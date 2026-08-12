@@ -5,6 +5,7 @@
 	--ink: #10130f;
 	--ink-soft: #1a2019;
 	--forest: #233126;
+	--forest-mid: #415847;
 	--moss: #94a969;
 	/* Text on paper/cream — moss alone fails WCAG AA (~2.5:1) */
 	--moss-deep: #5f703c;
@@ -222,7 +223,7 @@ p {
 }
 
 .section--forest {
-	background: var(--forest);
+	background: var(--forest-mid);
 	color: var(--cream);
 }
 
@@ -273,6 +274,15 @@ p {
 .section-heading--solo {
 	grid-template-columns: 1fr;
 	max-width: 28rem;
+}
+
+.section-heading--oneline {
+	max-width: none;
+}
+
+.section-heading--oneline h2 {
+	font-size: clamp(1.85rem, 8.5vw, 4.5rem);
+	white-space: nowrap;
 }
 
 .section-heading h2 {
@@ -1364,10 +1374,6 @@ p {
 	text-transform: uppercase;
 }
 
-.review-card__source {
-	color: var(--moss-bright);
-}
-
 /* FAQ */
 .faq-layout {
 	display: grid;
@@ -1565,14 +1571,20 @@ p {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	gap: 0.75rem;
+	gap: 0.5rem;
 	margin-top: 3rem;
 }
 
 .contact-details .button {
-	width: fit-content;
+	flex: 1 1 auto;
+	width: auto;
+	min-width: 0;
 	max-width: 100%;
-	font-size: 0.85rem;
+	min-height: 2.85rem;
+	padding: 0.65rem 0.8rem;
+	font-size: 0.68rem;
+	letter-spacing: 0.05em;
+	white-space: nowrap;
 }
 
 .contact-details .button::after {

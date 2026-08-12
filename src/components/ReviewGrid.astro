@@ -32,7 +32,6 @@ const attribution = (item: Review) =>
 				<blockquote>“{item.quote}”</blockquote>
 				<figcaption>
 					<span>{attribution(item)}</span>
-					{item.source === 'google' && <span class="review-card__source">Google</span>}
 				</figcaption>
 			</figure>
 		))
