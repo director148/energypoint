@@ -16,11 +16,8 @@ const audiences = ['Residential', 'Commercial', 'Rural', 'Maintenance'];
 	class="contact-form"
 	name="energy-plan"
 	method="POST"
-	action="/thank-you/"
-	data-netlify="true"
-	netlify-honeypot="bot-field"
+	action="/api/contact"
 >
-	<input type="hidden" name="form-name" value="energy-plan" />
 	<input type="hidden" name="subject" value={subject} />
 
 	<p class="field field--honeypot" hidden>
@@ -112,4 +109,3 @@ const audiences = ['Residential', 'Commercial', 'Rural', 'Maintenance'];
 		if (option) select.value = option.value;
 	}
 </script>
-

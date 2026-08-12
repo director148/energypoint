@@ -1,4 +1,5 @@
 ---
+import Icon from './Icon.astro';
 import { site } from '../data/site';
 
 const year = new Date().getFullYear();
@@ -42,8 +43,14 @@ const year = new Date().getFullYear();
 					<a href="/about-us/">About us</a>
 					<a href="/frequently-asked-questions/">FAQs</a>
 					<a href="/contact/">Contact</a>
-					<a href={site.facebook} target="_blank" rel="noreferrer">Facebook</a>
-					<a href={site.instagram} target="_blank" rel="noreferrer">Instagram</a>
+				</nav>
+				<nav class="footer-social" aria-label="Social media">
+					<a href={site.facebook} target="_blank" rel="noreferrer" aria-label="Facebook">
+						<Icon name="facebook" size={18} />
+					</a>
+					<a href={site.instagram} target="_blank" rel="noreferrer" aria-label="Instagram">
+						<Icon name="instagram" size={18} />
+					</a>
 				</nav>
 			</div>
 

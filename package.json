@@ -9,10 +9,12 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "preview:cf": "npm run build && wrangler pages dev dist --profile=florul",
     "check": "astro check",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name=energypoint --branch=main --profile=florul"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
@@ -21,6 +23,8 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@playwright/test": "^1.62.1",
+    "chrome-launcher": "^1.2.1",
+    "lighthouse": "^13.4.1",
     "typescript": "^6.0.3"
   }
 }

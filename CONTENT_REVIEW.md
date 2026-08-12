@@ -22,7 +22,8 @@ production launch, the site owner should confirm the following migrated business
 
 ## Form launch checklist
 
-- Enable Netlify form detection.
-- Configure email notifications for the `energy-plan` form.
-- Submit a real test enquiry from the deployed site and verify it appears in Netlify Forms.
-
+- Create a [Resend](https://resend.com) API key and add `RESEND_API_KEY` to the Cloudflare Pages
+  project (Settings → Variables and Secrets).
+- Optionally set `CONTACT_TO_EMAIL` (default `sales@energypoint.nz`) and a verified
+  `CONTACT_FROM_EMAIL`.
+- Submit a real test enquiry from the deployed site and confirm the email arrives.

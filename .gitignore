@@ -5,6 +5,8 @@ dist/
 .netlify/
 test-results/
 playwright-report/
+lighthouse-results/
+.wrangler/
 
 # dependencies
 node_modules/

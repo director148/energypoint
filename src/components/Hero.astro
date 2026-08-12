@@ -1,6 +1,6 @@
 ---
 interface Props {
-	eyebrow: string;
+	eyebrow?: string;
 	title: string;
 	intro: string;
 	image: string;
@@ -46,12 +46,18 @@ const optimizedSrcset = `/images/${imageBase}-960.webp 960w, ${optimizedImage} 1
 		/>
 	</div>
 	<div class="hero__content">
-		<div class="hero__kicker">
-			<span>{eyebrow}</span>
-			<span class="hero__scroll">{kicker}</span>
-		</div>
+		{
+			eyebrow && (
+				<div class="hero__kicker">
+					<span>{eyebrow}</span>
+				</div>
+			)
+		}
 		<div class="hero__grid">
-			<h1>{title}</h1>
+			<div class="hero__title">
+				<h1>{title}</h1>
+				<span class="hero__scroll">{kicker}</span>
+			</div>
 			<div class="hero__aside">
 				<p>{intro}</p>
 				<a class="button" href={ctaHref}>{cta}</a>
@@ -59,4 +65,3 @@ const optimizedSrcset = `/images/${imageBase}-960.webp 960w, ${optimizedImage} 1
 		</div>
 	</div>
 </section>
-

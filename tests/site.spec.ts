@@ -54,12 +54,13 @@ test('FAQ search filters answers', async ({ page }) => {
 	await expect(page.locator('[data-faq-empty]')).toBeVisible();
 });
 
-test('contact form is Netlify-ready and validates required fields', async ({ page }) => {
+test('contact form posts to the Cloudflare handler and validates required fields', async ({
+	page,
+}) => {
 	await page.goto('/contact/?audience=Rural');
 
 	const form = page.locator('form[name="energy-plan"]');
-	await expect(form).toHaveAttribute('data-netlify', 'true');
-	await expect(form).toHaveAttribute('action', '/thank-you/');
+	await expect(form).toHaveAttribute('action', '/api/contact');
 	await expect(page.locator('select[name="audience"]')).toHaveValue('Rural');
 
 	await page.getByRole('button', { name: 'Send my enquiry' }).click();

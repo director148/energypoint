@@ -1,5 +1,6 @@
-# Cloudflare Pages — Energy Point preview (solar.florul.com)
-# Deploy with: npm run deploy
+# Cloudflare Pages — Energy Point (solar.florul.com)
+# Auto-deploys from GitHub Actions on push to main.
+# Manual: npm run deploy
 name = "energypoint"
 compatibility_date = "2026-08-12"
 pages_build_output_dir = "dist"
