@@ -9,7 +9,20 @@ const {
 	subject = 'New Energy Point consultation enquiry',
 } = Astro.props;
 
-const audiences = ['Residential', 'Commercial', 'Rural', 'Maintenance'];
+const audiences = ['Residential', 'Commercial', 'Rural'];
+const goals = [
+	'Reduce electricity costs',
+	'Add energy resilience',
+	'Plan a new build',
+	'Battery or EV readiness',
+	'Maintenance or servicing',
+	'Not sure yet',
+] as const;
+
+const isMaintenanceIntent = defaultAudience.toLowerCase() === 'maintenance';
+const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
+const addressFinderKey =
+	import.meta.env.PUBLIC_ADDRESSFINDER_KEY || 'ADDRESSFINDER_DEMO_KEY';
 ---
 
 <form
@@ -17,6 +30,8 @@ const audiences = ['Residential', 'Commercial', 'Rural', 'Maintenance'];
 	name="energy-plan"
 	method="POST"
 	action="/api/contact"
+	novalidate
+	data-contact-form
 >
 	<input type="hidden" name="subject" value={subject} />
 
@@ -27,56 +42,112 @@ const audiences = ['Residential', 'Commercial', 'Rural', 'Maintenance'];
 		</label>
 	</p>
 
+	<p class="contact-form__error" data-form-error hidden></p>
+
 	<div class="field">
 		<label for="audience">Property type</label>
 		<select id="audience" name="audience" required data-audience-select>
-			<option value="" selected={!defaultAudience}>Choose one</option>
+			<option value="" selected={!propertyDefault}>Choose one</option>
 			{
 				audiences.map((audience) => (
-					<option value={audience} selected={defaultAudience.toLowerCase() === audience.toLowerCase()}>
+					<option value={audience} selected={propertyDefault.toLowerCase() === audience.toLowerCase()}>
 						{audience}
 					</option>
 				))
 			}
 		</select>
+		<span class="field__error" data-error-for="audience" hidden></span>
 	</div>
 
 	<div class="field">
 		<label for="goal">Main goal</label>
-		<select id="goal" name="goal" required>
-			<option value="">Choose one</option>
-			<option value="Reduce electricity costs">Reduce electricity costs</option>
-			<option value="Add energy resilience">Add energy resilience</option>
-			<option value="Plan a new build">Plan a new build</option>
-			<option value="Battery or EV readiness">Battery or EV readiness</option>
-			<option value="Repair or maintain a system">Repair or maintain a system</option>
-			<option value="Not sure yet">Not sure yet</option>
+		<select id="goal" name="goal" required data-goal-select>
+			<option value="" selected={!isMaintenanceIntent}>Choose one</option>
+			{
+				goals.map((goal) => (
+					<option
+						value={goal}
+						selected={isMaintenanceIntent && goal === 'Maintenance or servicing'}
+					>
+						{goal}
+					</option>
+				))
+			}
 		</select>
+		<span class="field__error" data-error-for="goal" hidden></span>
 	</div>
 
 	<div class="field">
 		<label for="name">Name</label>
-		<input id="name" name="name" type="text" autocomplete="name" required />
+		<input
+			id="name"
+			name="name"
+			type="text"
+			autocomplete="name"
+			required
+			minlength="2"
+			maxlength="80"
+			data-capitalize-name
+		/>
+		<span class="field__error" data-error-for="name" hidden></span>
 	</div>
 
 	<div class="field">
 		<label for="phone">Phone</label>
-		<input id="phone" name="phone" type="tel" autocomplete="tel" required />
+		<input
+			id="phone"
+			name="phone"
+			type="tel"
+			autocomplete="tel"
+			inputmode="tel"
+			required
+			maxlength="20"
+			placeholder="021 123 4567 or +64..."
+		/>
+		<span class="field__error" data-error-for="phone" hidden></span>
 	</div>
 
 	<div class="field">
 		<label for="email">Email</label>
-		<input id="email" name="email" type="email" autocomplete="email" required />
+		<input
+			id="email"
+			name="email"
+			type="email"
+			autocomplete="email"
+			required
+			maxlength="150"
+			inputmode="email"
+		/>
+		<span class="field__error" data-error-for="email" hidden></span>
 	</div>
 
 	<div class="field">
 		<label for="location">Town or postcode</label>
-		<input id="location" name="location" type="text" autocomplete="postal-code" required />
+		<input
+			id="location"
+			name="location"
+			type="text"
+			autocomplete="postal-code"
+			required
+			minlength="2"
+			maxlength="80"
+		/>
+		<span class="field__error" data-error-for="location" hidden></span>
 	</div>
 
 	<div class="field field--full">
 		<label for="address">Property address <small>(optional)</small></label>
-		<input id="address" name="address" type="text" autocomplete="street-address" />
+		<input
+			id="address"
+			name="address"
+			type="text"
+			autocomplete="street-address"
+			maxlength="120"
+			placeholder="Start typing your address"
+			data-address-finder
+		/>
+		<span class="field__hint">Search and select a NZ address, or type it manually.</span>
+		<span class="field__error" data-error-for="address" hidden></span>
 	</div>
 
 	<div class="field field--full">
@@ -86,7 +157,12 @@ const audiences = ['Residential', 'Commercial', 'Rural', 'Maintenance'];
 			name="message"
 			placeholder="What would a better energy setup help you achieve?"
 			required
+			minlength="10"
+			maxlength="1000"
+			rows="5"
 		></textarea>
+		<span class="field__hint"><span data-message-count>0</span> / 1000</span>
+		<span class="field__error" data-error-for="message" hidden></span>
 	</div>
 
 	<div class="contact-form__footer">
@@ -98,16 +174,243 @@ const audiences = ['Residential', 'Commercial', 'Rural', 'Maintenance'];
 	</div>
 </form>
 
-<script>
-	document.addEventListener('astro:page-load', () => {
-		const audience = new URLSearchParams(window.location.search).get('audience');
-		const select = document.querySelector<HTMLSelectElement>('[data-audience-select]');
+<script define:vars={{ addressFinderKey }}>
+	const LIMITS = {
+		name: 80,
+		phone: 20,
+		email: 150,
+		location: 80,
+		address: 120,
+		message: 1000,
+	};
 
-		if (audience && select) {
-			const option = Array.from(select.options).find(
+	const SAFE_TEXT = /^[\p{L}\p{N}\s.,'’/#&\-()+@:+]+$/u;
+	const NAME = /^[\p{L}][\p{L}\s'’-]{0,78}$/u;
+	const EMAIL = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+	const LOCATION = /^[\p{L}\p{N}\s.,'’\-]{2,80}$/u;
+	const ADDRESS = /^[\p{L}\p{N}\s.,'’/#&\-]{5,120}$/u;
+
+	const cleanPhone = (value) => String(value || '').replace(/[\s().-]/g, '');
+
+	const isValidPhone = (value) => {
+		const cleaned = cleanPhone(value);
+		return (
+			/^\+[1-9]\d{7,14}$/.test(cleaned) ||
+			/^0\d{7,10}$/.test(cleaned) ||
+			/^[1-9]\d{7,14}$/.test(cleaned)
+		);
+	};
+
+	const titleCaseName = (value) =>
+		String(value || '')
+			.trim()
+			.replace(/\s+/g, ' ')
+			.replace(/[^\p{L}\s'’-]/gu, '')
+			.replace(/(^|[\s'’-])(\p{L})/gu, (_, edge, letter) => edge + letter.toUpperCase());
+
+	const validate = (form) => {
+		const data = new FormData(form);
+		const errors = {};
+		const values = {
+			audience: String(data.get('audience') || '').trim(),
+			goal: String(data.get('goal') || '').trim(),
+			name: titleCaseName(data.get('name')),
+			phone: String(data.get('phone') || '').trim(),
+			email: String(data.get('email') || '').trim().toLowerCase(),
+			location: String(data.get('location') || '').trim().replace(/\s+/g, ' '),
+			address: String(data.get('address') || '').trim().replace(/\s+/g, ' '),
+			message: String(data.get('message') || '').trim().replace(/\s+/g, ' '),
+		};
+
+		if (!values.audience) errors.audience = 'Choose a property type.';
+		if (!values.goal) errors.goal = 'Choose a main goal.';
+
+		if (!values.name || values.name.length < 2) errors.name = 'Enter your name.';
+		else if (values.name.length > LIMITS.name) errors.name = `Name must be ${LIMITS.name} characters or fewer.`;
+		else if (!NAME.test(values.name)) errors.name = 'Use letters, spaces, hyphens or apostrophes only.';
+
+		if (!values.phone) errors.phone = 'Enter a phone number.';
+		else if (values.phone.length > LIMITS.phone) errors.phone = `Phone must be ${LIMITS.phone} characters or fewer.`;
+		else if (!isValidPhone(values.phone)) {
+			errors.phone = 'Use a NZ number (e.g. 021 123 4567) or international format (+64...).';
+		}
+
+		if (!values.email) errors.email = 'Enter an email address.';
+		else if (values.email.length > LIMITS.email) errors.email = `Email must be ${LIMITS.email} characters or fewer.`;
+		else if (!EMAIL.test(values.email)) errors.email = 'Enter a valid email address.';
+
+		if (!values.location) errors.location = 'Enter a town or postcode.';
+		else if (!LOCATION.test(values.location)) {
+			errors.location = 'Use letters, numbers, spaces or hyphens only.';
+		}
+
+		if (values.address) {
+			if (values.address.length > LIMITS.address) {
+				errors.address = `Address must be ${LIMITS.address} characters or fewer.`;
+			} else if (!ADDRESS.test(values.address)) {
+				errors.address = 'Use a normal street address without special symbols.';
+			}
+		}
+
+		if (!values.message || values.message.length < 10) {
+			errors.message = 'Tell us a little more (at least 10 characters).';
+		} else if (values.message.length > LIMITS.message) {
+			errors.message = `Message must be ${LIMITS.message} characters or fewer.`;
+		} else if (!SAFE_TEXT.test(values.message)) {
+			errors.message = 'Remove unusual symbols from your message.';
+		}
+
+		return { values, errors, ok: Object.keys(errors).length === 0 };
+	};
+
+	const showErrors = (form, errors) => {
+		form.querySelectorAll('[data-error-for]').forEach((el) => {
+			const key = el.getAttribute('data-error-for');
+			const message = key ? errors[key] : '';
+			const field = el.closest('.field');
+			const control = field?.querySelector('input, select, textarea');
+
+			if (message) {
+				el.textContent = message;
+				el.hidden = false;
+				field?.classList.add('field--invalid');
+				control?.setAttribute('aria-invalid', 'true');
+			} else {
+				el.textContent = '';
+				el.hidden = true;
+				field?.classList.remove('field--invalid');
+				control?.removeAttribute('aria-invalid');
+			}
+		});
+
+		const formError = form.querySelector('[data-form-error]');
+		if (formError) {
+			const first = Object.values(errors)[0];
+			if (first) {
+				formError.textContent = first;
+				formError.hidden = false;
+			} else {
+				formError.textContent = '';
+				formError.hidden = true;
+			}
+		}
+	};
+
+	const applyAudienceFromQuery = () => {
+		const params = new URLSearchParams(window.location.search);
+		const audience = params.get('audience');
+		const audienceSelect = document.querySelector('[data-audience-select]');
+		const goalSelect = document.querySelector('[data-goal-select]');
+		if (!audience) return;
+
+		if (audience.toLowerCase() === 'maintenance') {
+			if (goalSelect) {
+				const option = Array.from(goalSelect.options).find(
+					(item) => item.value.toLowerCase() === 'maintenance or servicing',
+				);
+				if (option) goalSelect.value = option.value;
+			}
+			return;
+		}
+
+		if (audienceSelect) {
+			const option = Array.from(audienceSelect.options).find(
 				(item) => item.value.toLowerCase() === audience.toLowerCase(),
 			);
-			if (option) select.value = option.value;
+			if (option) audienceSelect.value = option.value;
 		}
+	};
+
+	const initAddressFinder = (input) => {
+		if (!input || !window.AddressFinder) return;
+
+		const widget = new window.AddressFinder.Widget(input, addressFinderKey, 'NZ', {
+			manual_style: false,
+			max_results: 8,
+		});
+
+		widget.on('address:select', (fullAddress, metaData) => {
+			input.value = metaData.full_address || fullAddress || '';
+			const location = document.getElementById('location');
+			if (location instanceof HTMLInputElement) {
+				const town = metaData.city || metaData.suburb || metaData.town || '';
+				const postcode = metaData.postcode || '';
+				location.value = [town, postcode].filter(Boolean).join(' ').trim() || location.value;
+			}
+		});
+	};
+
+	const loadAddressFinder = (input) => {
+		if (!input) return;
+		if (window.AddressFinder) {
+			initAddressFinder(input);
+			return;
+		}
+
+		const existing = document.querySelector('script[data-addressfinder]');
+		if (existing) {
+			existing.addEventListener('load', () => initAddressFinder(input), { once: true });
+			return;
+		}
+
+		const script = document.createElement('script');
+		script.src = 'https://api.addressfinder.io/assets/v3/widget.js';
+		script.async = true;
+		script.dataset.addressfinder = 'true';
+		script.onload = () => initAddressFinder(input);
+		document.body.appendChild(script);
+	};
+
+	document.addEventListener('astro:page-load', () => {
+		const form = document.querySelector('[data-contact-form]');
+		if (!(form instanceof HTMLFormElement)) return;
+
+		applyAudienceFromQuery();
+		loadAddressFinder(form.querySelector('[data-address-finder]'));
+
+		const nameInput = form.querySelector('[data-capitalize-name]');
+		nameInput?.addEventListener('blur', () => {
+			if (nameInput instanceof HTMLInputElement) {
+				nameInput.value = titleCaseName(nameInput.value);
+			}
+		});
+
+		const message = form.querySelector('#message');
+		const counter = form.querySelector('[data-message-count]');
+		const updateCount = () => {
+			if (message instanceof HTMLTextAreaElement && counter) {
+				counter.textContent = String(message.value.length);
+			}
+		};
+		message?.addEventListener('input', updateCount);
+		updateCount();
+
+		form.addEventListener('submit', (event) => {
+			const nameField = form.querySelector('#name');
+			if (nameField instanceof HTMLInputElement) {
+				nameField.value = titleCaseName(nameField.value);
+			}
+
+			const emailField = form.querySelector('#email');
+			if (emailField instanceof HTMLInputElement) {
+				emailField.value = emailField.value.trim().toLowerCase();
+			}
+
+			const { values, errors, ok } = validate(form);
+			showErrors(form, errors);
+
+			if (!ok) {
+				event.preventDefault();
+				const firstInvalid = form.querySelector('.field--invalid input, .field--invalid select, .field--invalid textarea');
+				firstInvalid?.focus();
+				return;
+			}
+
+			// Write normalised values back before submit.
+			for (const [key, value] of Object.entries(values)) {
+				const field = form.elements.namedItem(key);
+				if (field && 'value' in field) field.value = value;
+			}
+		});
 	});
 </script>

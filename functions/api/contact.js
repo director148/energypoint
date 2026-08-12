@@ -6,7 +6,7 @@
  *   CONTACT_FROM_EMAIL   optional (verified Resend sender)
  */
 
-const REQUIRED = ['audience', 'goal', 'name', 'phone', 'email', 'location', 'message'];
+import { validateContactFields } from '../_shared/contact-validation.js';
 
 export async function onRequestPost(context) {
 	const thankYou = new URL('/thank-you/', context.request.url).toString();
@@ -23,16 +23,21 @@ export async function onRequestPost(context) {
 		return Response.redirect(thankYou, 303);
 	}
 
-	const values = Object.fromEntries(
-		REQUIRED.map((key) => [key, String(formData.get(key) || '').trim()]),
-	);
+	const { values, errors, ok } = validateContactFields({
+		audience: formData.get('audience'),
+		goal: formData.get('goal'),
+		name: formData.get('name'),
+		phone: formData.get('phone'),
+		email: formData.get('email'),
+		location: formData.get('location'),
+		address: formData.get('address'),
+		message: formData.get('message'),
+		subject: formData.get('subject'),
+	});
 
-	if (REQUIRED.some((key) => !values[key])) {
-		return new Response('Please complete all required fields.', { status: 400 });
-	}
-
-	if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
-		return new Response('Please provide a valid email address.', { status: 400 });
+	if (!ok) {
+		const first = Object.values(errors)[0] || 'Please check the form and try again.';
+		return new Response(first, { status: 400 });
 	}
 
 	const apiKey = context.env.RESEND_API_KEY;
@@ -43,10 +48,7 @@ export async function onRequestPost(context) {
 	const to = context.env.CONTACT_TO_EMAIL || 'sales@energypoint.nz';
 	const from =
 		context.env.CONTACT_FROM_EMAIL || 'Energy Point Website <onboarding@resend.dev>';
-	const address = String(formData.get('address') || '').trim();
-	const subject = String(
-		formData.get('subject') || 'New Energy Point consultation enquiry',
-	).trim();
+	const subject = values.subject || 'New Energy Point consultation enquiry';
 
 	const text = [
 		`Audience: ${values.audience}`,
@@ -55,7 +57,7 @@ export async function onRequestPost(context) {
 		`Phone: ${values.phone}`,
 		`Email: ${values.email}`,
 		`Location: ${values.location}`,
-		address ? `Address: ${address}` : null,
+		values.address ? `Address: ${values.address}` : null,
 		'',
 		values.message,
 	]

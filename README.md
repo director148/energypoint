@@ -36,6 +36,7 @@ Required Cloudflare Pages env vars (for the contact form):
 - `RESEND_API_KEY`
 - `CONTACT_TO_EMAIL` (optional, defaults to `sales@energypoint.nz`)
 - `CONTACT_FROM_EMAIL` (optional; must be a verified Resend sender)
+- `PUBLIC_ADDRESSFINDER_KEY` (optional NZ AddressFinder licence key; demo key used if unset)
 
 Manual deploy:
 
