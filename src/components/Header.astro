@@ -1,0 +1,123 @@
+---
+import { navigation, site } from '../data/site';
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) =>
+	href === '/' ? pathname === '/' : pathname.startsWith(href);
+---
+
+<header class="site-header" data-site-header>
+	<div class="site-header__bar">
+		<a class="brand" href="/" aria-label="Energy Point home">
+			<img
+				src="/images/energy-point-logo-240.webp"
+				srcset="/images/energy-point-logo-240.webp 240w, /images/energy-point-logo.webp 420w"
+				sizes="141px"
+				alt="Energy Point"
+				width="2083"
+				height="1265"
+			/>
+		</a>
+
+		<nav class="desktop-nav" aria-label="Main navigation">
+			{
+				navigation.map((item) =>
+					'children' in item ? (
+						<details class="nav-dropdown">
+							<summary>
+								{item.label} <span aria-hidden="true">+</span>
+							</summary>
+							<div class="nav-dropdown__panel">
+								{item.children.map((child) => (
+									<a href={child.href} aria-current={isActive(child.href) ? 'page' : undefined}>
+										{child.label}
+									</a>
+								))}
+							</div>
+						</details>
+					) : (
+						<a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+							{item.label}
+						</a>
+					),
+				)
+			}
+		</nav>
+
+		<div class="header-actions">
+			<a class="header-phone" href={site.phoneHref}>{site.phoneDisplay}</a>
+			<a class="button button--light" href="/contact/">Design your energy plan</a>
+			<button
+				class="menu-toggle"
+				type="button"
+				aria-label="Open navigation menu"
+				aria-expanded="false"
+				aria-controls="mobile-menu"
+				data-menu-toggle
+			>
+				<span></span>
+			</button>
+		</div>
+	</div>
+
+	<div class="mobile-menu" id="mobile-menu" data-mobile-menu data-open="false">
+		<nav aria-label="Mobile navigation">
+			<a href="/residential/">Residential</a>
+			<a href="/commercial/">Commercial</a>
+			<a href="/rural/">Rural</a>
+			<a href="/finance/">Finance</a>
+			<a href="/maintenance/">Maintenance</a>
+			<a href="/about-us/">About us</a>
+			<a href="/contact/">Contact</a>
+		</nav>
+		<div class="mobile-menu__meta">
+			<a href={site.phoneHref}>{site.phoneDisplay}</a>
+			<a href={`mailto:${site.email}`}>{site.email}</a>
+			<span>{site.region}</span>
+		</div>
+	</div>
+</header>
+
+<script>
+	const header = document.querySelector('[data-site-header]');
+	const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+	const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+
+	const closeMenu = () => {
+		if (!toggle || !menu) return;
+		toggle.setAttribute('aria-expanded', 'false');
+		toggle.setAttribute('aria-label', 'Open navigation menu');
+		menu.dataset.open = 'false';
+		document.body.classList.remove('nav-open');
+	};
+
+	toggle?.addEventListener('click', () => {
+		const willOpen = toggle.getAttribute('aria-expanded') !== 'true';
+		toggle.setAttribute('aria-expanded', String(willOpen));
+		toggle.setAttribute('aria-label', willOpen ? 'Close navigation menu' : 'Open navigation menu');
+		if (menu) menu.dataset.open = String(willOpen);
+		document.body.classList.toggle('nav-open', willOpen);
+	});
+
+	menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+
+	document.addEventListener('keydown', (event) => {
+		if (event.key === 'Escape') closeMenu();
+	});
+
+	document.querySelectorAll<HTMLDetailsElement>('.nav-dropdown').forEach((dropdown) => {
+		dropdown.addEventListener('toggle', () => {
+			if (!dropdown.open) return;
+			document.querySelectorAll<HTMLDetailsElement>('.nav-dropdown').forEach((other) => {
+				if (other !== dropdown) other.open = false;
+			});
+		});
+	});
+
+	window.addEventListener(
+		'scroll',
+		() => header?.classList.toggle('is-scrolled', window.scrollY > 40),
+		{ passive: true },
+	);
+</script>
+

@@ -1,0 +1,188 @@
+---
+import CTASection from '../components/CTASection.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import Hero from '../components/Hero.astro';
+import { faqGroups } from '../data/faqs';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const careFaqs = faqGroups.find((group) => group.id === 'care')?.items ?? [];
+
+const maintenanceSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'Service',
+	name: 'Solar maintenance, repair and system upgrades',
+	serviceType: 'Solar system maintenance',
+	areaServed: 'Waikato, New Zealand',
+};
+---
+
+<BaseLayout
+	title="Solar Maintenance Waikato"
+	description="Solar system checks, repair, performance investigation and upgrades across Waikato — including systems installed by other providers."
+	image="/images/process-support.jpg"
+	schema={maintenanceSchema}
+>
+	<Hero
+		page
+		eyebrow="Maintenance & support"
+		title="Keep good energy working."
+		intro="Protect system performance with monitoring, proactive checks, practical repairs and considered upgrades — whether we installed it or not."
+		image="/images/process-support.jpg"
+		alt="An Energy Point specialist supporting a solar energy system"
+		cta="Book a system check"
+		ctaHref="/contact/?audience=Maintenance"
+		position="center 48%"
+	/>
+
+	<section class="section section--cream">
+		<div class="container intro-statement">
+			<div>
+				<span class="eyebrow">Long-term care</span>
+			</div>
+			<div class="intro-statement__body" data-reveal>
+				<p>
+					A solar system is low maintenance. That does not mean it should be ignored.
+				</p>
+				<p class="lede muted">
+					Monitoring can reveal a drop in performance, but it cannot tighten a connection,
+					remove a new shading issue or assess physical damage. Thoughtful care protects
+					output, safety and the useful life of your investment.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section section--paper">
+		<div class="container">
+			<div class="section-heading">
+				<div>
+					<span class="eyebrow">Three ways we help</span>
+					<h2>Respond now. Improve next. Prevent later.</h2>
+				</div>
+				<p class="lede muted">
+					Start with the problem you can see — or the one you would rather catch early.
+				</p>
+			</div>
+			<div class="three-up">
+				<article class="editorial-card" data-reveal>
+					<span class="editorial-card__number">01</span>
+					<h3>Repair</h3>
+					<p>
+						Investigate inverter faults, physical damage, alerts and unexplained drops in
+						generation, then define the safest practical response.
+					</p>
+				</article>
+				<article class="editorial-card" data-reveal style="--reveal-delay: 80ms">
+					<span class="editorial-card__number">02</span>
+					<h3>Upgrade</h3>
+					<p>
+						Review batteries, monitoring, component replacement or expansion without losing
+						sight of the existing system constraints.
+					</p>
+				</article>
+				<article class="editorial-card" data-reveal style="--reveal-delay: 160ms">
+					<span class="editorial-card__number">03</span>
+					<h3>Maintain</h3>
+					<p>
+						Use scheduled visual, electrical and performance checks to catch smaller issues
+						before they become expensive interruptions.
+					</p>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<section class="media-split">
+		<div class="media-split__media">
+			<img
+				src="/images/process-support-1600.webp"
+				alt="Solar monitoring and ongoing Energy Point support"
+				width="1400"
+				height="900"
+				loading="lazy"
+				decoding="async"
+			/>
+		</div>
+		<div class="media-split__content">
+			<span class="eyebrow">Performance, made visible</span>
+			<h2>Know when something changes.</h2>
+			<p class="lede">
+				Generation naturally moves with season and weather. Monitoring helps separate those
+				normal changes from alerts, outages or persistent underperformance worth investigating.
+			</p>
+			<ul class="feature-list">
+				<li>System status review</li>
+				<li>Inverter and monitoring alerts</li>
+				<li>Generation trend investigation</li>
+				<li>Practical next-step advice</li>
+			</ul>
+			<a class="button button--ghost" href="/contact/?audience=Maintenance">
+				Request support
+			</a>
+		</div>
+	</section>
+
+	<section class="section section--cream">
+		<div class="container">
+			<div class="section-heading">
+				<div>
+					<span class="eyebrow">Why it matters</span>
+					<h2>Small checks protect the bigger investment.</h2>
+				</div>
+				<p class="lede muted">
+					Maintenance is about sustained performance, safe operation and fewer surprises.
+				</p>
+			</div>
+			<div class="numbered-grid">
+				<article class="numbered-item">
+					<span class="numbered-item__number">01</span>
+					<div>
+						<h3>Protect output</h3>
+						<p>Identify performance changes caused by faults, dirt, shading or damage.</p>
+					</div>
+				</article>
+				<article class="numbered-item">
+					<span class="numbered-item__number">02</span>
+					<div>
+						<h3>Prevent escalation</h3>
+						<p>Catch smaller issues before they create extended downtime or larger repairs.</p>
+					</div>
+				</article>
+				<article class="numbered-item">
+					<span class="numbered-item__number">03</span>
+					<div>
+						<h3>Stay informed</h3>
+						<p>Understand what the system is doing and when a change needs attention.</p>
+					</div>
+				</article>
+				<article class="numbered-item">
+					<span class="numbered-item__number">04</span>
+					<div>
+						<h3>Plan upgrades well</h3>
+						<p>Make future additions with clear knowledge of the system already in place.</p>
+					</div>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<section class="section section--paper">
+		<div class="container faq-layout">
+			<div class="faq-intro">
+				<span class="eyebrow">Care questions</span>
+				<h2>Support that starts with a straight answer.</h2>
+				<a class="text-link" href="/frequently-asked-questions/">All FAQs</a>
+			</div>
+			<FAQAccordion items={careFaqs} />
+		</div>
+	</section>
+
+	<CTASection
+		audience="Maintenance"
+		eyebrow="Book a system check"
+		title="Give your solar system the care it deserves."
+		copy="Tell us what you are seeing, when it changed and who installed the system. We will help define the right next step."
+		label="Request maintenance"
+	/>
+</BaseLayout>
+

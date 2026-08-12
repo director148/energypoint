@@ -1,0 +1,52 @@
+---
+interface Step {
+	title: string;
+	copy: string;
+}
+
+interface Props {
+	steps?: readonly Step[];
+}
+
+const defaultSteps = [
+	{
+		title: 'Capture',
+		copy: 'Panels turn Waikato sunlight into direct-current electricity.',
+	},
+	{
+		title: 'Convert',
+		copy: 'The inverter makes that energy ready for your property to use.',
+	},
+	{
+		title: 'Use',
+		copy: 'Your home or operation consumes solar energy before grid energy.',
+	},
+	{
+		title: 'Store',
+		copy: 'An optional battery holds surplus energy for later demand.',
+	},
+	{
+		title: 'Export',
+		copy: 'Remaining surplus can flow to the grid under your retailer plan.',
+	},
+];
+
+const { steps = defaultSteps } = Astro.props;
+---
+
+<div class="energy-flow" aria-label="How a solar energy system works">
+	{
+		steps.map((step, index) => (
+			<div
+				class="energy-flow__step"
+				data-reveal
+				style={`--reveal-delay: ${index * 70}ms`}
+			>
+				<span class="energy-flow__number">{String(index + 1).padStart(2, '0')}</span>
+				<h3>{step.title}</h3>
+				<p>{step.copy}</p>
+			</div>
+		))
+	}
+</div>
+

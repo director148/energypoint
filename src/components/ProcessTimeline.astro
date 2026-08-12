@@ -1,0 +1,28 @@
+---
+import { process } from '../data/site';
+---
+
+<div class="process-list">
+	{
+		process.map((step, index) => (
+			<article
+				class="process-item"
+				data-reveal
+				style={`--reveal-delay: ${index * 70}ms`}
+			>
+				<span class="process-item__number">{step.number}</span>
+				<h3>{step.title}</h3>
+				<p>{step.copy}</p>
+				<img
+					src={step.image}
+					alt={step.alt}
+					width="560"
+					height="350"
+					loading="lazy"
+					decoding="async"
+				/>
+			</article>
+		))
+	}
+</div>
+

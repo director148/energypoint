@@ -1,0 +1,34 @@
+---
+import { audiences } from '../data/site';
+---
+
+<div class="audience-grid">
+	{
+		audiences.map((audience, index) => (
+			<a
+				class="audience-card"
+				href={audience.href}
+				data-reveal
+				style={`--reveal-delay: ${index * 90}ms`}
+			>
+				<div class="audience-card__media">
+					<img
+						src={audience.image}
+						alt={audience.alt}
+						width="1200"
+						height="1500"
+						loading="lazy"
+						decoding="async"
+					/>
+				</div>
+				<div class="audience-card__content">
+					<span class="eyebrow">{audience.eyebrow}</span>
+					<h3>{audience.title}</h3>
+					<p>{audience.copy}</p>
+					<span class="text-link">Explore {audience.title}</span>
+				</div>
+			</a>
+		))
+	}
+</div>
+

@@ -1,0 +1,115 @@
+---
+interface Props {
+	defaultAudience?: string;
+	subject?: string;
+}
+
+const {
+	defaultAudience = '',
+	subject = 'New Energy Point consultation enquiry',
+} = Astro.props;
+
+const audiences = ['Residential', 'Commercial', 'Rural', 'Maintenance'];
+---
+
+<form
+	class="contact-form"
+	name="energy-plan"
+	method="POST"
+	action="/thank-you/"
+	data-netlify="true"
+	netlify-honeypot="bot-field"
+>
+	<input type="hidden" name="form-name" value="energy-plan" />
+	<input type="hidden" name="subject" value={subject} />
+
+	<p class="field field--honeypot" hidden>
+		<label>
+			Do not complete this field
+			<input name="bot-field" tabindex="-1" autocomplete="off" />
+		</label>
+	</p>
+
+	<div class="field">
+		<label for="audience">Property type</label>
+		<select id="audience" name="audience" required data-audience-select>
+			<option value="" selected={!defaultAudience}>Choose one</option>
+			{
+				audiences.map((audience) => (
+					<option value={audience} selected={defaultAudience.toLowerCase() === audience.toLowerCase()}>
+						{audience}
+					</option>
+				))
+			}
+		</select>
+	</div>
+
+	<div class="field">
+		<label for="goal">Main goal</label>
+		<select id="goal" name="goal" required>
+			<option value="">Choose one</option>
+			<option value="Reduce electricity costs">Reduce electricity costs</option>
+			<option value="Add energy resilience">Add energy resilience</option>
+			<option value="Plan a new build">Plan a new build</option>
+			<option value="Battery or EV readiness">Battery or EV readiness</option>
+			<option value="Repair or maintain a system">Repair or maintain a system</option>
+			<option value="Not sure yet">Not sure yet</option>
+		</select>
+	</div>
+
+	<div class="field">
+		<label for="name">Name</label>
+		<input id="name" name="name" type="text" autocomplete="name" required />
+	</div>
+
+	<div class="field">
+		<label for="phone">Phone</label>
+		<input id="phone" name="phone" type="tel" autocomplete="tel" required />
+	</div>
+
+	<div class="field">
+		<label for="email">Email</label>
+		<input id="email" name="email" type="email" autocomplete="email" required />
+	</div>
+
+	<div class="field">
+		<label for="location">Town or postcode</label>
+		<input id="location" name="location" type="text" autocomplete="postal-code" required />
+	</div>
+
+	<div class="field field--full">
+		<label for="address">Property address <small>(optional)</small></label>
+		<input id="address" name="address" type="text" autocomplete="street-address" />
+	</div>
+
+	<div class="field field--full">
+		<label for="message">Tell us about the property</label>
+		<textarea
+			id="message"
+			name="message"
+			placeholder="What would a better energy setup help you achieve?"
+			required
+		></textarea>
+	</div>
+
+	<div class="contact-form__footer">
+		<p>
+			By sending this form, you agree that Energy Point may contact you about this
+			enquiry. We do not sell your details.
+		</p>
+		<button class="button" type="submit">Send my enquiry</button>
+	</div>
+</form>
+
+<script>
+	const audience = new URLSearchParams(window.location.search).get('audience');
+	const select = document.querySelector<HTMLSelectElement>('[data-audience-select]');
+
+	if (audience && select) {
+		const option = Array.from(select.options).find(
+			(item) => item.value.toLowerCase() === audience.toLowerCase(),
+		);
+		if (option) select.value = option.value;
+	}
+</script>
+

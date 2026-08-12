@@ -1,0 +1,62 @@
+---
+interface Props {
+	eyebrow: string;
+	title: string;
+	intro: string;
+	image: string;
+	alt: string;
+	cta?: string;
+	ctaHref?: string;
+	page?: boolean;
+	position?: string;
+	kicker?: string;
+}
+
+const {
+	eyebrow,
+	title,
+	intro,
+	image,
+	alt,
+	cta = 'Design your energy plan',
+	ctaHref = '/contact/',
+	page = false,
+	position = 'center',
+	kicker = 'Waikato · Aotearoa New Zealand',
+} = Astro.props;
+
+const imageBase = image
+	.replace(/^\/images\//, '')
+	.replace(/\.(png|jpe?g|webp)$/i, '');
+const optimizedImage = `/images/${imageBase}-1600.webp`;
+const optimizedSrcset = `/images/${imageBase}-960.webp 960w, ${optimizedImage} 1600w`;
+---
+
+<section class:list={['hero', page && 'hero--page']} style={`--hero-position: ${position};`}>
+	<div class="hero__media">
+		<img
+			src={optimizedImage}
+			srcset={optimizedSrcset}
+			sizes="100vw"
+			alt={alt}
+			width="1920"
+			height="1080"
+			fetchpriority="high"
+			decoding="async"
+		/>
+	</div>
+	<div class="hero__content">
+		<div class="hero__kicker">
+			<span>{eyebrow}</span>
+			<span class="hero__scroll">{kicker}</span>
+		</div>
+		<div class="hero__grid">
+			<h1>{title}</h1>
+			<div class="hero__aside">
+				<p>{intro}</p>
+				<a class="button" href={ctaHref}>{cta}</a>
+			</div>
+		</div>
+	</div>
+</section>
+

@@ -1,0 +1,5 @@
+# Cloudflare Pages — Energy Point preview (solar.florul.com)
+# Deploy with: npm run deploy
+name = "energypoint"
+compatibility_date = "2026-08-12"
+pages_build_output_dir = "dist"

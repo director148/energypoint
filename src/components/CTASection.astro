@@ -1,0 +1,29 @@
+---
+interface Props {
+	eyebrow?: string;
+	title?: string;
+	copy?: string;
+	label?: string;
+	audience?: string;
+}
+
+const {
+	eyebrow = 'Your next move',
+	title = 'Let’s design energy around you.',
+	copy = 'Start with a clear conversation about your property, your energy use and what you want to achieve.',
+	label = 'Start your energy plan',
+	audience,
+} = Astro.props;
+
+const href = audience ? `/contact/?audience=${encodeURIComponent(audience)}` : '/contact/';
+---
+
+<section class="cta-stage">
+	<div class="cta-stage__content" data-reveal>
+		<span class="eyebrow">{eyebrow}</span>
+		<h2>{title}</h2>
+		<p>{copy}</p>
+		<a class="button button--light" href={href}>{label}</a>
+	</div>
+</section>
+

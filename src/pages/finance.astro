@@ -1,0 +1,202 @@
+---
+import CTASection from '../components/CTASection.astro';
+import Hero from '../components/Hero.astro';
+import { financeBenefits, financeOptions, financeReviewed } from '../data/finance';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+	title="Solar Finance New Zealand"
+	description="A clear, date-stamped guide to New Zealand green lending pathways that may help eligible customers finance solar and energy upgrades."
+	image="/images/finance-hero.jpg"
+>
+	<Hero
+		page
+		eyebrow="Finance pathways"
+		title="Make the numbers as clear as the energy plan."
+		intro="Explore current green lending options, understand the caveats and speak with your lender before deciding how to fund your system."
+		image="/images/finance-hero.jpg"
+		alt="A homeowner considering finance for a solar energy system"
+		cta="Talk through my project"
+		ctaHref="/contact/?audience=Residential"
+		position="center 45%"
+	/>
+
+	<section class="section section--cream">
+		<div class="container intro-statement">
+			<div>
+				<span class="eyebrow">Finance, made legible</span>
+			</div>
+			<div class="intro-statement__body" data-reveal>
+				<p>
+					The right question is not “Can I finance solar?” It is “Does this structure
+					make sense for my property and cash flow?”
+				</p>
+				<p class="lede muted">
+					Energy Point can help define the technical investment and model how the system
+					may perform. Your bank or independent adviser must confirm eligibility, lending
+					terms and whether a product is appropriate for you.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section section--paper">
+		<div class="container">
+			<div class="section-heading">
+				<div>
+					<span class="eyebrow">Why consider finance</span>
+					<h2>Start generating while you manage the upfront investment.</h2>
+				</div>
+				<p class="lede muted">
+					Finance can change the timing of cost, not the fundamentals of a good system.
+					Design and conservative assumptions still matter.
+				</p>
+			</div>
+			<div class="three-up">
+				{
+					financeBenefits.map((benefit, index) => (
+						<article
+							class="editorial-card"
+							data-reveal
+							style={`--reveal-delay: ${index * 80}ms`}
+						>
+							<span class="editorial-card__number">
+								{String(index + 1).padStart(2, '0')}
+							</span>
+							<h3>{benefit.title}</h3>
+							<p>{benefit.copy}</p>
+						</article>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="section section--cream">
+		<div class="container">
+			<div class="section-heading">
+				<div>
+					<span class="eyebrow">Current bank pathways</span>
+					<h2>Green lending from major New Zealand banks.</h2>
+				</div>
+				<div>
+					<p class="lede muted">
+						Offers change. Follow the source and confirm every rate, limit and eligibility
+						requirement directly with the lender.
+					</p>
+					<p class="finance-note">Information reviewed {financeReviewed}.</p>
+				</div>
+			</div>
+
+			<div class="finance-list">
+				{
+					financeOptions.map((option) => (
+						<a
+							class="finance-row"
+							href={option.source}
+							target="_blank"
+							rel="noreferrer"
+							aria-label={`${option.provider} ${option.product} — opens official lender website`}
+						>
+							<span class="finance-row__provider">{option.provider}</span>
+							<span class="finance-row__product">{option.product}</span>
+							<span class="finance-row__rate">{option.rate}<br />{option.term}</span>
+							<span class="finance-row__limit">{option.limit}</span>
+							<span class="finance-row__arrow" aria-hidden="true">↗</span>
+						</a>
+					))
+				}
+			</div>
+
+			<div class="notice" style="margin-top: 2rem;">
+				<strong>Important</strong>
+				<p>
+					These products are offered by independent lenders, not Energy Point. Lending,
+					equity, credit and product criteria apply. Promotional rates can revert to higher
+					rates. Energy Point does not provide financial advice and receives no authority to
+					approve lending.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section section--dark">
+		<div class="container">
+			<div class="section-heading">
+				<div>
+					<span class="eyebrow">No invented incentives</span>
+					<h2>There is no active nationwide solar rebate.</h2>
+				</div>
+				<p class="lede muted">
+					As of August 2026, New Zealand does not have a nationwide government rebate for
+					residential rooftop solar. Announced election policies are proposals, not current
+					entitlements.
+				</p>
+			</div>
+			<div class="metric-band">
+				<div class="metric" data-reveal>
+					<strong>01</strong>
+					<span>Check current lender terms</span>
+				</div>
+				<div class="metric" data-reveal style="--reveal-delay: 80ms">
+					<strong>02</strong>
+					<span>Review conservative energy assumptions</span>
+				</div>
+				<div class="metric" data-reveal style="--reveal-delay: 160ms">
+					<strong>03</strong>
+					<span>Get independent financial advice</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section section--paper">
+		<div class="narrow">
+			<div class="section-heading" style="grid-template-columns: 1fr;">
+				<div>
+					<span class="eyebrow">Before you choose</span>
+					<h2>Four questions worth asking.</h2>
+				</div>
+			</div>
+			<div class="numbered-grid">
+				<article class="numbered-item">
+					<span class="numbered-item__number">01</span>
+					<div>
+						<h3>What happens after the special rate?</h3>
+						<p>Understand the revert rate, repayment term and total borrowing cost.</p>
+					</div>
+				</article>
+				<article class="numbered-item">
+					<span class="numbered-item__number">02</span>
+					<div>
+						<h3>What does eligibility require?</h3>
+						<p>Ask about home-loan status, equity, approved products and documentation.</p>
+					</div>
+				</article>
+				<article class="numbered-item">
+					<span class="numbered-item__number">03</span>
+					<div>
+						<h3>Are savings assumptions conservative?</h3>
+						<p>Model your real usage, retailer plan and likely export rather than a headline.</p>
+					</div>
+				</article>
+				<article class="numbered-item">
+					<span class="numbered-item__number">04</span>
+					<div>
+						<h3>Will the design still suit you later?</h3>
+						<p>Consider demand growth, EVs, storage and likely time in the property.</p>
+					</div>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<CTASection
+		eyebrow="Technical clarity first"
+		title="Build the energy case before the finance case."
+		copy="We will help define the right system and the assumptions behind it. Then you can take a clear proposal to your lender."
+		label="Discuss my project"
+	/>
+</BaseLayout>
+

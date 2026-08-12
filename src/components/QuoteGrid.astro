@@ -1,0 +1,29 @@
+---
+interface Quote {
+	quote: string;
+	name: string;
+	location: string;
+}
+
+interface Props {
+	items: readonly Quote[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="quote-grid">
+	{
+		items.map((item, index) => (
+			<figure
+				class="quote-card"
+				data-reveal
+				style={`--reveal-delay: ${index * 90}ms`}
+			>
+				<blockquote>“{item.quote}”</blockquote>
+				<figcaption>{item.name} · {item.location}</figcaption>
+			</figure>
+		))
+	}
+</div>
+

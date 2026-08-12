@@ -1,0 +1,223 @@
+---
+import CTASection from '../components/CTASection.astro';
+import EnergyFlow from '../components/EnergyFlow.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import Hero from '../components/Hero.astro';
+import { featuredFaqs } from '../data/faqs';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const businessFlow = [
+	{
+		title: 'Profile',
+		copy: 'Map interval data, operating hours, peaks and critical loads.',
+	},
+	{
+		title: 'Design',
+		copy: 'Match generation to useful daytime demand and available roof space.',
+	},
+	{
+		title: 'Integrate',
+		copy: 'Coordinate switchboards, metering, network requirements and operations.',
+	},
+	{
+		title: 'Monitor',
+		copy: 'Track output and see whether the system is performing as designed.',
+	},
+	{
+		title: 'Evolve',
+		copy: 'Plan a pathway for storage, fleet charging or changing demand.',
+	},
+];
+
+const commercialSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'Service',
+	name: 'Commercial solar and business energy design',
+	serviceType: 'Commercial solar installation',
+	areaServed: 'Waikato, New Zealand',
+};
+---
+
+<BaseLayout
+	title="Commercial Solar Waikato"
+	description="Commercial solar and smart energy systems designed around operating hours, load profile and business growth across Waikato."
+	image="/images/process-installation.png"
+	schema={commercialSchema}
+>
+	<Hero
+		page
+		eyebrow="Commercial energy"
+		title="Make energy an operating advantage."
+		intro="A commercial solar system should do more than cover a roof. It should match real demand, strengthen cost control and support where the business is going."
+		image="/images/process-installation.png"
+		alt="A professional Energy Point commercial solar installation"
+		cta="Discuss a business system"
+		ctaHref="/contact/?audience=Commercial"
+		position="center 42%"
+	/>
+
+	<section class="section section--cream">
+		<div class="container intro-statement">
+			<div>
+				<span class="eyebrow">Energy meets operations</span>
+			</div>
+			<div class="intro-statement__body" data-reveal>
+				<p>
+					The strongest commercial case starts with when your business uses power — not
+					how many panels can fit.
+				</p>
+				<p class="lede muted">
+					We bring interval data, site conditions, roof capacity, operating hours and
+					future demand into one practical design. That gives decision-makers a clearer
+					view of the technical system and the assumptions behind it.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section section--paper">
+		<div class="container">
+			<div class="section-heading">
+				<div>
+					<span class="eyebrow">The commercial lens</span>
+					<h2>Design around the business, not around a brochure.</h2>
+				</div>
+				<p class="lede muted">
+					Three realities shape every proposal before equipment enters the conversation.
+				</p>
+			</div>
+			<div class="three-up">
+				<article class="editorial-card" data-reveal>
+					<span class="editorial-card__number">01</span>
+					<h3>Load</h3>
+					<p>
+						When demand occurs, how consistent it is, and where solar generation can be
+						used directly.
+					</p>
+				</article>
+				<article class="editorial-card" data-reveal style="--reveal-delay: 80ms">
+					<span class="editorial-card__number">02</span>
+					<h3>Site</h3>
+					<p>
+						Roof condition, shading, switchboard capacity, metering, access and network
+						requirements.
+					</p>
+				</article>
+				<article class="editorial-card" data-reveal style="--reveal-delay: 160ms">
+					<span class="editorial-card__number">03</span>
+					<h3>Growth</h3>
+					<p>
+						Future operating hours, electrification, fleet charging, storage and expansion.
+					</p>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<section class="section section--dark">
+		<div class="container">
+			<div class="section-heading">
+				<div>
+					<span class="eyebrow">From data to delivery</span>
+					<h2>A disciplined commercial energy pathway.</h2>
+				</div>
+				<p class="lede muted">
+					Every stage is designed to make the next business decision clearer.
+				</p>
+			</div>
+			<EnergyFlow steps={businessFlow} />
+		</div>
+	</section>
+
+	<section class="media-split media-split--reverse">
+		<div class="media-split__media">
+			<img
+				src="/images/home-detail-1600.webp"
+				alt="High-performance solar energy technology"
+				width="1920"
+				height="1080"
+				loading="lazy"
+				decoding="async"
+			/>
+		</div>
+		<div class="media-split__content">
+			<span class="eyebrow">Built for due diligence</span>
+			<h2>Clear assumptions make stronger investments.</h2>
+			<p class="lede">
+				We explain what the model includes, where risk sits and which decisions affect the
+				outcome. No opaque savings headline. No one-size-fits-all package.
+			</p>
+			<ul class="feature-list">
+				<li>Usage and generation modelling</li>
+				<li>Site-specific technical scope</li>
+				<li>Staged upgrade options</li>
+				<li>Monitoring and maintenance planning</li>
+			</ul>
+			<a class="button" href="/contact/?audience=Commercial">Start a commercial review</a>
+		</div>
+	</section>
+
+	<section class="section section--cream">
+		<div class="container">
+			<div class="section-heading">
+				<div>
+					<span class="eyebrow">End-to-end delivery</span>
+					<h2>One accountable team across the project.</h2>
+				</div>
+				<p class="lede muted">
+					From the first data request to handover and long-term system care.
+				</p>
+			</div>
+			<div class="numbered-grid">
+				<article class="numbered-item" data-reveal>
+					<span class="numbered-item__number">01</span>
+					<div>
+						<h3>Discovery and data</h3>
+						<p>Understand demand, constraints, stakeholders and business objectives.</p>
+					</div>
+				</article>
+				<article class="numbered-item" data-reveal>
+					<span class="numbered-item__number">02</span>
+					<div>
+						<h3>Technical and commercial case</h3>
+						<p>Present system architecture, scope, assumptions and delivery options.</p>
+					</div>
+				</article>
+				<article class="numbered-item" data-reveal>
+					<span class="numbered-item__number">03</span>
+					<div>
+						<h3>Planned implementation</h3>
+						<p>Coordinate approvals, site access and works around live operations.</p>
+					</div>
+				</article>
+				<article class="numbered-item" data-reveal>
+					<span class="numbered-item__number">04</span>
+					<div>
+						<h3>Performance and care</h3>
+						<p>Commission, monitor and maintain the system for long-term value.</p>
+					</div>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<section class="section section--paper">
+		<div class="container faq-layout">
+			<div class="faq-intro">
+				<span class="eyebrow">Commercial questions</span>
+				<h2>Clarity before commitment.</h2>
+				<a class="text-link" href="/frequently-asked-questions/">View all FAQs</a>
+			</div>
+			<FAQAccordion items={featuredFaqs.slice(0, 4)} />
+		</div>
+	</section>
+
+	<CTASection
+		audience="Commercial"
+		eyebrow="Commercial energy review"
+		title="Put your energy data to work."
+		copy="Bring us your operating profile, project questions or early-stage idea. We will help define the right next step."
+		label="Start the conversation"
+	/>
+</BaseLayout>
+
