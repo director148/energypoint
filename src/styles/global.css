@@ -497,7 +497,8 @@ p {
 	align-items: center;
 	justify-content: center;
 	border: 1px solid rgba(255, 255, 255, 0.24);
-	border-radius: 50%;
+	border-radius: 0.9rem;
+	corner-shape: squircle;
 	background: rgba(16, 19, 15, 0.25);
 	color: var(--white);
 }
@@ -1130,6 +1131,64 @@ p {
 	font-size: 0.77rem;
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
+}
+
+.review-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1rem;
+}
+
+.review-card {
+	display: flex;
+	flex-direction: column;
+	gap: 1.1rem;
+	padding: clamp(1.8rem, 4vw, 3rem);
+	border: 1px solid var(--line-dark);
+	border-radius: var(--radius-md);
+}
+
+.review-card__stars {
+	display: flex;
+	gap: 0.2rem;
+	color: var(--moss-bright);
+	font-size: 1rem;
+	letter-spacing: 0.08em;
+}
+
+.review-card h3 {
+	margin: 0;
+	max-width: 18ch;
+	color: var(--cream);
+	font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+	letter-spacing: -0.03em;
+	line-height: 1.15;
+}
+
+.review-card blockquote {
+	margin: 0;
+	color: rgba(243, 240, 231, 0.82);
+	font-size: 1.02rem;
+	font-style: italic;
+	line-height: 1.65;
+}
+
+.review-card figcaption {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.6rem 1rem;
+	margin-top: auto;
+	padding-top: 0.6rem;
+	color: rgba(243, 240, 231, 0.64);
+	font-size: 0.77rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.review-card__source {
+	color: var(--moss-bright);
 }
 
 /* FAQ */
@@ -1774,6 +1833,7 @@ p {
 	.benefit-grid,
 	.numbered-grid,
 	.quote-grid,
+	.review-grid,
 	.three-up,
 	.metric-band,
 	.contact-form {

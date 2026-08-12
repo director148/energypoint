@@ -5,8 +5,9 @@ import CTASection from '../components/CTASection.astro';
 import FAQAccordion from '../components/FAQAccordion.astro';
 import Hero from '../components/Hero.astro';
 import ProcessTimeline from '../components/ProcessTimeline.astro';
+import ReviewGrid from '../components/ReviewGrid.astro';
 import { featuredFaqs } from '../data/faqs';
-import { homeBenefits } from '../data/site';
+import { featuredReviews, homeBenefits } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const serviceSchema = {
@@ -154,6 +155,25 @@ const serviceSchema = {
 				<li>No imaginary government rebates</li>
 			</ul>
 			<a class="button" href="/finance/">See current finance pathways</a>
+		</div>
+	</section>
+
+	<section class="section section--forest">
+		<div class="container">
+			<div class="section-heading">
+				<div>
+					<span class="eyebrow">Customer reviews</span>
+					<h2>What customers say after the install.</h2>
+				</div>
+				<p class="lede muted">
+					What Waikato homeowners say after working with Energy Point — from first chat
+					to switch-on.
+				</p>
+			</div>
+			<ReviewGrid items={featuredReviews} />
+			<p style="margin-top: 2rem;">
+				<a class="text-link" href="/reviews/">Read every review</a>
+			</p>
 		</div>
 	</section>
 

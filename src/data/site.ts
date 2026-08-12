@@ -25,6 +25,7 @@ export const navigation = [
 	{ label: 'Rural', href: '/rural/' },
 	{ label: 'Maintenance', href: '/maintenance/' },
 	{ label: 'About us', href: '/about-us/' },
+	{ label: 'Reviews', href: '/reviews/' },
 ] as const;
 
 export const audiences = [
@@ -127,35 +128,84 @@ export const values = [
 	},
 ] as const;
 
-// Migrated from the current public site. Confirm names and permission before production launch.
+export type Review = {
+	headline?: string;
+	quote: string;
+	name: string;
+	location?: string;
+	source?: 'google' | 'website';
+	rating?: 5;
+};
+
+export const reviews: readonly Review[] = [
+	{
+		headline: 'The whole process was so easy.',
+		quote:
+			'From the first chat to the final install, the Energy Point team were awesome to deal with. They explained everything clearly and never pushed us into anything. Now we’re saving money and feel good knowing we’re using clean energy. Couldn’t be happier!',
+		name: 'Emma & Josh',
+		location: 'Cambridge',
+		source: 'website',
+		rating: 5,
+	},
+	{
+		headline: 'Local legends – highly recommend!',
+		quote:
+			'We’d been thinking about solar for ages but didn’t know where to start. Energy Point made it simple. They really listened to what we needed and gave us options that made sense. It’s great to work with a local team that actually cares.',
+		name: 'Tania R.',
+		location: 'Hamilton',
+		source: 'website',
+		rating: 5,
+	},
+	{
+		headline: 'Fantastic from start to finish.',
+		quote:
+			'We had our solar system installed last year by the team at Energy Point and they were fantastic from start to finish. They were great to deal with and designed a system that perfectly suited our energy use. The installation was tidy and professional, and Nick and the team managed the whole project seamlessly. We’re extremely happy with the result and would highly recommend Energy Point to anyone considering solar.',
+		name: 'Lisa',
+		source: 'google',
+		rating: 5,
+	},
+	{
+		headline: 'Excellent service, start to finish.',
+		quote:
+			'The team were fantastic to deal with from start to finish. They made all our options easy to understand and explained everything clearly, so we felt confident in our decision. The installation process was smooth and hassle-free, and they’ve continued to be incredibly helpful with any questions we’ve had since the install. We really appreciate the excellent service. Thanks so much!',
+		name: 'Megan Bowen',
+		source: 'google',
+		rating: 5,
+	},
+	{
+		quote:
+			'They came out, looked at our property and built a system that works for our power use. The difference in our bills has been huge.',
+		name: 'Mike & Leanne',
+		location: 'Te Awamutu',
+		source: 'website',
+		rating: 5,
+	},
+	{
+		quote:
+			'No fluff, just good honest service. They explained everything in plain terms and had our system up and running in no time.',
+		name: 'Shane B.',
+		location: 'Morrinsville',
+		source: 'website',
+		rating: 5,
+	},
+] as const;
+
+export const featuredReviews = reviews.slice(0, 4);
+
 export const testimonials = {
-	residential: [
-		{
-			quote:
-				'From the first chat to the final install, the Energy Point team explained everything clearly and never pushed us into anything.',
-			name: 'Emma & Josh',
-			location: 'Cambridge',
-		},
-		{
-			quote:
-				'They listened to what we needed and gave us options that made sense. It is great to work with a local team that actually cares.',
-			name: 'Tania R.',
-			location: 'Hamilton',
-		},
-	],
-	rural: [
-		{
-			quote:
-				'They came out, looked at our property and built a system that works for our power use. The difference in our bills has been huge.',
-			name: 'Mike & Leanne',
-			location: 'Te Awamutu',
-		},
-		{
-			quote:
-				'No fluff, just good honest service. They explained everything in plain terms and had our system up and running in no time.',
-			name: 'Shane B.',
-			location: 'Morrinsville',
-		},
-	],
+	residential: reviews
+		.filter((review) => review.name === 'Emma & Josh' || review.name === 'Tania R.')
+		.map((review) => ({
+			quote: review.headline ?? review.quote,
+			name: review.name,
+			location: review.location ?? '',
+		})),
+	rural: reviews
+		.filter((review) => review.name === 'Mike & Leanne' || review.name === 'Shane B.')
+		.map((review) => ({
+			quote: review.quote,
+			name: review.name,
+			location: review.location ?? '',
+		})),
 } as const;
 

@@ -1,0 +1,73 @@
+---
+import CTASection from '../components/CTASection.astro';
+import Hero from '../components/Hero.astro';
+import ReviewGrid from '../components/ReviewGrid.astro';
+import { reviews, site } from '../data/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const reviewSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'LocalBusiness',
+	name: site.name,
+	url: site.url,
+	aggregateRating: {
+		'@type': 'AggregateRating',
+		ratingValue: '5',
+		bestRating: '5',
+		reviewCount: String(reviews.length),
+	},
+	review: reviews.map((item) => ({
+		'@type': 'Review',
+		author: { '@type': 'Person', name: item.name },
+		reviewBody: item.quote,
+		name: item.headline,
+		reviewRating: {
+			'@type': 'Rating',
+			ratingValue: String(item.rating ?? 5),
+			bestRating: '5',
+		},
+	})),
+};
+---
+
+<BaseLayout
+	title="Customer Reviews"
+	description="What Waikato homeowners say about Energy Point — clear advice, no pressure, and a solar system that fits."
+	image="/images/residential-hero.jpg"
+	schema={reviewSchema}
+>
+	<Hero
+		page
+		eyebrow="Customer reviews"
+		title="Clear advice. No pressure. A system that fits."
+		intro="From the first conversation to switch-on and aftercare, this is what customers say about working with Energy Point."
+		image="/images/residential-hero.jpg"
+		alt="A Waikato home with an Energy Point solar installation"
+		cta="Start your energy plan"
+		ctaHref="/contact/"
+		position="center 48%"
+	/>
+
+	<section class="section section--forest">
+		<div class="container">
+			<div class="section-heading">
+				<div>
+					<span class="eyebrow">From the Waikato</span>
+					<h2>Five stars, in their own words.</h2>
+				</div>
+				<p class="lede muted">
+					Reviews from Energy Point customers, including Google reviews, kept in their
+					original wording.
+				</p>
+			</div>
+			<ReviewGrid items={reviews} />
+		</div>
+	</section>
+
+	<CTASection
+		eyebrow="Ready when you are"
+		title="See whether solar fits your property."
+		copy="Start with a no-pressure conversation about how you use energy, and what you want the system to do."
+		label="Talk to Energy Point"
+	/>
+</BaseLayout>

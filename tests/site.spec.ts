@@ -8,6 +8,7 @@ const routes = [
 	'/finance/',
 	'/maintenance/',
 	'/about-us/',
+	'/reviews/',
 	'/frequently-asked-questions/',
 	'/contact/',
 	'/thank-you/',

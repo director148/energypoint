@@ -1,0 +1,36 @@
+---
+import type { Review } from '../data/site';
+
+interface Props {
+	items: readonly Review[];
+}
+
+const { items } = Astro.props;
+
+const attribution = (item: Review) =>
+	[item.name, item.location].filter(Boolean).join(' · ');
+---
+
+<div class="review-grid">
+	{
+		items.map((item, index) => (
+			<figure
+				class="review-card"
+				data-reveal
+				style={`--reveal-delay: ${index * 80}ms`}
+			>
+				<div class="review-card__stars" aria-label={`${item.rating ?? 5} out of 5 stars`}>
+					{Array.from({ length: item.rating ?? 5 }).map(() => (
+						<span aria-hidden="true">★</span>
+					))}
+				</div>
+				{item.headline && <h3>{item.headline}</h3>}
+				<blockquote>“{item.quote}”</blockquote>
+				<figcaption>
+					<span>{attribution(item)}</span>
+					{item.source === 'google' && <span class="review-card__source">Google</span>}
+				</figcaption>
+			</figure>
+		))
+	}
+</div>
