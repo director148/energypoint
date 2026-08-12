@@ -28,7 +28,7 @@ Cloudflare Pages project `energypoint`.
 Required GitHub repository secrets:
 
 - `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_API_TOKEN` — create at https://dash.cloudflare.com/profile/api-tokens with
+- `CLOUDFLARE_API_TOKEN`: create at https://dash.cloudflare.com/profile/api-tokens with
   **Account → Cloudflare Pages → Edit**
 
 Required Cloudflare Pages env vars (for the contact form):

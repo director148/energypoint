@@ -28,7 +28,6 @@ const faqSchema = {
 >
 	<Hero
 		page
-		eyebrow="Energy knowledge"
 		title="Your questions, answered simply."
 		intro="Straight answers about what solar can do, what it cannot promise, and what a good decision should take into account."
 		image="/images/home-detail.png"
@@ -56,7 +55,7 @@ const faqSchema = {
 				<input
 					id="faq-search"
 					type="search"
-					placeholder="Search questions — try “battery”, “finance” or “maintenance”"
+					placeholder="Search questions. Try “battery”, “finance” or “maintenance”"
 					autocomplete="off"
 					data-faq-search
 				/>
@@ -76,7 +75,9 @@ const faqSchema = {
 									>
 										<summary>{item.question}</summary>
 										<div class="faq-item__answer">
-											<p>{item.answer}</p>
+											<div class="faq-item__answer-inner">
+												<p>{item.answer}</p>
+											</div>
 										</div>
 									</details>
 								))}
@@ -93,33 +94,36 @@ const faqSchema = {
 	</section>
 
 	<CTASection
-		eyebrow="Still deciding?"
 		title="Bring us the question behind the question."
 		copy="Tell us what you are trying to achieve and where the uncertainty sits. We will give you a practical next step."
 		label="Ask Energy Point"
 	/>
 
 	<script>
-		const input = document.querySelector<HTMLInputElement>('[data-faq-search]');
-		const groups = document.querySelectorAll<HTMLElement>('[data-faq-group]');
-		const empty = document.querySelector<HTMLElement>('[data-faq-empty]');
+		document.addEventListener('astro:page-load', () => {
+			const input = document.querySelector<HTMLInputElement>('[data-faq-search]');
+			const groups = document.querySelectorAll<HTMLElement>('[data-faq-group]');
+			const empty = document.querySelector<HTMLElement>('[data-faq-empty]');
 
-		input?.addEventListener('input', () => {
-			const query = input.value.trim().toLowerCase();
-			let visibleCount = 0;
+			if (!input) return;
 
-			groups.forEach((group) => {
-				let groupCount = 0;
-				group.querySelectorAll<HTMLElement>('[data-faq-item]').forEach((item) => {
-					const matches = !query || item.dataset.searchText?.includes(query);
-					item.hidden = !matches;
-					if (matches) groupCount += 1;
+			input.addEventListener('input', () => {
+				const query = input.value.trim().toLowerCase();
+				let visibleCount = 0;
+
+				groups.forEach((group) => {
+					let groupCount = 0;
+					group.querySelectorAll<HTMLElement>('[data-faq-item]').forEach((item) => {
+						const matches = !query || item.dataset.searchText?.includes(query);
+						item.hidden = !matches;
+						if (matches) groupCount += 1;
+					});
+					group.hidden = groupCount === 0;
+					visibleCount += groupCount;
 				});
-				group.hidden = groupCount === 0;
-				visibleCount += groupCount;
-			});
 
-			if (empty) empty.style.display = visibleCount === 0 ? 'block' : 'none';
+				if (empty) empty.style.display = visibleCount === 0 ? 'block' : 'none';
+			});
 		});
 	</script>
 </BaseLayout>

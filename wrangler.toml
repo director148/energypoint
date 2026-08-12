@@ -1,4 +1,4 @@
-# Cloudflare Pages — Energy Point (solar.florul.com)
+# Cloudflare Pages: Energy Point (solar.florul.com)
 # Auto-deploys from GitHub Actions on push to main.
 # Manual: npm run deploy
 name = "energypoint"

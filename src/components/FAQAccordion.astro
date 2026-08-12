@@ -14,10 +14,11 @@ const { items } = Astro.props;
 			<details class="faq-item" data-faq-item>
 				<summary>{item.question}</summary>
 				<div class="faq-item__answer">
-					<p>{item.answer}</p>
+					<div class="faq-item__answer-inner">
+						<p>{item.answer}</p>
+					</div>
 				</div>
 			</details>
 		))
 	}
 </div>
-

@@ -1,6 +1,5 @@
 ---
 interface Props {
-	eyebrow?: string;
 	title: string;
 	intro: string;
 	image: string;
@@ -13,7 +12,6 @@ interface Props {
 }
 
 const {
-	eyebrow,
 	title,
 	intro,
 	image,
@@ -28,8 +26,8 @@ const {
 const imageBase = image
 	.replace(/^\/images\//, '')
 	.replace(/\.(png|jpe?g|webp)$/i, '');
-const optimizedImage = `/images/${imageBase}-1600.webp`;
-const optimizedSrcset = `/images/${imageBase}-960.webp 960w, ${optimizedImage} 1600w`;
+const optimizedImage = `/images/${imageBase}-1200.webp`;
+const optimizedSrcset = `/images/${imageBase}-640.webp 640w, /images/${imageBase}-960.webp 960w, /images/${imageBase}-1200.webp 1200w, /images/${imageBase}-1600.webp 1600w`;
 ---
 
 <section class:list={['hero', page && 'hero--page']} style={`--hero-position: ${position};`}>
@@ -46,13 +44,6 @@ const optimizedSrcset = `/images/${imageBase}-960.webp 960w, ${optimizedImage} 1
 		/>
 	</div>
 	<div class="hero__content">
-		{
-			eyebrow && (
-				<div class="hero__kicker">
-					<span>{eyebrow}</span>
-				</div>
-			)
-		}
 		<div class="hero__grid">
 			<div class="hero__title">
 				<h1>{title}</h1>

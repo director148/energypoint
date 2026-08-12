@@ -1,10 +1,23 @@
 ---
 import { audiences } from '../data/site';
+
+const optimized = (image: string) => {
+	const base = image
+		.replace(/^\/images\//, '')
+		.replace(/\.(png|jpe?g|webp)$/i, '')
+		.replace(/-(?:640|960|1200|1600)$/i, '');
+	return {
+		src: `/images/${base}-960.webp`,
+		srcset: `/images/${base}-640.webp 640w, /images/${base}-960.webp 960w`,
+	};
+};
 ---
 
 <div class="audience-grid">
 	{
-		audiences.map((audience, index) => (
+		audiences.map((audience, index) => {
+			const media = optimized(audience.image);
+			return (
 			<a
 				class="audience-card"
 				href={audience.href}
@@ -13,7 +26,9 @@ import { audiences } from '../data/site';
 			>
 				<div class="audience-card__media">
 					<img
-						src={audience.image}
+						src={media.src}
+						srcset={media.srcset}
+						sizes="(max-width: 900px) 100vw, 33vw"
 						alt={audience.alt}
 						width="1200"
 						height="1500"
@@ -28,7 +43,8 @@ import { audiences } from '../data/site';
 					<span class="text-link">Explore {audience.title}</span>
 				</div>
 			</a>
-		))
+			);
+		})
 	}
 </div>
 

@@ -19,7 +19,11 @@ const attribution = (item: Review) =>
 				data-reveal
 				style={`--reveal-delay: ${index * 80}ms`}
 			>
-				<div class="review-card__stars" aria-label={`${item.rating ?? 5} out of 5 stars`}>
+				<div
+					class="review-card__stars"
+					role="img"
+					aria-label={`${item.rating ?? 5} out of 5 stars`}
+				>
 					{Array.from({ length: item.rating ?? 5 }).map(() => (
 						<span aria-hidden="true">★</span>
 					))}

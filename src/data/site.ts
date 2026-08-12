@@ -30,7 +30,7 @@ export const navigation = [
 
 export const audiences = [
 	{
-		eyebrow: '01 — Home',
+		eyebrow: '01 · Home',
 		title: 'Residential',
 		copy: 'A home energy plan designed around how your household actually lives.',
 		href: '/residential/',
@@ -38,7 +38,7 @@ export const audiences = [
 		alt: 'A Waikato home fitted with rooftop solar panels',
 	},
 	{
-		eyebrow: '02 — Business',
+		eyebrow: '02 · Business',
 		title: 'Commercial',
 		copy: 'Turn daytime energy demand into a more controlled operating cost.',
 		href: '/commercial/',
@@ -46,7 +46,7 @@ export const audiences = [
 		alt: 'Solar panels supplying a commercial energy system',
 	},
 	{
-		eyebrow: '03 — Land',
+		eyebrow: '03 · Land',
 		title: 'Rural',
 		copy: 'Hard-working solar for sheds, pumps, workshops and productive land.',
 		href: '/rural/',
@@ -66,7 +66,7 @@ export const process = [
 	{
 		number: '02',
 		title: 'Design',
-		copy: 'Our technical design is shaped around your roof, usage profile, future plans and budget — never a template.',
+		copy: 'Our technical design is shaped around your roof, usage profile, future plans and budget, never a template.',
 		image: '/images/process-design-960.webp',
 		alt: 'An Energy Point specialist planning a solar design',
 	},
@@ -90,29 +90,37 @@ export const homeBenefits = [
 	{
 		title: 'Spend less',
 		copy: 'Use more of the energy you generate and buy less from the grid.',
-		icon: 'savings',
+		image: '/images/home-hero.jpg',
+		alt: 'Solar installation on a Waikato home',
+		position: 'center 48%',
 	},
 	{
 		title: 'Know more',
 		copy: 'See how your property produces and uses power in real time.',
-		icon: 'monitor',
+		image: '/images/process-design.jpg',
+		alt: 'Energy system monitoring and design in progress',
+		position: 'center 40%',
 	},
 	{
 		title: 'Plan ahead',
 		copy: 'Build a system ready for batteries, EV charging and changing demand.',
-		icon: 'future',
+		image: '/images/home-detail.png',
+		alt: 'Solar panels on a property ready for future upgrades',
+		position: 'center 40%',
 	},
 	{
 		title: 'Stay supported',
 		copy: 'Get a local team for maintenance, upgrades and straight answers.',
-		icon: 'support',
+		image: '/images/process-support.jpg',
+		alt: 'Local technician maintaining a solar installation',
+		position: 'center 55%',
 	},
 ] as const;
 
 export const values = [
 	{
 		title: 'Energy-first thinking',
-		copy: 'We design for performance and your usage profile — not a panel count.',
+		copy: 'We design for performance and your usage profile, not a panel count.',
 	},
 	{
 		title: 'Transparent advice',
@@ -148,7 +156,7 @@ export const reviews: readonly Review[] = [
 		rating: 5,
 	},
 	{
-		headline: 'Local legends – highly recommend!',
+		headline: 'Local legends: highly recommend!',
 		quote:
 			'We’d been thinking about solar for ages but didn’t know where to start. Energy Point made it simple. They really listened to what we needed and gave us options that made sense. It’s great to work with a local team that actually cares.',
 		name: 'Tania R.',

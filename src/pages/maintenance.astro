@@ -1,4 +1,5 @@
 ---
+import BenefitsGrid from '../components/BenefitsGrid.astro';
 import CTASection from '../components/CTASection.astro';
 import FAQAccordion from '../components/FAQAccordion.astro';
 import Hero from '../components/Hero.astro';
@@ -6,6 +7,33 @@ import { faqGroups } from '../data/faqs';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const careFaqs = faqGroups.find((group) => group.id === 'care')?.items ?? [];
+
+const carePaths = [
+	{
+		number: '01',
+		title: 'Repair',
+		copy: 'Investigate inverter faults, physical damage, alerts and unexplained drops in generation, then define the safest practical response.',
+		image: '/images/process-support.jpg',
+		alt: 'Energy Point specialist investigating a solar system issue',
+		position: 'center 48%',
+	},
+	{
+		number: '02',
+		title: 'Upgrade',
+		copy: 'Review batteries, monitoring, component replacement or expansion without losing sight of the existing system constraints.',
+		image: '/images/process-design.jpg',
+		alt: 'Planning a solar system upgrade around existing equipment',
+		position: 'center 42%',
+	},
+	{
+		number: '03',
+		title: 'Maintain',
+		copy: 'Use scheduled visual, electrical and performance checks to catch smaller issues before they become expensive interruptions.',
+		image: '/images/process-consultation.jpg',
+		alt: 'On-site solar maintenance and performance check',
+		position: 'center 35%',
+	},
+];
 
 const maintenanceSchema = {
 	'@context': 'https://schema.org',
@@ -18,15 +46,14 @@ const maintenanceSchema = {
 
 <BaseLayout
 	title="Solar Maintenance Waikato"
-	description="Solar system checks, repair, performance investigation and upgrades across Waikato — including systems installed by other providers."
+	description="Solar system checks, repair, performance investigation and upgrades across Waikato, including systems installed by other providers."
 	image="/images/process-support.jpg"
 	schema={maintenanceSchema}
 >
 	<Hero
 		page
-		eyebrow="Maintenance & support"
 		title="Keep good energy working."
-		intro="Protect system performance with monitoring, proactive checks, practical repairs and considered upgrades — whether we installed it or not."
+		intro="Protect system performance with monitoring, proactive checks, practical repairs and considered upgrades, whether we installed it or not."
 		image="/images/process-support.jpg"
 		alt="An Energy Point specialist supporting a solar energy system"
 		cta="Book a system check"
@@ -60,35 +87,10 @@ const maintenanceSchema = {
 					<h2>Respond now. Improve next. Prevent later.</h2>
 				</div>
 				<p class="lede muted">
-					Start with the problem you can see — or the one you would rather catch early.
+					Start with the problem you can see, or the one you would rather catch early.
 				</p>
 			</div>
-			<div class="three-up">
-				<article class="editorial-card" data-reveal>
-					<span class="editorial-card__number">01</span>
-					<h3>Repair</h3>
-					<p>
-						Investigate inverter faults, physical damage, alerts and unexplained drops in
-						generation, then define the safest practical response.
-					</p>
-				</article>
-				<article class="editorial-card" data-reveal style="--reveal-delay: 80ms">
-					<span class="editorial-card__number">02</span>
-					<h3>Upgrade</h3>
-					<p>
-						Review batteries, monitoring, component replacement or expansion without losing
-						sight of the existing system constraints.
-					</p>
-				</article>
-				<article class="editorial-card" data-reveal style="--reveal-delay: 160ms">
-					<span class="editorial-card__number">03</span>
-					<h3>Maintain</h3>
-					<p>
-						Use scheduled visual, electrical and performance checks to catch smaller issues
-						before they become expensive interruptions.
-					</p>
-				</article>
-			</div>
+			<BenefitsGrid items={carePaths} />
 		</div>
 	</section>
 
@@ -179,7 +181,6 @@ const maintenanceSchema = {
 
 	<CTASection
 		audience="Maintenance"
-		eyebrow="Book a system check"
 		title="Give your solar system the care it deserves."
 		copy="Tell us what you are seeing, when it changed and who installed the system. We will help define the right next step."
 		label="Request maintenance"

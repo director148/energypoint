@@ -12,22 +12,30 @@ const benefits = [
 	{
 		title: 'Offset daytime load',
 		copy: 'Match generation to sheds, pumps, workshops and other productive demand.',
-		icon: 'sun',
+		image: '/images/rural-hero.png',
+		alt: 'Solar panels on a Waikato farm shed above a working dairy yard',
+		position: 'center 35%',
 	},
 	{
 		title: 'Use roof or ground',
 		copy: 'Consider available structures and ground-mounted options around real farm access.',
-		icon: 'farm',
+		image: '/images/process-installation.png',
+		alt: 'Solar panels being installed on a rural metal roof',
+		position: 'center 40%',
 	},
 	{
 		title: 'Plan for resilience',
 		copy: 'Assess storage and system architecture around critical rural loads.',
-		icon: 'battery',
+		image: '/images/process-design.jpg',
+		alt: 'Energy Point designer planning a solar system layout',
+		position: 'center 45%',
 	},
 	{
 		title: 'Keep it serviceable',
 		copy: 'Design for safe access, monitoring, cleaning and long-term maintenance.',
-		icon: 'support',
+		image: '/images/process-support.jpg',
+		alt: 'Technician cleaning solar panels on a rural property',
+		position: 'center 55%',
 	},
 ];
 
@@ -48,9 +56,8 @@ const ruralSchema = {
 >
 	<Hero
 		page
-		eyebrow="Rural energy"
 		title="Put your land to work twice."
-		intro="Solar designed around the demands of rural life — from dairy sheds and pumps to workshops, worker accommodation and ground-mounted systems."
+		intro="Solar designed around the demands of rural life: from dairy sheds and pumps to workshops, worker accommodation and ground-mounted systems."
 		image="/images/rural-hero.png"
 		alt="Ground-mounted solar panels on a rural Waikato property"
 		cta="Book a rural site review"
@@ -65,7 +72,8 @@ const ruralSchema = {
 			</div>
 			<div class="intro-statement__body" data-reveal>
 				<p>
-					A farm is not a large house. Its energy system should not be designed like one.
+					A farm is not a large house.<br />
+					Neither should its energy system.
 				</p>
 				<p class="lede muted">
 					Pumps, cooling, milking, workshops, accommodation and long cable runs create
@@ -84,7 +92,7 @@ const ruralSchema = {
 					<h2>Daylight and productive demand often arrive together.</h2>
 				</div>
 				<p class="lede muted">
-					The opportunity is real — but only when site, load and long-term serviceability
+					The opportunity is real, but only when site, load and long-term serviceability
 					are considered together.
 				</p>
 			</div>
@@ -108,7 +116,7 @@ const ruralSchema = {
 			<h2>Use the best part of the property.</h2>
 			<p class="lede">
 				Not every roof has the right orientation, structure or access. A ground-mounted
-				array can offer scale, maintenance access and flexibility — provided it works with
+				array can offer scale, maintenance access and flexibility, provided it works with
 				stock, vehicles, drainage and daily operations.
 			</p>
 			<ul class="feature-list">
@@ -213,7 +221,7 @@ const ruralSchema = {
 		<div class="container faq-layout">
 			<div class="faq-intro">
 				<span class="eyebrow">Rural solar questions</span>
-				<h2>Start with the practical detail.</h2>
+				<h2>Practical detail first.</h2>
 				<a class="text-link" href="/frequently-asked-questions/">View all FAQs</a>
 			</div>
 			<FAQAccordion items={featuredFaqs.slice(0, 4)} />
@@ -222,7 +230,6 @@ const ruralSchema = {
 
 	<CTASection
 		audience="Rural"
-		eyebrow="Free rural site review"
 		title="Walk the property with an energy specialist."
 		copy="Show us how the operation works. We will help identify where solar could earn its place."
 		label="Book my site review"

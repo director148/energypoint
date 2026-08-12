@@ -1,10 +1,23 @@
 ---
 import { process } from '../data/site';
+
+const optimized = (image: string) => {
+	const base = image
+		.replace(/^\/images\//, '')
+		.replace(/\.(png|jpe?g|webp)$/i, '')
+		.replace(/-(?:640|960|1200|1600)$/i, '');
+	return {
+		src: `/images/${base}-640.webp`,
+		srcset: `/images/${base}-640.webp 640w, /images/${base}-960.webp 960w`,
+	};
+};
 ---
 
 <div class="process-list">
 	{
-		process.map((step, index) => (
+		process.map((step, index) => {
+			const media = optimized(step.image);
+			return (
 			<article
 				class="process-item"
 				data-reveal
@@ -14,7 +27,9 @@ import { process } from '../data/site';
 				<h3>{step.title}</h3>
 				<p>{step.copy}</p>
 				<img
-					src={step.image}
+					src={media.src}
+					srcset={media.srcset}
+					sizes="(max-width: 900px) 100vw, 28rem"
 					alt={step.alt}
 					width="560"
 					height="350"
@@ -22,7 +37,8 @@ import { process } from '../data/site';
 					decoding="async"
 				/>
 			</article>
-		))
+			);
+		})
 	}
 </div>
 

@@ -1,10 +1,11 @@
 ---
-import Icon from './Icon.astro';
-
 interface Item {
 	title: string;
 	copy: string;
-	icon?: string;
+	image: string;
+	alt: string;
+	position?: string;
+	number?: string;
 }
 
 interface Props {
@@ -12,23 +13,51 @@ interface Props {
 }
 
 const { items } = Astro.props;
+const columns = items.length === 3 ? 3 : 4;
+
+const optimized = (image: string) => {
+	const base = image
+		.replace(/^\/images\//, '')
+		.replace(/\.(png|jpe?g|webp)$/i, '')
+		.replace(/-(?:640|960|1200|1600)$/i, '');
+	return {
+		src: `/images/${base}-960.webp`,
+		srcset: `/images/${base}-640.webp 640w, /images/${base}-960.webp 960w, /images/${base}-1200.webp 1200w`,
+	};
+};
 ---
 
-<div class="benefit-grid">
+<div class:list={['benefit-grid', columns === 3 && 'benefit-grid--3']}>
 	{
-		items.map((item, index) => (
-			<article
-				class="benefit-card"
-				data-reveal
-				style={`--reveal-delay: ${index * 60}ms`}
-			>
-				<div class="benefit-card__icon">
-					<Icon name={item.icon ?? 'sun'} />
-				</div>
-				<h3>{item.title}</h3>
-				<p>{item.copy}</p>
-			</article>
-		))
+		items.map((item, index) => {
+			const media = optimized(item.image);
+			return (
+				<article
+					class="benefit-card"
+					data-reveal
+					style={`--reveal-delay: ${index * 60}ms`}
+					aria-label={item.alt}
+				>
+					<div class="benefit-card__media" aria-hidden="true">
+						<img
+							src={media.src}
+							srcset={media.srcset}
+							sizes={columns === 3 ? '(max-width: 900px) 100vw, 33vw' : '(max-width: 900px) 100vw, 25vw'}
+							alt=""
+							width="960"
+							height="720"
+							loading="lazy"
+							decoding="async"
+							style={item.position ? `object-position: ${item.position}` : undefined}
+						/>
+					</div>
+					<div class="benefit-card__content">
+						{item.number && <span class="benefit-card__number">{item.number}</span>}
+						<h3>{item.title}</h3>
+						<p>{item.copy}</p>
+					</div>
+				</article>
+			);
+		})
 	}
 </div>
-

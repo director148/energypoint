@@ -1,5 +1,5 @@
 /**
- * Cloudflare Pages Function — contact enquiry handler.
+ * Cloudflare Pages Function: contact enquiry handler.
  * Env (Pages project → Settings → Variables):
  *   RESEND_API_KEY       required
  *   CONTACT_TO_EMAIL     optional (default sales@energypoint.nz)
@@ -18,7 +18,7 @@ export async function onRequestPost(context) {
 		return new Response('Invalid form data.', { status: 400 });
 	}
 
-	// Honeypot — treat as success so bots get no signal.
+	// Honeypot: treat as success so bots get no signal.
 	if (String(formData.get('bot-field') || '').trim()) {
 		return Response.redirect(thankYou, 303);
 	}

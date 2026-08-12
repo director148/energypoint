@@ -13,22 +13,30 @@ const benefits = [
 	{
 		title: 'Use your own energy',
 		copy: 'Match generation to daytime household demand and buy less from the grid.',
-		icon: 'home',
+		image: '/images/residential-hero.jpg',
+		alt: 'Residential solar installation on a Waikato home',
+		position: 'center 45%',
 	},
 	{
 		title: 'See what is happening',
 		copy: 'Monitor generation and performance from a clear app or online portal.',
-		icon: 'monitor',
+		image: '/images/process-design.jpg',
+		alt: 'Monitoring and designing a home energy system',
+		position: 'center 40%',
 	},
 	{
 		title: 'Prepare for what is next',
 		copy: 'Make considered choices about battery storage and EV charging.',
-		icon: 'future',
+		image: '/images/home-detail.png',
+		alt: 'Solar array ready for future home energy needs',
+		position: 'center 40%',
 	},
 	{
 		title: 'Keep local support',
 		copy: 'Call a Waikato team for maintenance, questions and future upgrades.',
-		icon: 'support',
+		image: '/images/process-consultation.jpg',
+		alt: 'Energy Point specialist meeting a homeowner',
+		position: 'center 30%',
 	},
 ];
 
@@ -49,9 +57,8 @@ const homeSchema = {
 >
 	<Hero
 		page
-		eyebrow="Residential energy"
 		title="A smarter home starts with how you use it."
-		intro="Lower bills are one outcome. A clear, resilient home energy plan — designed for your routines, roof and future — is the real goal."
+		intro="Lower bills are one outcome. A clear, resilient home energy plan, designed for your routines, roof and future, is the real goal."
 		image="/images/residential-hero.jpg"
 		alt="Solar panels installed on a contemporary Waikato home"
 		cta="Plan my home energy"
@@ -70,7 +77,7 @@ const homeSchema = {
 				</p>
 				<p class="lede muted">
 					We look at when you use electricity, where demand is changing and what matters
-					most — savings, resilience, an EV, a battery, or simply more control. Then we
+					most: savings, resilience, an EV, a battery, or simply more control. Then we
 					build a system that makes sense now and remains useful later.
 				</p>
 			</div>
@@ -214,7 +221,6 @@ const homeSchema = {
 
 	<CTASection
 		audience="Residential"
-		eyebrow="Your home energy plan"
 		title="Make the roof work for the life below it."
 		copy="Start with a no-pressure conversation about your home, energy use and future plans."
 		label="Plan my home system"

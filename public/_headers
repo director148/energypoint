@@ -1,6 +1,7 @@
 /images/*
   Cache-Control: public, max-age=31536000, immutable
   X-Content-Type-Options: nosniff
+  # Tip: enable Cloudflare Polish (lossy) on the zone for extra CDN compression of JPG/PNG.
 
 /*
   Referrer-Policy: strict-origin-when-cross-origin

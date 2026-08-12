@@ -99,13 +99,15 @@ const audiences = ['Residential', 'Commercial', 'Rural', 'Maintenance'];
 </form>
 
 <script>
-	const audience = new URLSearchParams(window.location.search).get('audience');
-	const select = document.querySelector<HTMLSelectElement>('[data-audience-select]');
+	document.addEventListener('astro:page-load', () => {
+		const audience = new URLSearchParams(window.location.search).get('audience');
+		const select = document.querySelector<HTMLSelectElement>('[data-audience-select]');
 
-	if (audience && select) {
-		const option = Array.from(select.options).find(
-			(item) => item.value.toLowerCase() === audience.toLowerCase(),
-		);
-		if (option) select.value = option.value;
-	}
+		if (audience && select) {
+			const option = Array.from(select.options).find(
+				(item) => item.value.toLowerCase() === audience.toLowerCase(),
+			);
+			if (option) select.value = option.value;
+		}
+	});
 </script>

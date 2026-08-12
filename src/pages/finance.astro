@@ -12,7 +12,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 >
 	<Hero
 		page
-		eyebrow="Finance pathways"
 		title="Make the numbers as clear as the energy plan."
 		intro="Explore current green lending options, understand the caveats and speak with your lender before deciding how to fund your system."
 		image="/images/finance-hero.jpg"
@@ -97,13 +96,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 							href={option.source}
 							target="_blank"
 							rel="noreferrer"
-							aria-label={`${option.provider} ${option.product} — opens official lender website`}
 						>
 							<span class="finance-row__provider">{option.provider}</span>
 							<span class="finance-row__product">{option.product}</span>
 							<span class="finance-row__rate">{option.rate}<br />{option.term}</span>
 							<span class="finance-row__limit">{option.limit}</span>
 							<span class="finance-row__arrow" aria-hidden="true">↗</span>
+							<span class="sr-only"> (opens official lender website)</span>
 						</a>
 					))
 				}
@@ -193,7 +192,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	</section>
 
 	<CTASection
-		eyebrow="Technical clarity first"
 		title="Build the energy case before the finance case."
 		copy="We will help define the right system and the assumptions behind it. Then you can take a clear proposal to your lender."
 		label="Discuss my project"
