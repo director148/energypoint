@@ -1533,15 +1533,17 @@ p {
 }
 
 .contact-details {
-	display: grid;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
 	gap: 0.75rem;
 	margin-top: 3rem;
-	justify-items: start;
 }
 
 .contact-details .button {
 	width: fit-content;
 	max-width: 100%;
+	font-size: 0.85rem;
 }
 
 .contact-details .button::after {
@@ -1549,6 +1551,7 @@ p {
 }
 
 .contact-details .muted {
+	flex-basis: 100%;
 	margin-top: 0.35rem;
 }
 
