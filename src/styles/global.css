@@ -60,6 +60,18 @@ body.nav-open {
 	overflow: hidden;
 }
 
+/* Keep logo + close control above the full-screen menu overlay */
+body.nav-open .site-header {
+	z-index: 102;
+}
+
+body.nav-open .menu-toggle {
+	position: fixed;
+	top: max(0.85rem, env(safe-area-inset-top, 0px));
+	right: max(0.85rem, env(safe-area-inset-right, 0px));
+	left: auto;
+}
+
 img,
 svg,
 video {
@@ -376,10 +388,18 @@ p {
 	z-index: 102;
 	display: inline-flex;
 	align-items: center;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.brand:focus:not(:focus-visible) {
+	outline: none;
 }
 
 .brand img {
 	width: clamp(5.12rem, 7.68vw, 7.04rem);
+	pointer-events: none;
+	user-select: none;
+	-webkit-user-drag: none;
 }
 
 .desktop-nav {
@@ -484,14 +504,27 @@ p {
 .header-actions {
 	display: flex;
 	align-items: center;
-	gap: 1rem;
+	gap: 0.85rem;
 }
 
 .header-phone {
-	font-size: 0.73rem;
+	font-size: 1.05rem;
 	font-weight: 700;
-	letter-spacing: 0.08em;
+	letter-spacing: 0.04em;
+	line-height: 1;
 	white-space: nowrap;
+}
+
+.header-actions .button {
+	min-height: 2.55rem;
+	padding: 0.55rem 1rem;
+	font-size: 0.68rem;
+	letter-spacing: 0.07em;
+}
+
+.header-actions .button::after {
+	width: 0.38rem;
+	height: 0.38rem;
 }
 
 .menu-toggle {
@@ -578,13 +611,13 @@ p {
 
 .mobile-menu nav > a {
 	display: block;
-	padding-block: 1rem;
+	padding-block: 0.7rem;
 	border-bottom: 1px solid var(--line-dark);
 	font-family: var(--font-body);
-	font-size: clamp(1.7rem, 7vw, 2.35rem);
+	font-size: clamp(1.15rem, 4.2vw, 1.45rem);
 	font-weight: 650;
-	letter-spacing: -0.03em;
-	line-height: 1.15;
+	letter-spacing: -0.02em;
+	line-height: 1.2;
 	color: var(--cream);
 	opacity: 0;
 	transform: translateY(0.7rem);
@@ -630,9 +663,10 @@ p {
 
 .mobile-menu__meta {
 	display: grid;
-	gap: 0.65rem;
+	justify-items: start;
+	gap: 0.85rem;
 	width: min(100%, 40rem);
-	margin: 2.5rem auto 0;
+	margin: 2rem auto 0;
 	color: rgba(243, 240, 231, 0.68);
 	font-size: 0.95rem;
 	line-height: 1.4;
@@ -649,8 +683,19 @@ p {
 	transition-delay: 300ms;
 }
 
-.mobile-menu__meta a {
+.mobile-menu__meta a:not(.button) {
 	color: inherit;
+}
+
+.mobile-menu__phone {
+	min-height: 3rem;
+	padding-inline: 1.25rem;
+	font-size: 0.9rem;
+	letter-spacing: 0.06em;
+}
+
+.mobile-menu__phone::after {
+	display: none;
 }
 
 /* Hero */
