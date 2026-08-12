@@ -7,29 +7,41 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <BaseLayout
 	title="Start Your Energy Plan"
 	description="Talk with Energy Point about residential, commercial, rural or maintenance needs across Waikato. Start with a no-pressure project conversation."
+	image="/images/process-consultation.jpg"
 >
-	<section
-		class="section section--dark"
-		style="padding-top: clamp(10rem, 18vw, 15rem); min-height: 100svh;"
-	>
-		<div class="container contact-stage">
-			<div class="contact-stage__intro">
-				<div>
-					<span class="eyebrow">Start your energy plan</span>
-					<h1>Tell us what better energy looks like.</h1>
-					<p class="lede muted">
-						Share the property, the problem and the outcome you want. We will come back
-						with a practical next step, not a generic package.
-					</p>
+	<section class="hero hero--contact" style="--hero-position: center 40%;">
+		<div class="hero__media">
+			<img
+				src="/images/process-consultation-1200.webp"
+				srcset="/images/process-consultation-640.webp 640w, /images/process-consultation-960.webp 960w, /images/process-consultation-1200.webp 1200w, /images/process-consultation-1600.webp 1600w"
+				sizes="100vw"
+				alt="An Energy Point specialist meeting a Waikato homeowner on site"
+				width="1920"
+				height="1080"
+				fetchpriority="high"
+				decoding="async"
+			/>
+		</div>
+		<div class="hero__content">
+			<div class="contact-stage">
+				<div class="contact-stage__intro">
+					<div>
+						<span class="eyebrow">Start your energy plan</span>
+						<h1>Tell us what better energy looks like.</h1>
+						<p class="lede muted">
+							Share the property, the problem and the outcome you want. We will come back
+							with a practical next step, not a generic package.
+						</p>
+					</div>
+					<div class="contact-details">
+						<span class="eyebrow">Prefer direct?</span>
+						<a href={site.phoneHref}>{site.phoneDisplay}</a>
+						<a href={`mailto:${site.email}`}>{site.email}</a>
+						<span class="muted">{site.region}</span>
+					</div>
 				</div>
-				<div class="contact-details">
-					<span class="eyebrow">Prefer direct?</span>
-					<a href={site.phoneHref}>{site.phoneDisplay}</a>
-					<a href={`mailto:${site.email}`}>{site.email}</a>
-					<span class="muted">{site.region}</span>
-				</div>
+				<ContactForm />
 			</div>
-			<ContactForm />
 		</div>
 	</section>
 
@@ -65,4 +77,3 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 		</div>
 	</section>
 </BaseLayout>
-

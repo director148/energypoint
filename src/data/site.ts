@@ -32,7 +32,6 @@ export const audiences = [
 	{
 		eyebrow: '01 · Home',
 		title: 'Residential',
-		copy: 'A home energy plan designed around how your household actually lives.',
 		href: '/residential/',
 		image: '/images/residential-hero-960.webp',
 		alt: 'A Waikato home fitted with rooftop solar panels',
@@ -40,7 +39,6 @@ export const audiences = [
 	{
 		eyebrow: '02 · Business',
 		title: 'Commercial',
-		copy: 'Turn daytime energy demand into a more controlled operating cost.',
 		href: '/commercial/',
 		image: '/images/home-detail-960.webp',
 		alt: 'Solar panels supplying a commercial energy system',
@@ -48,7 +46,6 @@ export const audiences = [
 	{
 		eyebrow: '03 · Land',
 		title: 'Rural',
-		copy: 'Hard-working solar for sheds, pumps, workshops and productive land.',
 		href: '/rural/',
 		image: '/images/rural-hero-960.webp',
 		alt: 'A rural Waikato property with a ground-mounted solar array',

@@ -30,8 +30,8 @@ const optimized = (image: string) => {
 						srcset={media.srcset}
 						sizes="(max-width: 900px) 100vw, 33vw"
 						alt={audience.alt}
-						width="1200"
-						height="1500"
+						width="960"
+						height="540"
 						loading="lazy"
 						decoding="async"
 					/>
@@ -39,8 +39,7 @@ const optimized = (image: string) => {
 				<div class="audience-card__content">
 					<span class="eyebrow">{audience.eyebrow}</span>
 					<h3>{audience.title}</h3>
-					<p>{audience.copy}</p>
-					<span class="text-link">Explore {audience.title}</span>
+					<span class="text-link">Explore</span>
 				</div>
 			</a>
 			);

@@ -79,7 +79,9 @@ const isActive = (href: string) =>
 		<a href="/contact/" aria-current={isActive('/contact/') ? 'page' : undefined}>Contact</a>
 	</nav>
 	<div class="mobile-menu__meta">
-		<a href={site.phoneHref}>{site.phoneDisplay}</a>
+		<a class="button button--light mobile-menu__phone" href={site.phoneHref}>
+			{site.phoneDisplay}
+		</a>
 		<a href={`mailto:${site.email}`}>{site.email}</a>
 		<span>{site.region}</span>
 	</div>
