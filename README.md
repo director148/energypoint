@@ -29,7 +29,7 @@ Required GitHub repository secrets:
 
 - `CLOUDFLARE_ACCOUNT_ID`
 - `CLOUDFLARE_API_TOKEN`: create at https://dash.cloudflare.com/profile/api-tokens with
-  **Account → Cloudflare Pages → Edit**
+  **Account → Cloudflare Pages → Edit** and **Account → Workers R2 Storage → Edit**
 
 Required Cloudflare Pages env vars (for the contact form):
 
@@ -37,6 +37,16 @@ Required Cloudflare Pages env vars (for the contact form):
 - `CONTACT_TO_EMAIL` (optional, defaults to `sales@energypoint.nz`)
 - `CONTACT_FROM_EMAIL` (optional; must be a verified Resend sender)
 - `PUBLIC_ADDRESSFINDER_KEY` (optional NZ AddressFinder licence key; demo key used if unset)
+- `R2_PUBLIC_BASE_URL` (optional public base URL for enquiry photos; email includes object keys if unset)
+
+Enquiry photos upload to the R2 bucket `energypoint-enquiry-photos` (binding `ENQUIRY_PHOTOS` in `wrangler.toml`). Create it once, then apply the 30-day deletion policy:
+
+```bash
+npx wrangler r2 bucket create energypoint-enquiry-photos --profile=florul
+npm run r2:lifecycle
+```
+
+The GitHub deploy workflow reapplies `r2-lifecycle.json` on each production deploy. The API token needs **Account → Workers R2 Storage → Edit** in addition to Pages Edit.
 
 Manual deploy:
 

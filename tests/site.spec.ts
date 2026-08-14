@@ -62,7 +62,9 @@ test('contact form posts to the Cloudflare handler and validates required fields
 
 	const form = page.locator('form[name="energy-plan"]');
 	await expect(form).toHaveAttribute('action', '/api/contact');
+	await expect(form).toHaveAttribute('enctype', 'multipart/form-data');
 	await expect(page.locator('select[name="audience"]')).toHaveValue('Rural');
+	await expect(page.locator('input[name="photos"]')).toHaveAttribute('type', 'file');
 
 	await page.getByRole('button', { name: 'Send my enquiry' }).click();
 	await expect(page).toHaveURL(/\/contact/);

@@ -4,9 +4,12 @@
  *   RESEND_API_KEY       required
  *   CONTACT_TO_EMAIL     optional (default sales@energypoint.nz)
  *   CONTACT_FROM_EMAIL   optional (verified Resend sender)
+ *   R2_PUBLIC_BASE_URL   optional public prefix for stored photos
+ * R2 binding: ENQUIRY_PHOTOS
  */
 
 import { validateContactFields } from '../_shared/contact-validation.js';
+import { storeEnquiryPhotos } from '../_shared/enquiry-photos.js';
 
 export async function onRequestPost(context) {
 	const thankYou = new URL('/thank-you/', context.request.url).toString();
@@ -50,6 +53,17 @@ export async function onRequestPost(context) {
 		context.env.CONTACT_FROM_EMAIL || 'Energy Point Website <onboarding@resend.dev>';
 	const subject = values.subject || 'New Energy Point consultation enquiry';
 
+	let photoLines = [];
+	try {
+		const photos = await storeEnquiryPhotos(context.env, formData.getAll('photos'));
+		photoLines = photos.length
+			? ['', 'Photos:', ...photos.map((item) => `- ${item}`)]
+			: [];
+	} catch (error) {
+		console.error('R2 photo store error', error);
+		photoLines = ['', 'Photos: could not be stored.'];
+	}
+
 	const text = [
 		`Audience: ${values.audience}`,
 		`Goal: ${values.goal}`,
@@ -60,6 +74,7 @@ export async function onRequestPost(context) {
 		values.address ? `Address: ${values.address}` : null,
 		'',
 		values.message,
+		...photoLines,
 	]
 		.filter((line) => line !== null)
 		.join('\n');

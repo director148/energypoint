@@ -40,3 +40,10 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=energypoint --branch=main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Apply R2 30-day photo expiry
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: r2 bucket lifecycle set energypoint-enquiry-photos --file r2-lifecycle.json --force

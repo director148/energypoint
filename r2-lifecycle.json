@@ -1,0 +1,24 @@
+{
+	"Rules": [
+		{
+			"ID": "expire-user-photos-30d",
+			"Status": "Enabled",
+			"Filter": {
+				"Prefix": ""
+			},
+			"Expiration": {
+				"Days": 30
+			}
+		},
+		{
+			"ID": "abort-incomplete-user-photos",
+			"Status": "Enabled",
+			"Filter": {
+				"Prefix": ""
+			},
+			"AbortIncompleteMultipartUpload": {
+				"DaysAfterInitiation": 1
+			}
+		}
+	]
+}

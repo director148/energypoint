@@ -57,37 +57,30 @@ const nextSteps = [
 					<div class="contact-details">
 						<a class="button button--light" href={site.phoneHref}>{site.phoneDisplay}</a>
 						<a class="button button--ghost" href={`mailto:${site.email}`}>{site.email}</a>
+						<span class="muted">{site.hours}</span>
 						<span class="muted">{site.region}</span>
 					</div>
 				</div>
-				<ContactForm />
-			</div>
-		</div>
-	</section>
-
-	<section class="section section--cream section--compact">
-		<div class="container">
-			<div class="section-heading section-heading--solo section-heading--oneline">
-				<div>
-					<h2>Three clear steps.</h2>
+				<div class="contact-stage__form">
+					<ol class="next-steps">
+						{
+							nextSteps.map((step) => (
+								<li class="next-steps__item">
+									<span class="next-steps__icon" aria-hidden="true">
+										<Icon name={step.icon} size={22} />
+									</span>
+									<span class="next-steps__number">{step.number}</span>
+									<div>
+										<h3>{step.title}</h3>
+										<p>{step.copy}</p>
+									</div>
+								</li>
+							))
+						}
+					</ol>
+					<ContactForm />
 				</div>
 			</div>
-			<ol class="next-steps">
-				{
-					nextSteps.map((step) => (
-						<li class="next-steps__item">
-							<span class="next-steps__icon" aria-hidden="true">
-								<Icon name={step.icon} size={22} />
-							</span>
-							<span class="next-steps__number">{step.number}</span>
-							<div>
-								<h3>{step.title}</h3>
-								<p>{step.copy}</p>
-							</div>
-						</li>
-					))
-				}
-			</ol>
 		</div>
 	</section>
 </BaseLayout>

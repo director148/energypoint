@@ -5,6 +5,7 @@ export const site = {
 	phoneHref: 'tel:+64800102211',
 	email: 'sales@energypoint.nz',
 	region: 'Waikato, New Zealand',
+	hours: 'Monday to Friday, 9am to 5pm',
 	facebook: 'https://www.facebook.com/EnergyPointNZ',
 	instagram: 'https://www.instagram.com/energypointnz/',
 	description:
@@ -12,20 +13,14 @@ export const site = {
 } as const;
 
 export const navigation = [
-	{
-		label: 'Residential',
-		href: '/residential/',
-		children: [
-			{ label: 'Solar for homes', href: '/residential/' },
-			{ label: 'Finance your system', href: '/finance/' },
-			{ label: 'Your questions answered', href: '/frequently-asked-questions/' },
-		],
-	},
+	{ label: 'Residential', href: '/residential/' },
 	{ label: 'Commercial', href: '/commercial/' },
 	{ label: 'Rural', href: '/rural/' },
+	{ label: 'Finance', href: '/finance/' },
 	{ label: 'Maintenance', href: '/maintenance/' },
 	{ label: 'About us', href: '/about-us/' },
 	{ label: 'Reviews', href: '/reviews/' },
+	{ label: 'FAQs', href: '/frequently-asked-questions/' },
 ] as const;
 
 export const audiences = [

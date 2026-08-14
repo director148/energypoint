@@ -21,32 +21,17 @@ const isActive = (href: string) =>
 
 		<nav class="desktop-nav" aria-label="Main navigation">
 			{
-				navigation.map((item) =>
-					'children' in item ? (
-						<details class="nav-dropdown">
-							<summary>
-								{item.label} <span aria-hidden="true">+</span>
-							</summary>
-							<div class="nav-dropdown__panel">
-								{item.children.map((child) => (
-									<a href={child.href} aria-current={isActive(child.href) ? 'page' : undefined}>
-										{child.label}
-									</a>
-								))}
-							</div>
-						</details>
-					) : (
-						<a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
-							{item.label}
-						</a>
-					),
-				)
+				navigation.map((item) => (
+					<a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+						{item.label}
+					</a>
+				))
 			}
 		</nav>
 
 		<div class="header-actions">
 			<a class="header-phone" href={site.phoneHref}>{site.phoneDisplay}</a>
-			<a class="button button--light" href="/contact/">Design your energy plan</a>
+			<a class="button button--light" href="/contact/">Contact</a>
 			<button
 				class="menu-toggle"
 				type="button"
@@ -76,14 +61,17 @@ const isActive = (href: string) =>
 		</a>
 		<a href="/about-us/" aria-current={isActive('/about-us/') ? 'page' : undefined}>About us</a>
 		<a href="/reviews/" aria-current={isActive('/reviews/') ? 'page' : undefined}>Reviews</a>
-		<a href="/contact/" aria-current={isActive('/contact/') ? 'page' : undefined}>Contact</a>
+		<a href="/frequently-asked-questions/" aria-current={isActive('/frequently-asked-questions/') ? 'page' : undefined}>
+			FAQs
+		</a>
 	</nav>
 	<div class="mobile-menu__meta">
-		<a class="button button--light mobile-menu__phone" href={site.phoneHref}>
+		<a class="button button--light mobile-menu__action" href={site.phoneHref}>
 			{site.phoneDisplay}
 		</a>
-		<a href={`mailto:${site.email}`}>{site.email}</a>
-		<span>{site.region}</span>
+		<a class="button button--light mobile-menu__action" href="/contact/">
+			Contact
+		</a>
 	</div>
 </div>
 
@@ -135,19 +123,6 @@ const isActive = (href: string) =>
 			},
 			{ signal },
 		);
-
-		document.querySelectorAll<HTMLDetailsElement>('.nav-dropdown').forEach((dropdown) => {
-			dropdown.addEventListener(
-				'toggle',
-				() => {
-					if (!dropdown.open) return;
-					document.querySelectorAll<HTMLDetailsElement>('.nav-dropdown').forEach((other) => {
-						if (other !== dropdown) other.open = false;
-					});
-				},
-				{ signal },
-			);
-		});
 
 		window.addEventListener(
 			'scroll',

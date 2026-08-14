@@ -30,6 +30,7 @@ const addressFinderKey =
 	name="energy-plan"
 	method="POST"
 	action="/api/contact"
+	enctype="multipart/form-data"
 	novalidate
 	data-contact-form
 >
@@ -151,6 +152,21 @@ const addressFinderKey =
 	</div>
 
 	<div class="field field--full">
+		<label for="photos">Photos of the property <small>(optional)</small></label>
+		<input
+			id="photos"
+			name="photos"
+			type="file"
+			accept="image/jpeg,image/png,image/webp"
+			multiple
+			data-photo-input
+		/>
+		<span class="field__hint">Up to 6 photos. We compress them, convert to WebP, and delete them after 30 days.</span>
+		<ul class="photo-picker" data-photo-list hidden></ul>
+		<span class="field__error" data-error-for="photos" hidden></span>
+	</div>
+
+	<div class="field field--full">
 		<label for="message">Tell us about the property</label>
 		<textarea
 			id="message"
@@ -182,6 +198,10 @@ const addressFinderKey =
 		location: 80,
 		address: 120,
 		message: 1000,
+		photos: 6,
+		photoBytes: 12 * 1024 * 1024,
+		photoEdge: 1600,
+		photoQuality: 0.8,
 	};
 
 	const SAFE_TEXT = /^[\p{L}\p{N}\s.,'’/#&\-()+@:+]+$/u;
@@ -208,7 +228,36 @@ const addressFinderKey =
 			.replace(/[^\p{L}\s'’-]/gu, '')
 			.replace(/(^|[\s'’-])(\p{L})/gu, (_, edge, letter) => edge + letter.toUpperCase());
 
-	const validate = (form) => {
+	const blobToFile = (blob, name) => new File([blob], name, { type: blob.type, lastModified: Date.now() });
+
+	const canvasToBlob = (canvas, type, quality) =>
+		new Promise((resolve) => {
+			canvas.toBlob((blob) => resolve(blob), type, quality);
+		});
+
+	const compressImage = async (file) => {
+		const bitmap = await createImageBitmap(file);
+		const scale = Math.min(1, LIMITS.photoEdge / Math.max(bitmap.width, bitmap.height));
+		const width = Math.max(1, Math.round(bitmap.width * scale));
+		const height = Math.max(1, Math.round(bitmap.height * scale));
+		const canvas = document.createElement('canvas');
+		canvas.width = width;
+		canvas.height = height;
+		const ctx = canvas.getContext('2d');
+		if (!ctx) throw new Error('Could not prepare this photo.');
+		ctx.drawImage(bitmap, 0, 0, width, height);
+		bitmap.close();
+
+		const webp = await canvasToBlob(canvas, 'image/webp', LIMITS.photoQuality);
+		if (webp && webp.size > 0) return blobToFile(webp, 'photo.webp');
+
+		const jpeg = await canvasToBlob(canvas, 'image/jpeg', 0.82);
+		if (jpeg && jpeg.size > 0) return blobToFile(jpeg, 'photo.jpg');
+
+		throw new Error('Could not convert this photo.');
+	};
+
+	const validate = (form, photoCount = 0) => {
 		const data = new FormData(form);
 		const errors = {};
 		const values = {
@@ -258,6 +307,10 @@ const addressFinderKey =
 			errors.message = `Message must be ${LIMITS.message} characters or fewer.`;
 		} else if (!SAFE_TEXT.test(values.message)) {
 			errors.message = 'Remove unusual symbols from your message.';
+		}
+
+		if (photoCount > LIMITS.photos) {
+			errors.photos = `Add ${LIMITS.photos} photos or fewer.`;
 		}
 
 		return { values, errors, ok: Object.keys(errors).length === 0 };
@@ -385,7 +438,68 @@ const addressFinderKey =
 		message?.addEventListener('input', updateCount);
 		updateCount();
 
-		form.addEventListener('submit', (event) => {
+		const photoInput = form.querySelector('[data-photo-input]');
+		const photoList = form.querySelector('[data-photo-list]');
+		const photos = [];
+
+		const renderPhotos = () => {
+			if (!(photoList instanceof HTMLElement)) return;
+			photoList.hidden = photos.length === 0;
+			photoList.replaceChildren();
+
+			photos.forEach((file, index) => {
+				const item = document.createElement('li');
+				const img = document.createElement('img');
+				img.src = URL.createObjectURL(file);
+				img.alt = `Prepared photo ${index + 1}`;
+				img.onload = () => URL.revokeObjectURL(img.src);
+
+				const remove = document.createElement('button');
+				remove.type = 'button';
+				remove.textContent = 'Remove';
+				remove.addEventListener('click', () => {
+					photos.splice(index, 1);
+					renderPhotos();
+				});
+
+				item.append(img, remove);
+				photoList.append(item);
+			});
+		};
+
+		photoInput?.addEventListener('change', async () => {
+			if (!(photoInput instanceof HTMLInputElement) || !photoInput.files) return;
+
+			const incoming = Array.from(photoInput.files);
+			photoInput.value = '';
+
+			for (const file of incoming) {
+				if (photos.length >= LIMITS.photos) {
+					showErrors(form, { photos: `Add ${LIMITS.photos} photos or fewer.` });
+					break;
+				}
+				if (!file.type.startsWith('image/')) {
+					showErrors(form, { photos: 'Use JPEG, PNG or WebP photos.' });
+					continue;
+				}
+				if (file.size > LIMITS.photoBytes) {
+					showErrors(form, { photos: 'Each original photo must be under 12MB.' });
+					continue;
+				}
+
+				try {
+					photos.push(await compressImage(file));
+					showErrors(form, {});
+					renderPhotos();
+				} catch {
+					showErrors(form, { photos: 'Could not prepare that photo. Try another image.' });
+				}
+			}
+		});
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+
 			const nameField = form.querySelector('#name');
 			if (nameField instanceof HTMLInputElement) {
 				nameField.value = titleCaseName(nameField.value);
@@ -396,20 +510,57 @@ const addressFinderKey =
 				emailField.value = emailField.value.trim().toLowerCase();
 			}
 
-			const { values, errors, ok } = validate(form);
+			const { values, errors, ok } = validate(form, photos.length);
 			showErrors(form, errors);
 
 			if (!ok) {
-				event.preventDefault();
 				const firstInvalid = form.querySelector('.field--invalid input, .field--invalid select, .field--invalid textarea');
 				firstInvalid?.focus();
 				return;
 			}
 
-			// Write normalised values back before submit.
 			for (const [key, value] of Object.entries(values)) {
 				const field = form.elements.namedItem(key);
 				if (field && 'value' in field) field.value = value;
+			}
+
+			const submit = form.querySelector('button[type="submit"]');
+			if (submit instanceof HTMLButtonElement) {
+				submit.disabled = true;
+				submit.textContent = 'Sending...';
+			}
+
+			const payload = new FormData(form);
+			payload.delete('photos');
+			photos.forEach((file, index) => {
+				const ext = file.type === 'image/webp' ? 'webp' : 'jpg';
+				payload.append('photos', file, `photo-${index + 1}.${ext}`);
+			});
+
+			try {
+				const response = await fetch(form.action, { method: 'POST', body: payload });
+				if (response.redirected && /thank-you/.test(response.url)) {
+					window.location.assign(response.url);
+					return;
+				}
+				if (response.ok) {
+					window.location.assign('/thank-you/');
+					return;
+				}
+				const message = (await response.text()) || 'Could not send enquiry. Please try again.';
+				showErrors(form, { photos: message });
+				const formError = form.querySelector('[data-form-error]');
+				if (formError) {
+					formError.textContent = message;
+					formError.hidden = false;
+				}
+			} catch {
+				showErrors(form, { photos: 'Could not send enquiry. Check your connection and try again.' });
+			} finally {
+				if (submit instanceof HTMLButtonElement) {
+					submit.disabled = false;
+					submit.textContent = 'Send my enquiry';
+				}
 			}
 		});
 	});
