@@ -49,12 +49,18 @@ function put(file) {
 		'public, max-age=31536000',
 		'--remote',
 	];
+	if (process.env.CLOUDFLARE_ACCOUNT_ID) {
+		args.push('--account-id', process.env.CLOUDFLARE_ACCOUNT_ID);
+	}
 	if (!process.env.CLOUDFLARE_API_TOKEN) {
 		args.push('--profile=florul');
 	}
 
 	return new Promise((resolve, reject) => {
-		const child = spawn(wranglerBin, args, { stdio: ['ignore', 'pipe', 'pipe'] });
+		const child = spawn(wranglerBin, args, {
+			stdio: ['ignore', 'pipe', 'pipe'],
+			env: process.env,
+		});
 		let stderr = '';
 		child.stderr.on('data', (chunk) => {
 			stderr += chunk;
