@@ -55,13 +55,49 @@ function pagesFunctionDev(path, handler, methods = ['GET']) {
 
 		try {
 			const origin = `http://${req.headers.host || '127.0.0.1'}`;
+			const env = { ...loadDevVars(), ...process.env };
+			const body = method === 'GET' || method === 'HEAD' ? undefined : await readRequestBody(req);
+
+			if (path === '/api/contact' && method === 'POST' && !env.RESEND_API_KEY) {
+				const upstreamHeaders = new Headers();
+				for (const [key, value] of Object.entries(req.headers)) {
+					if (value == null) continue;
+					const lower = key.toLowerCase();
+					if (['host', 'connection', 'content-length', 'transfer-encoding'].includes(lower)) continue;
+					upstreamHeaders.set(key, Array.isArray(value) ? value.join(', ') : String(value));
+				}
+
+				const upstream = await fetch('https://solar.florul.com/api/contact', {
+					method: 'POST',
+					headers: upstreamHeaders,
+					body,
+					redirect: 'manual',
+				});
+
+				res.statusCode = upstream.status;
+				upstream.headers.forEach((value, key) => {
+					if (key.toLowerCase() === 'location') {
+						try {
+							const loc = new URL(value, 'https://solar.florul.com');
+							if (loc.pathname.startsWith('/thank-you')) {
+								res.setHeader('Location', `${origin}/thank-you/`);
+								return;
+							}
+						} catch {
+							/* keep upstream location */
+						}
+					}
+					res.setHeader(key, value);
+				});
+				res.end(Buffer.from(await upstream.arrayBuffer()));
+				return;
+			}
+
 			const headers = new Headers();
 			for (const [key, value] of Object.entries(req.headers)) {
 				if (value == null) continue;
 				headers.set(key, Array.isArray(value) ? value.join(', ') : String(value));
 			}
-
-			const body = method === 'GET' || method === 'HEAD' ? undefined : await readRequestBody(req);
 
 			const response = await handler({
 				request: new Request(new URL(req.url || path, origin), {
@@ -69,7 +105,7 @@ function pagesFunctionDev(path, handler, methods = ['GET']) {
 					headers,
 					body,
 				}),
-				env: { ...loadDevVars(), ...process.env },
+				env,
 			});
 			res.statusCode = response.status;
 			response.headers.forEach((value, key) => {

@@ -79,6 +79,7 @@ body.nav-open .header-phone {
 
 body.nav-open .site-header.is-scrolled {
 	background: transparent;
+	-webkit-backdrop-filter: none;
 	backdrop-filter: none;
 }
 
@@ -410,6 +411,7 @@ p {
 
 .site-header.is-scrolled {
 	background: rgba(16, 19, 15, 0.94);
+	-webkit-backdrop-filter: blur(18px);
 	backdrop-filter: blur(18px);
 }
 
@@ -459,6 +461,7 @@ p {
 
 .site-header--on-light.is-scrolled {
 	background: rgba(243, 240, 231, 0.94);
+	-webkit-backdrop-filter: blur(18px);
 	backdrop-filter: blur(18px);
 }
 
@@ -875,6 +878,7 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	font-weight: 700;
 	letter-spacing: 0.14em;
 	text-transform: uppercase;
+	-webkit-backdrop-filter: blur(10px);
 	backdrop-filter: blur(10px);
 	overflow: hidden;
 	transition:
@@ -1024,7 +1028,7 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	padding: 1.15rem 0.15rem 0;
 }
 
-.person-card__content h3 {
+.person-card__content h2 {
 	margin: 0;
 	font-size: clamp(1.65rem, 2.4vw, 2.2rem);
 }
@@ -1570,18 +1574,29 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	gap: 0.45rem;
 }
 
+/* Hit area is 1.5rem square (WCAG 2.2 target size); the dot itself stays small. */
 .review-carousel__dot {
-	width: 0.55rem;
-	height: 0.55rem;
+	display: inline-flex;
+	width: 1.5rem;
+	height: 1.5rem;
+	align-items: center;
+	justify-content: center;
 	padding: 0;
 	border: 0;
-	border-radius: 999px;
-	background: color-mix(in srgb, var(--ink) 18%, transparent);
+	background: none;
 	cursor: pointer;
 }
 
-.review-carousel__dot[aria-current='true'] {
-	background: var(--moss);
+.review-carousel__dot::before {
+	width: 0.55rem;
+	height: 0.55rem;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ink) 18%, transparent);
+	content: "";
+}
+
+.review-carousel__dot[aria-current='true']::before {
+	background: var(--moss-deep);
 }
 
 .review-carousel__button {
