@@ -1,10 +1,26 @@
 ---
 import { navigation, site } from '../data/site';
 
+interface Props {
+	/** Force the light-background treatment. Pages without a hero must set this. */
+	onLight?: boolean;
+}
+
 const pathname = Astro.url.pathname;
 const isActive = (href: string) =>
 	href === '/' ? pathname === '/' : pathname.startsWith(href);
-const onLight = pathname.startsWith('/contact') || pathname.startsWith('/thank-you');
+
+/* Pages with no hero image sit on cream, so white header text is unreadable. */
+const lightPaths = [
+	'/contact',
+	'/thank-you',
+	'/privacy',
+	'/terms',
+	'/cookies',
+	'/disclaimer',
+];
+const onLight =
+	Astro.props.onLight ?? lightPaths.some((path) => pathname.startsWith(path));
 ---
 
 <header class:list={['site-header', onLight && 'site-header--on-light']} data-site-header>

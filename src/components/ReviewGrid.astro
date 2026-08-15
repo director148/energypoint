@@ -16,6 +16,26 @@ const slideLabel = (index: number) =>
 ---
 
 <div class="review-grid" data-review-carousel data-reveal>
+	{
+		total > 1 && (
+			<div class="review-carousel__controls">
+				<button type="button" class="review-carousel__button" data-review-prev>
+					<span class="sr-only">Previous review</span>
+					<svg viewBox="0 0 16 16" aria-hidden="true">
+						<path d="M10.2 2.4 4.6 8l5.6 5.6" fill="none" stroke="currentColor" stroke-width="1.6" />
+					</svg>
+				</button>
+				<div class="review-carousel__dots" data-review-dots></div>
+				<button type="button" class="review-carousel__button" data-review-next>
+					<span class="sr-only">Next review</span>
+					<svg viewBox="0 0 16 16" aria-hidden="true">
+						<path d="M5.8 2.4 11.4 8l-5.6 5.6" fill="none" stroke="currentColor" stroke-width="1.6" />
+					</svg>
+				</button>
+			</div>
+		)
+	}
+
 	<div
 		class="review-carousel"
 		data-review-viewport
@@ -48,26 +68,6 @@ const slideLabel = (index: number) =>
 			}
 		</div>
 	</div>
-
-	{
-		total > 1 && (
-			<div class="review-carousel__controls">
-				<button type="button" class="review-carousel__button" data-review-prev>
-					<span class="sr-only">Previous review</span>
-					<svg viewBox="0 0 16 16" aria-hidden="true">
-						<path d="M10.2 2.4 4.6 8l5.6 5.6" fill="none" stroke="currentColor" stroke-width="1.6" />
-					</svg>
-				</button>
-				<div class="review-carousel__dots" data-review-dots></div>
-				<button type="button" class="review-carousel__button" data-review-next>
-					<span class="sr-only">Next review</span>
-					<svg viewBox="0 0 16 16" aria-hidden="true">
-						<path d="M5.8 2.4 11.4 8l-5.6 5.6" fill="none" stroke="currentColor" stroke-width="1.6" />
-					</svg>
-				</button>
-			</div>
-		)
-	}
 </div>
 
 <script>

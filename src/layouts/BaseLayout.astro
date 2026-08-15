@@ -11,6 +11,8 @@ interface Props {
 	image?: string;
 	schema?: Record<string, unknown> | Record<string, unknown>[];
 	noindex?: boolean;
+	/** Force the light-background header (pages that render no hero). */
+	headerOnLight?: boolean;
 }
 
 const {
@@ -19,6 +21,7 @@ const {
 	image = '/images/og-card.jpg',
 	schema,
 	noindex = false,
+	headerOnLight,
 } = Astro.props;
 
 const pageTitle = title === site.name ? title : `${title} | ${site.name}`;
@@ -91,7 +94,7 @@ const pageFade = fade({ duration: '420ms' });
 	</head>
 	<body>
 		<a class="skip-link" href="#main-content">Skip to main content</a>
-		<Header />
+		<Header onLight={headerOnLight} />
 		<main id="main-content">
 			<slot />
 		</main>
