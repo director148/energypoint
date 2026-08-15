@@ -48,7 +48,7 @@ npm run r2:sync
 npm run r2:lifecycle
 ```
 
-The GitHub deploy workflow syncs `public/images` to `energy-point`, deploys Pages without bundling those files and reapplies `r2-lifecycle.json` on the enquiry bucket. The API token needs **Account → Workers R2 Storage → Edit** in addition to Pages Edit.
+The GitHub deploy workflow syncs `public/images` to `energy-point` when the API token can write R2, then deploys Pages without bundling those files. Enquiry photo expiry is a one-time bucket setting: run `npm run r2:lifecycle` after creating the bucket. The GitHub token needs **Account → Workers R2 Storage → Edit** for image sync. Without that permission the workflow skips the upload and warns, rather than failing the Pages deploy.
 
 Manual deploy:
 

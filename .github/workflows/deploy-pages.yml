@@ -31,7 +31,6 @@ jobs:
         run: npm ci
 
       - name: Sync site images to R2
-        continue-on-error: true
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -50,11 +49,3 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=energypoint --branch=main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Apply R2 30-day enquiry expiry
-        continue-on-error: true
-        uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: r2 bucket lifecycle set energypoint-enquiry-photos --file r2-lifecycle.json --force

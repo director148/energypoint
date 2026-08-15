@@ -1,4 +1,4 @@
-import { readdir, stat } from 'node:fs/promises';
+import { readdir } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 
@@ -31,6 +31,15 @@ async function walk(dir) {
 
 function contentType(file) {
 	return TYPES[path.extname(file).toLowerCase()] || 'application/octet-stream';
+}
+
+function isAuthError(error) {
+	const message = String(error.message);
+	return (
+		message.includes('403: Forbidden') ||
+		message.includes('Authentication error') ||
+		message.includes('"code":10000')
+	);
 }
 
 function put(file) {
@@ -88,10 +97,42 @@ async function runPool(items, worker, size) {
 	return errors;
 }
 
+function skipWithoutR2Write() {
+	const message =
+		'CLOUDFLARE_API_TOKEN cannot write R2. Grant Account Workers R2 Storage Edit, or run npm run r2:sync locally.';
+	if (process.env.GITHUB_ACTIONS) {
+		console.log(`::warning title=R2 image sync skipped::${message}`);
+	} else {
+		console.warn(message);
+	}
+}
+
 const files = await walk(SOURCE);
+if (!files.length) {
+	console.log(`No files to sync in ${SOURCE}`);
+	process.exit(0);
+}
+
 console.log(`Uploading ${files.length} files to R2 bucket ${BUCKET}`);
-const errors = await runPool(files, put, CONCURRENCY);
+
+const [probe, ...rest] = files;
+try {
+	console.log(`uploaded ${await put(probe)}`);
+} catch (error) {
+	if (isAuthError(error)) {
+		skipWithoutR2Write();
+		process.exit(0);
+	}
+	console.error(error.message);
+	process.exit(1);
+}
+
+const errors = await runPool(rest, put, CONCURRENCY);
 if (errors.length) {
+	if (errors.every(isAuthError)) {
+		skipWithoutR2Write();
+		process.exit(0);
+	}
 	console.error(`${errors.length} uploads failed`);
 	process.exit(1);
 }
