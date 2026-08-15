@@ -1,14 +1,12 @@
 /** Serve site images from the energy-point R2 bucket. */
+import { buildImageKey } from '../_shared/image-key.js';
 
 export async function onRequestGet(context) {
-	/* A [[path]] catch-all gives an array of segments, so join rather than stringify. */
-	const parts = context.params.path;
-	const raw = Array.isArray(parts) ? parts.join('/') : String(parts || '');
-	if (!raw || raw.split('/').includes('..')) {
+	const key = buildImageKey(context.params.path);
+	if (!key) {
 		return new Response('Not found.', { status: 404 });
 	}
 
-	const key = `images/${raw}`;
 	const bucket = context.env.MEDIA;
 	if (!bucket) {
 		return new Response('Media store is not configured.', { status: 500 });
