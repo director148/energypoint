@@ -1655,7 +1655,7 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	letter-spacing: 0.08em;
 }
 
-.review-card h3 {
+.review-card h2 {
 	margin: 0;
 	max-width: none;
 	color: var(--ink);
@@ -2575,7 +2575,7 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	background: rgba(255, 255, 255, 0.45);
 }
 
-.next-steps__item h3 {
+.next-steps__item h2 {
 	margin: 0 0 0.35rem;
 	font-family: var(--font-body);
 	font-size: 1rem;

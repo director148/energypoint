@@ -19,13 +19,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 				Expect a call within one working day, usually the same morning. Have a recent power
 				bill nearby if you can. You do not need it to start.
 			</p>
-			<p class="muted" style="margin-bottom: 2rem;">
-				{site.hours}. If it is easier to talk now, call
-				<a class="text-link" href={site.phoneHref}>{site.phoneDisplay}</a>
-				or email
-				<a class="text-link" href={`mailto:${site.email}`}>{site.email}</a>.
+			<p class="muted thank-you-contact" style="margin-bottom: 2rem;">
+				{site.hours}. If it is easier to talk now, call <a href={site.phoneHref}>{site.phoneDisplay}</a> or email <a href={`mailto:${site.email}`}>{site.email}</a>.
 			</p>
 			<a class="button" href="/">Back to Energy Point</a>
 		</div>
 	</section>
 </BaseLayout>
+
+<style>
+	.thank-you-contact a {
+		color: var(--ink);
+		text-decoration: underline;
+		text-underline-offset: 0.18em;
+	}
+</style>
