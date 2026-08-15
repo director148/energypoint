@@ -1,5 +1,10 @@
 export const site = {
 	name: 'Energy Point',
+	/* NZ Companies Register: incorporated 5 December 2024, status registered. */
+	legalName: 'Energy Point Limited',
+	companyNumber: '9297401',
+	nzbn: '9429052495519',
+	registeredOffice: '71 Anderson Street, Morrinsville 3300, New Zealand',
 	url: 'https://solar.florul.com',
 	phoneDisplay: '0800 102 211',
 	phoneHref: 'tel:+64800102211',
@@ -10,6 +15,9 @@ export const site = {
 	instagram: 'https://www.instagram.com/energypointnz/',
 	seanz: 'https://www.seanz.org.nz/50438',
 	seanzLogo: '/images/seanz-logo-white.webp',
+	ewrbRegister:
+		'https://kete.mbie.govt.nz/EW/EWPRSearch/practitioner/?id=228928f3-b042-df11-917a-005056ae567f',
+	ewrbLogo: '/images/ewrb-logo.webp',
 	description:
 		'Solar, battery and energy plans for Waikato homes, businesses and rural properties. Locally owned. People first.',
 } as const;
@@ -231,7 +239,7 @@ export const people = [
 		copy: 'Co-owner. He visits the property, explains the options in plain English and stays in the job until handover.',
 		image: '/images/process-consultation.jpg',
 		alt: 'Energy Point meeting a Waikato homeowner on site',
-		position: 'center 28%',
+		position: '62% 28%',
 		positionMobile: '82% 30%',
 	},
 	{
@@ -279,6 +287,15 @@ export const footerLogos = [
 		height: 162,
 		external: false,
 		compact: false,
+	},
+	{
+		href: site.ewrbRegister,
+		src: site.ewrbLogo,
+		alt: 'Electrical Workers Registration Board',
+		width: 660,
+		height: 192,
+		external: true,
+		compact: true,
 	},
 	{
 		href: 'https://www.sigenergy.com/au/',

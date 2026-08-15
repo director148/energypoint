@@ -22,6 +22,8 @@ const SKIP = new Set([
 	'seanz-logo-white.webp',
 	'sigenergy-logo-white.png',
 	'sigenergy-logo-white.webp',
+	'ewrb-logo.png',
+	'ewrb-logo.webp',
 ]);
 
 function baseName(file) {

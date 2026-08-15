@@ -261,6 +261,17 @@ test('legal pages include a dated policy and on-page navigation', async ({ page 
 	await expect(page.locator('main')).toContainText('WCAG');
 });
 
+/** Companies Register: ENERGY POINT LIMITED, incorporated 5 December 2024. */
+test('legal pages name the registered company', async ({ page }) => {
+	for (const route of ['/privacy/', '/terms/']) {
+		await page.goto(route);
+		const main = page.locator('main');
+		await expect(main).toContainText('Energy Point Limited');
+		await expect(main).toContainText('company number 9297401');
+		await expect(main).toContainText('NZBN 9429052495519');
+	}
+});
+
 test('footer exposes legal pages from the homepage', async ({ page }) => {
 	await page.goto('/');
 	const legal = page.getByRole('navigation', { name: 'Legal' });
@@ -276,6 +287,12 @@ test('footer exposes legal pages from the homepage', async ({ page }) => {
 	await expect(page.getByRole('navigation', { name: 'Partners' }).getByRole('link', { name: 'Sigenergy' })).toHaveAttribute(
 		'href',
 		'https://www.sigenergy.com/au/',
+	);
+	await expect(
+		page.getByRole('navigation', { name: 'Partners' }).getByRole('link', { name: 'Electrical Workers Registration Board' }),
+	).toHaveAttribute(
+		'href',
+		'https://kete.mbie.govt.nz/EW/EWPRSearch/practitioner/?id=228928f3-b042-df11-917a-005056ae567f',
 	);
 });
 

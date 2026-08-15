@@ -32,6 +32,9 @@ export type LegalDocument = {
 
 const contactHtml = `Email <a href="mailto:${site.email}">${site.email}</a> or call <a href="${site.phoneHref}">${site.phoneDisplay}</a>. ${site.hours}. ${site.region}.`;
 
+/** The registered entity behind the Energy Point trading name. */
+const entityHtml = `Energy Point is the trading name of ${site.legalName}, New Zealand company number ${site.companyNumber}, NZBN ${site.nzbn}. Our registered office is ${site.registeredOffice}.`;
+
 export const privacy: LegalDocument = {
 	href: '/privacy/',
 	title: 'Privacy policy',
@@ -47,7 +50,7 @@ export const privacy: LegalDocument = {
 			blocks: [
 				{
 					type: 'p',
-					html: `Energy Point is a locally owned solar and energy business in the Waikato, New Zealand. This policy covers this website and the enquiries, calls and emails we receive through it.`,
+					html: `${entityHtml} We are a locally owned solar and energy business in the Waikato. This policy covers this website and the enquiries, calls and emails we receive through it.`,
 				},
 				{
 					type: 'p',
@@ -241,7 +244,7 @@ export const privacy: LegalDocument = {
 			blocks: [
 				{
 					type: 'p',
-					html: `Energy Point. ${contactHtml}`,
+					html: `${site.legalName}, New Zealand company number ${site.companyNumber}. ${contactHtml}`,
 				},
 			],
 		},
@@ -267,7 +270,7 @@ export const terms: LegalDocument = {
 				},
 				{
 					type: 'p',
-					html: `Energy Point is based in the Waikato, New Zealand. ${contactHtml}`,
+					html: `${entityHtml} We are based in the Waikato. ${contactHtml}`,
 				},
 			],
 		},
@@ -662,7 +665,7 @@ export const accessibility: LegalDocument = {
 				},
 				{
 					type: 'p',
-					html: `Energy Point. ${contactHtml}`,
+					html: `${site.legalName}, New Zealand company number ${site.companyNumber}. ${contactHtml}`,
 				},
 			],
 		},
