@@ -12,6 +12,16 @@ from = "/people/"
 to = "/meet-the-team/"
 status = 301
 
+[[redirects]]
+from = "/about-us"
+to = "/meet-the-team/"
+status = 301
+
+[[redirects]]
+from = "/about-us/"
+to = "/meet-the-team/"
+status = 301
+
 [build.environment]
 NODE_VERSION = "22"
 

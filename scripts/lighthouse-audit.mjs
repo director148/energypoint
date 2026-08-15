@@ -34,7 +34,6 @@ const PAGES = [
 	{ id: 'how-it-works', path: '/how-it-works/' },
 	{ id: 'maintenance', path: '/maintenance/' },
 	{ id: 'finance', path: '/finance/' },
-	{ id: 'about-us', path: '/about-us/' },
 	{ id: 'meet-the-team', path: '/meet-the-team/' },
 	{ id: 'reviews', path: '/reviews/' },
 	{ id: 'faqs', path: '/frequently-asked-questions/' },

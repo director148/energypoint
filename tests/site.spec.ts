@@ -8,7 +8,6 @@ const routes = [
 	'/how-it-works/',
 	'/finance/',
 	'/maintenance/',
-	'/about-us/',
 	'/meet-the-team/',
 	'/reviews/',
 	'/frequently-asked-questions/',
@@ -19,6 +18,12 @@ const routes = [
 	'/cookies/',
 	'/disclaimer/',
 ];
+
+test('about-us redirects to meet the team', async ({ page }) => {
+	await page.goto('/about-us/');
+	await expect(page).toHaveURL(/\/meet-the-team\/$/);
+	await expect(page.locator('main h1')).toBeVisible();
+});
 
 for (const route of routes) {
 	test(`${route} renders a titled page`, async ({ page }) => {

@@ -16,10 +16,10 @@ export const navigation = [
 	{ label: 'Residential', href: '/residential/' },
 	{ label: 'Commercial', href: '/commercial/' },
 	{ label: 'Rural', href: '/rural/' },
+	{ label: 'Maintenance', href: '/maintenance/' },
 	{ label: 'How it works', href: '/how-it-works/' },
 	{ label: 'Finance', href: '/finance/' },
-	{ label: 'Maintenance', href: '/maintenance/' },
-	{ label: 'Team', href: '/meet-the-team/' },
+	{ label: 'Meet the team', href: '/meet-the-team/' },
 	{ label: 'Reviews', href: '/reviews/' },
 	{ label: 'FAQs', href: '/frequently-asked-questions/' },
 ] as const;
@@ -146,25 +146,6 @@ export const homeBenefits = [
 		image: '/images/process-support.jpg',
 		alt: 'Local technician maintaining a solar installation',
 		position: 'center 55%',
-	},
-] as const;
-
-export const values = [
-	{
-		title: 'Energy-first thinking',
-		copy: 'We design for performance and your usage profile, not a panel count.',
-	},
-	{
-		title: 'Transparent advice',
-		copy: 'Clear options, practical trade-offs and no sales pressure.',
-	},
-	{
-		title: 'Quality that lasts',
-		copy: 'Proven components selected for New Zealand conditions.',
-	},
-	{
-		title: 'Long-term support',
-		copy: 'Maintenance, monitoring and upgrades from a team that stays involved.',
 	},
 ] as const;
 

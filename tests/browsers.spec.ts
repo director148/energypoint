@@ -12,7 +12,6 @@ const routes = [
 	'/how-it-works/',
 	'/finance/',
 	'/maintenance/',
-	'/about-us/',
 	'/meet-the-team/',
 	'/reviews/',
 	'/frequently-asked-questions/',

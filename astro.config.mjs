@@ -135,6 +135,9 @@ function pagesFunctionDev(path, handler, methods = ['GET']) {
 export default defineConfig({
 	site: 'https://solar.florul.com',
 	output: 'static',
+	redirects: {
+		'/about-us': '/meet-the-team',
+	},
 	integrations: [
 		sitemap({
 			filter: (page) =>
