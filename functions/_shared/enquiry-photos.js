@@ -148,11 +148,26 @@ export async function storeEnquiryDocument(env, file, label) {
 	return putEnquiryFile(env, bytes, kind, label);
 }
 
-export async function storeEnquiryUploads(env, files) {
-	const bucket = env.ENQUIRY_PHOTOS;
-	const stored = [];
+function safeFileName(fileName, ext, index) {
+	const raw = String(fileName || `upload-${index + 1}`);
+	const trimmed = raw.replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+	const base = trimmed || `upload-${index + 1}`;
+	return base.toLowerCase().endsWith(`.${ext}`) ? base : `${base}.${ext}`;
+}
 
-	if (!bucket || !files.length) return stored;
+function toBase64(bytes) {
+	let binary = '';
+	const chunk = 0x8000;
+	for (let i = 0; i < bytes.length; i += chunk) {
+		binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+	}
+	return btoa(binary);
+}
+
+export async function storeEnquiryUploads(env, files) {
+	const attachments = [];
+	const names = [];
+	if (!files.length) return { attachments, names };
 
 	const stamp = new Date().toISOString().slice(0, 10);
 	const id = crypto.randomUUID();
@@ -175,11 +190,23 @@ export async function storeEnquiryUploads(env, files) {
 			throw new Error('UPLOAD_TOO_LARGE');
 		}
 
-		queue.push({ bytes, kind });
+		queue.push({ bytes, kind, fileName: file.name });
 		if (queue.length >= PHOTO_LIMITS.maxCount + 4) break;
 	}
 
+	const bucket = env.ENQUIRY_PHOTOS;
+
 	for (const [index, item] of queue.entries()) {
+		const filename = safeFileName(item.fileName, item.kind.ext, index);
+		names.push(filename);
+		attachments.push({
+			filename,
+			content: toBase64(item.bytes),
+			content_type: item.kind.type,
+		});
+
+		if (!bucket) continue;
+
 		const key = `enquiries/${stamp}/${id}/${String(index + 1).padStart(2, '0')}.${item.kind.ext}`;
 
 		await bucket.put(key, item.bytes, {
@@ -191,12 +218,9 @@ export async function storeEnquiryUploads(env, files) {
 				retention: '30-days',
 			},
 		});
-
-		const base = String(env.R2_PUBLIC_BASE_URL || '').replace(/\/$/, '');
-		stored.push(base ? `${base}/${key}` : key);
 	}
 
-	return stored;
+	return { attachments, names };
 }
 
 export async function storeEnquiryPhotos(env, files) {

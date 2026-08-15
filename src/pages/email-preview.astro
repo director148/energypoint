@@ -1,0 +1,78 @@
+---
+import { previewEnquiryEmails } from '../../functions/_shared/enquiry-emails.js';
+
+if (import.meta.env.PROD) {
+	return Astro.redirect('/');
+}
+
+const { customer, office } = previewEnquiryEmails(Astro.url.origin);
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="robots" content="noindex" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Email preview</title>
+		<style>
+			body {
+				margin: 0;
+				background: #e8e4d8;
+				color: #10130f;
+				font-family: 'Avenir Next', Avenir, Helvetica, Arial, sans-serif;
+			}
+			header {
+				padding: 1.25rem 1.5rem 0.5rem;
+			}
+			h1 {
+				margin: 0 0 0.35rem;
+				font-family: 'Iowan Old Style', Palatino, Georgia, serif;
+				font-size: 1.6rem;
+			}
+			p {
+				margin: 0;
+				color: #5f675e;
+			}
+			.grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 1rem;
+				padding: 1rem 1.5rem 2rem;
+			}
+			.pane h2 {
+				margin: 0 0 0.5rem;
+				font-size: 0.8rem;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+			}
+			iframe {
+				display: block;
+				width: 100%;
+				height: 42rem;
+				border: 1px solid rgba(16, 19, 15, 0.18);
+				background: #fff;
+			}
+			@media (max-width: 56rem) {
+				.grid {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>Email templates</h1>
+			<p>Local preview of the HTML that Resend will send. Sample data only.</p>
+		</header>
+		<div class="grid">
+			<section class="pane">
+				<h2>Customer · {customer.subject}</h2>
+				<iframe title="Customer confirmation" srcdoc={customer.html}></iframe>
+			</section>
+			<section class="pane">
+				<h2>Office · {office.subject}</h2>
+				<iframe title="Office enquiry" srcdoc={office.html}></iframe>
+			</section>
+		</div>
+	</body>
+</html>

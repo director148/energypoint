@@ -141,10 +141,43 @@ test('contact form posts to the Cloudflare handler and validates required fields
 	await expect(page.locator('input[name="photos"]')).toHaveCount(0);
 	await expect(page.locator('ol.next-steps')).toContainText('Within one working day');
 
-	await page.getByRole('button', { name: 'Book a visit' }).click();
+	await page.getByRole('button', { name: 'Submit' }).click();
 	await expect(page).toHaveURL(/\/contact/);
 	const invalidFields = page.locator('form[name="energy-plan"] :invalid');
 	expect(await invalidFields.count()).toBeGreaterThan(0);
+});
+
+test('contact form does not dump HTML error pages into the uploads field', async ({ page }) => {
+	await page.route('**/api/contact', async (route) => {
+		await route.fulfill({
+			status: 404,
+			contentType: 'text/html; charset=utf-8',
+			body: '<!DOCTYPE html><html lang="en-NZ"><head><meta charset="UTF-8"><title>Not found</title></head><body><h1>Not found</h1></body></html>',
+		});
+	});
+
+	await page.goto('/contact/');
+	await page.locator('#firstName').fill('Jordan');
+	await page.locator('#lastName').fill('Taylor');
+	await page.locator('#phone').fill('0211234567');
+	await page.locator('#email').fill('jordan@example.com');
+	await page.locator('#address').fill('12 Victoria Street, Hamilton');
+	await page.locator('#audience').selectOption('Residential');
+	await page.locator('#goal').selectOption('Reduce electricity costs');
+	await page.locator('#authority').selectOption('I own the property');
+	await page.locator('#preferredTime').selectOption('Morning');
+
+	await page.getByRole('button', { name: 'Submit' }).click();
+
+	const formError = page.locator('[data-form-error]');
+	await expect(formError).toBeVisible();
+	await expect(formError).toHaveText('Could not send enquiry. Please try again.');
+	await expect(formError).not.toContainText('DOCTYPE');
+	await expect(formError).not.toContainText('<html');
+	const box = await formError.boundingBox();
+	expect(box?.height ?? 9999).toBeLessThan(120);
+	await expect(page.locator('[data-error-for="uploads"]')).toBeHidden();
+	await expect(page.locator('main')).not.toContainText('<!DOCTYPE');
 });
 
 test('legal pages include a dated policy and on-page navigation', async ({ page }) => {

@@ -263,10 +263,10 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 
 	<div class="contact-form__footer">
 		<p>
-			By sending this form, you agree that Energy Point may contact you about this enquiry. We do
-			not sell your details. Read the <a href="/privacy/">privacy policy</a>.
+			By sending this form, you agree that Energy Point may contact you about this enquiry. Read
+			the <a href="/privacy/">privacy policy</a>.
 		</p>
-		<button class="button" type="submit">Book a visit</button>
+		<button class="button" type="submit">Submit</button>
 	</div>
 </form>
 
@@ -520,6 +520,58 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 		return { values, errors, ok: Object.keys(errors).length === 0 };
 	};
 
+	const SEND_FAILED = 'Could not send enquiry. Please try again.';
+	const SAFE_ERROR_MAX = 180;
+	const SAFE_ERROR_CHARS = /^[\p{L}\p{N}\s.,'!?:+#()/\\-]+$/u;
+
+	const customerErrorMessage = (text, fallback = SEND_FAILED) => {
+		const oneLine = String(text || '')
+			.replace(/\s+/g, ' ')
+			.trim();
+		if (!oneLine || oneLine.length > SAFE_ERROR_MAX || /[<>]/.test(oneLine) || !SAFE_ERROR_CHARS.test(oneLine)) {
+			return fallback;
+		}
+		return oneLine;
+	};
+
+	const isHtmlResponse = (response) =>
+		String(response.headers.get('content-type') || '')
+			.toLowerCase()
+			.includes('text/html');
+
+	const messageFromResponse = async (response) => {
+		if (isHtmlResponse(response)) return SEND_FAILED;
+
+		const type = String(response.headers.get('content-type') || '').toLowerCase();
+		try {
+			if (type.includes('application/json')) {
+				const data = await response.json();
+				const msg =
+					(typeof data.error === 'string' && data.error) ||
+					(typeof data.message === 'string' && data.message) ||
+					'';
+				return customerErrorMessage(msg);
+			}
+
+			if (!type.includes('text/plain')) return SEND_FAILED;
+			return customerErrorMessage(await response.text());
+		} catch {
+			return SEND_FAILED;
+		}
+	};
+
+	const showFormError = (form, message) => {
+		const formError = form.querySelector('[data-form-error]');
+		if (!(formError instanceof HTMLElement)) return;
+		formError.replaceChildren();
+		if (message) {
+			formError.textContent = customerErrorMessage(message);
+			formError.hidden = false;
+		} else {
+			formError.hidden = true;
+		}
+	};
+
 	const showErrors = (form, errors) => {
 		form.querySelectorAll('[data-error-for]').forEach((el) => {
 			const key = el.getAttribute('data-error-for');
@@ -528,7 +580,7 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 			const control = field?.querySelector('input, select, textarea');
 
 			if (message) {
-				el.textContent = message;
+				el.textContent = /[<>]/.test(message) ? SEND_FAILED : message;
 				el.hidden = false;
 				field?.classList.add('field--invalid');
 				control?.setAttribute('aria-invalid', 'true');
@@ -540,17 +592,7 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 			}
 		});
 
-		const formError = form.querySelector('[data-form-error]');
-		if (formError) {
-			const first = Object.values(errors)[0];
-			if (first) {
-				formError.textContent = first;
-				formError.hidden = false;
-			} else {
-				formError.textContent = '';
-				formError.hidden = true;
-			}
-		}
+		showFormError(form, Object.values(errors)[0] || '');
 	};
 
 	const applyAudienceFromQuery = (form) => {
@@ -1006,7 +1048,7 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 			if (submit instanceof HTMLButtonElement) {
 				submit.disabled = true;
 				submit.textContent = 'Sending...';
-				submit.dataset.label = 'Book a visit';
+				submit.dataset.label = 'Submit';
 			}
 
 			const payload = new FormData(form);
@@ -1032,23 +1074,19 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 					window.location.assign(response.url);
 					return;
 				}
-				if (response.ok) {
+				if (response.ok && !isHtmlResponse(response)) {
 					window.location.assign('/thank-you/');
 					return;
 				}
-				const message = (await response.text()) || 'Could not send enquiry. Please try again.';
-				showErrors(form, { uploads: message });
-				const formError = form.querySelector('[data-form-error]');
-				if (formError) {
-					formError.textContent = message;
-					formError.hidden = false;
-				}
+				showErrors(form, {});
+				showFormError(form, await messageFromResponse(response));
 			} catch {
-				showErrors(form, { uploads: 'Could not send enquiry. Check your connection and try again.' });
+				showErrors(form, {});
+				showFormError(form, 'Could not send enquiry. Check your connection and try again.');
 			} finally {
 				if (submit instanceof HTMLButtonElement) {
 					submit.disabled = false;
-					submit.textContent = submit.dataset.label || 'Book a visit';
+					submit.textContent = submit.dataset.label || 'Submit';
 				}
 			}
 		});

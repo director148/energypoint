@@ -2,13 +2,17 @@
  * Cloudflare Pages Function: contact enquiry handler.
  * Env (Pages project → Settings → Variables):
  *   RESEND_API_KEY       required
- *   CONTACT_TO_EMAIL     optional (default sales@energypoint.nz)
+ *   CONTACT_TO_EMAIL     optional (default director@florul.co.uk while testing)
  *   CONTACT_FROM_EMAIL   optional (verified Resend sender)
  *   R2_PUBLIC_BASE_URL   optional public prefix for stored photos
  * R2 binding: ENQUIRY_PHOTOS
  */
 
 import { validateContactFields } from '../_shared/contact-validation.js';
+import {
+	customerConfirmationEmail,
+	officeEnquiryEmail,
+} from '../_shared/enquiry-emails.js';
 import { storeEnquiryUploads } from '../_shared/enquiry-photos.js';
 
 export async function onRequestPost(context) {
@@ -52,10 +56,9 @@ export async function onRequestPost(context) {
 		return new Response('Enquiry delivery is not configured yet.', { status: 503 });
 	}
 
-	const to = context.env.CONTACT_TO_EMAIL || 'sales@energypoint.nz';
+	const to = context.env.CONTACT_TO_EMAIL || 'director@florul.co.uk';
 	const from =
 		context.env.CONTACT_FROM_EMAIL || 'Energy Point Website <onboarding@resend.dev>';
-	const subject = values.subject || 'New Energy Point consultation enquiry';
 
 	const incoming = [
 		...formData.getAll('uploads'),
@@ -65,11 +68,13 @@ export async function onRequestPost(context) {
 	].filter((file) => file instanceof File && file.size);
 
 	let uploadLines = [];
+	let attachments = [];
 	try {
 		const stored = await storeEnquiryUploads(context.env, incoming);
-		uploadLines = stored.length
-			? ['', 'Uploads:', ...stored.map((item) => `- ${item}`)]
-			: ['', 'Uploads: none stored.'];
+		attachments = stored.attachments;
+		uploadLines = stored.names.length
+			? ['', 'Uploads attached:', ...stored.names.map((name) => `- ${name}`)]
+			: ['', 'Uploads: none.'];
 	} catch (error) {
 		console.error('R2 upload store error', error);
 		if (error instanceof Error && error.message === 'UPLOAD_TOO_LARGE') {
@@ -81,36 +86,30 @@ export async function onRequestPost(context) {
 		uploadLines = ['', 'Uploads: could not be stored.'];
 	}
 
-	const text = [
-		`Audience: ${values.audience}`,
-		`Goal: ${values.goal}`,
-		`Best time: ${values.preferredTime}`,
-		`Authority: ${values.authority}`,
-		values.monthlyBill ? `Typical monthly bill: $${values.monthlyBill}` : null,
-		`Name: ${values.name}`,
-		`Phone: ${values.phone}`,
-		`Email: ${values.email}`,
-		`Address: ${values.address}`,
-		'',
-		values.message || '(No extra note.)',
-		...uploadLines,
-	]
-		.filter((line) => line !== null)
-		.join('\n');
+	const officeMail = officeEnquiryEmail({ values, uploadLines });
+	const customerMail = customerConfirmationEmail({
+		firstName: values.firstName,
+		audience: values.audience,
+	});
 
-	const res = await fetch('https://api.resend.com/emails', {
-		method: 'POST',
-		headers: {
-			Authorization: `Bearer ${apiKey}`,
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({
-			from,
-			to: [to],
-			reply_to: values.email,
-			subject: `${subject} (${values.audience})`,
-			text,
-		}),
+	const sendEmail = (payload) =>
+		fetch('https://api.resend.com/emails', {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${apiKey}`,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(payload),
+		});
+
+	const res = await sendEmail({
+		from,
+		to: [to],
+		reply_to: values.email,
+		subject: officeMail.subject,
+		text: officeMail.text,
+		html: officeMail.html,
+		attachments: attachments.length ? attachments : undefined,
 	});
 
 	if (!res.ok) {
@@ -119,6 +118,19 @@ export async function onRequestPost(context) {
 			'Could not send enquiry. Please call or email us directly.',
 			{ status: 502 },
 		);
+	}
+
+	const confirm = await sendEmail({
+		from,
+		to: [values.email],
+		reply_to: to,
+		subject: customerMail.subject,
+		text: customerMail.text,
+		html: customerMail.html,
+	});
+
+	if (!confirm.ok) {
+		console.error('Resend confirmation error', await confirm.text());
 	}
 
 	return Response.redirect(thankYou, 303);

@@ -6,17 +6,45 @@ interface Props {
 }
 
 const { href = '/how-it-works/' } = Astro.props;
+
+const optimized = (image: string) => {
+	const base = image
+		.replace(/^\/images\//, '')
+		.replace(/\.(png|jpe?g|webp)$/i, '')
+		.replace(/-(?:640|960|1200|1600)$/i, '');
+	return {
+		src: `/images/${base}-960.webp`,
+		srcset: `/images/${base}-640.webp 640w, /images/${base}-960.webp 960w, /images/${base}-1200.webp 1200w`,
+	};
+};
 ---
 
 <ol class="process-index">
 	{
-		defaultProcess.map((step) => (
-			<li>
-				<a href={`${href}#${step.id}`}>
-					<span>{step.number}</span>
-					<strong>{step.title}</strong>
-				</a>
-			</li>
-		))
+		defaultProcess.map((step, index) => {
+			const media = optimized(step.image);
+			return (
+				<li data-reveal style={`--reveal-delay: ${index * 60}ms`}>
+					<a class="process-index__card" href={href}>
+						<div class="process-index__media" aria-hidden="true">
+							<img
+								src={media.src}
+								srcset={media.srcset}
+								sizes="(max-width: 48rem) 100vw, (max-width: 64rem) 50vw, 20vw"
+								alt=""
+								width="960"
+								height="720"
+								loading="lazy"
+								decoding="async"
+							/>
+						</div>
+						<div class="process-index__content">
+							<span>{step.number}</span>
+							<strong>{step.title}</strong>
+						</div>
+					</a>
+				</li>
+			);
+		})
 	}
 </ol>
