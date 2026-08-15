@@ -2,7 +2,6 @@
 # Auto-deploys from GitHub Actions on push to main.
 # Manual: npm run deploy
 name = "energypoint"
-account_id = "9f77d5515ac8f130a2e4c47c3d409ebe"
 compatibility_date = "2026-08-12"
 pages_build_output_dir = "dist"
 
