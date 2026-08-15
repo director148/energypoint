@@ -46,11 +46,12 @@ test('mobile navigation exposes every primary journey', async ({ page, isMobile 
 	await toggle.click();
 
 	await expect(toggle).toHaveAttribute('aria-expanded', 'true');
-	await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toBeVisible();
-	await expect(page.getByRole('link', { name: 'Residential', exact: true })).toBeVisible();
-	await expect(page.getByRole('link', { name: 'Commercial', exact: true })).toBeVisible();
-	await expect(page.getByRole('link', { name: 'Rural', exact: true })).toBeVisible();
-	await expect(page.getByRole('link', { name: 'How it works', exact: true })).toBeVisible();
+	const mobileNav = page.getByRole('navigation', { name: 'Mobile navigation' });
+	await expect(mobileNav).toBeVisible();
+	await expect(mobileNav.getByRole('link', { name: 'Residential', exact: true })).toBeVisible();
+	await expect(mobileNav.getByRole('link', { name: 'Commercial', exact: true })).toBeVisible();
+	await expect(mobileNav.getByRole('link', { name: 'Rural', exact: true })).toBeVisible();
+	await expect(mobileNav.getByRole('link', { name: 'How it works', exact: true })).toBeVisible();
 
 	await page.keyboard.press('Escape');
 	await expect(toggle).toHaveAttribute('aria-expanded', 'false');
@@ -87,12 +88,12 @@ test('FAQ audience filter shows matching questions', async ({ page }) => {
 	await rural.click();
 	await expect(rural).toHaveAttribute('aria-pressed', 'true');
 	await expect(page).toHaveURL(/audience=rural/);
-	await expect(page.getByText('Is ground-mounted solar an option on a farm or lifestyle block?')).toBeVisible();
+	await expect(page.getByText('Is ground-mounted solar an option on a farm?')).toBeVisible();
 	await expect(page.getByText('Can solar work on a commercial roof or multiple buildings?')).toBeHidden();
 
 	await commercial.click();
 	await expect(page.getByText('Can solar work on a commercial roof or multiple buildings?')).toBeVisible();
-	await expect(page.getByText('Is ground-mounted solar an option on a farm or lifestyle block?')).toBeHidden();
+	await expect(page.getByText('Is ground-mounted solar an option on a farm?')).toBeHidden();
 });
 
 test('address lookup shows NZ suggestions when the Pages function is missing', async ({
@@ -178,6 +179,35 @@ test('contact form does not dump HTML error pages into the uploads field', async
 	expect(box?.height ?? 9999).toBeLessThan(120);
 	await expect(page.locator('[data-error-for="uploads"]')).toBeHidden();
 	await expect(page.locator('main')).not.toContainText('<!DOCTYPE');
+});
+
+test('contact form never shows internal delivery setup errors', async ({ page }) => {
+	await page.route('**/api/contact', async (route) => {
+		await route.fulfill({
+			status: 503,
+			contentType: 'text/plain; charset=utf-8',
+			body: 'Enquiry delivery is not configured yet.',
+		});
+	});
+
+	await page.goto('/contact/');
+	await page.locator('#firstName').fill('Jordan');
+	await page.locator('#lastName').fill('Taylor');
+	await page.locator('#phone').fill('0211234567');
+	await page.locator('#email').fill('jordan@example.com');
+	await page.locator('#address').fill('12 Victoria Street, Hamilton');
+	await page.locator('#audience').selectOption('Residential');
+	await page.locator('#goal').selectOption('Reduce electricity costs');
+	await page.locator('#authority').selectOption('I own the property');
+	await page.locator('#preferredTime').selectOption('Morning');
+
+	await page.getByRole('button', { name: 'Submit' }).click();
+
+	const formError = page.locator('[data-form-error]');
+	await expect(formError).toBeVisible();
+	await expect(formError).toHaveText('Could not send enquiry. Please try again.');
+	await expect(page.locator('main')).not.toContainText('not configured');
+	await expect(page.locator('[data-error-for="uploads"]')).toBeHidden();
 });
 
 test('legal pages include a dated policy and on-page navigation', async ({ page }) => {

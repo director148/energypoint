@@ -259,6 +259,8 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 			}
 			maxlength="1000"
 			rows="3"
+			autocapitalize="sentences"
+			data-message-field
 		></textarea>
 		<span class="field__error" data-error-for="message" hidden></span>
 	</div>
@@ -356,6 +358,9 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 
 		return cleaned ? titleCaseNameParts(cleaned) : '';
 	};
+
+	const capitaliseFirstLetter = (value) =>
+		String(value || '').replace(/^(\s*)(\p{L})/u, (_, space, letter) => space + letter.toUpperCase());
 
 	const blobToFile = (blob, name) => new File([blob], name, { type: blob.type, lastModified: Date.now() });
 
@@ -457,7 +462,7 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 			phone: sanitisePhone(data.get('phone')),
 			email: sanitiseEmail(data.get('email')),
 			address: String(data.get('address') || '').trim().replace(/\s+/g, ' '),
-			message: String(data.get('message') || '').trim().replace(/\s+/g, ' '),
+			message: capitaliseFirstLetter(String(data.get('message') || '').trim().replace(/\s+/g, ' ')),
 		};
 
 		if (!values.audience) errors.audience = 'Choose a property type.';
@@ -525,12 +530,19 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 	const SEND_FAILED = 'Could not send enquiry. Please try again.';
 	const SAFE_ERROR_MAX = 180;
 	const SAFE_ERROR_CHARS = /^[\p{L}\p{N}\s.,'!?:+#()/\\-]+$/u;
+	const INTERNAL_ERROR = /not configured|resend|api key|delivery is/i;
 
 	const customerErrorMessage = (text, fallback = SEND_FAILED) => {
 		const oneLine = String(text || '')
 			.replace(/\s+/g, ' ')
 			.trim();
-		if (!oneLine || oneLine.length > SAFE_ERROR_MAX || /[<>]/.test(oneLine) || !SAFE_ERROR_CHARS.test(oneLine)) {
+		if (
+			!oneLine ||
+			oneLine.length > SAFE_ERROR_MAX ||
+			/[<>]/.test(oneLine) ||
+			!SAFE_ERROR_CHARS.test(oneLine) ||
+			INTERNAL_ERROR.test(oneLine)
+		) {
 			return fallback;
 		}
 		return oneLine;
@@ -542,6 +554,7 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 			.includes('text/html');
 
 	const messageFromResponse = async (response) => {
+		if (response.status >= 500) return SEND_FAILED;
 		if (isHtmlResponse(response)) return SEND_FAILED;
 
 		const type = String(response.headers.get('content-type') || '').toLowerCase();
@@ -582,7 +595,7 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 			const control = field?.querySelector('input, select, textarea');
 
 			if (message) {
-				el.textContent = /[<>]/.test(message) ? SEND_FAILED : message;
+				el.textContent = customerErrorMessage(message);
 				el.hidden = false;
 				field?.classList.add('field--invalid');
 				control?.setAttribute('aria-invalid', 'true');
@@ -847,6 +860,22 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 			});
 		}
 
+		const messageInput = form.querySelector('[data-message-field]');
+		if (messageInput instanceof HTMLTextAreaElement) {
+			const applySentenceStart = () => {
+				const cursor = messageInput.selectionStart;
+				const next = capitaliseFirstLetter(messageInput.value);
+				if (next === messageInput.value) return;
+				messageInput.value = next;
+				if (typeof cursor === 'number') {
+					messageInput.setSelectionRange(cursor, cursor);
+				}
+			};
+
+			messageInput.addEventListener('input', applySentenceStart);
+			messageInput.addEventListener('blur', applySentenceStart);
+		}
+
 		const billInput = form.querySelector('[data-bill-field]');
 		if (billInput instanceof HTMLInputElement) {
 			const digitsOnly = (value) => value.replace(/\D/g, '').slice(0, LIMITS.monthlyBill);
@@ -1024,6 +1053,9 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 
 			if (emailInput instanceof HTMLInputElement) {
 				emailInput.value = sanitiseEmail(emailInput.value);
+			}
+			if (messageInput instanceof HTMLTextAreaElement) {
+				messageInput.value = capitaliseFirstLetter(messageInput.value);
 			}
 
 			const classified = classifyUploads(billFile, usageFile, photos);

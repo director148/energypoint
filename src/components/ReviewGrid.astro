@@ -17,44 +17,48 @@ const slideLabel = (index: number) =>
 
 <div class="review-grid" data-review-carousel data-reveal>
 	<div
-		class="review-carousel__scroller"
-		data-review-scroller
-		tabindex="0"
+		class="review-carousel"
+		data-review-viewport
 		role="region"
 		aria-roledescription="carousel"
 		aria-label="Customer reviews"
 	>
-		{
-			items.map((item, index) => (
-				<figure class="review-card" aria-label={slideLabel(index)}>
-					<div
-						class="review-card__stars"
-						role="img"
-						aria-label={`${item.rating ?? 5} out of 5 stars`}
-					>
-						{Array.from({ length: item.rating ?? 5 }).map(() => (
-							<span aria-hidden="true">★</span>
-						))}
+		<div class="review-carousel__container">
+			{
+				items.map((item, index) => (
+					<div class="review-carousel__slide">
+						<figure class="review-card" aria-label={slideLabel(index)}>
+							<div
+								class="review-card__stars"
+								role="img"
+								aria-label={`${item.rating ?? 5} out of 5 stars`}
+							>
+								{Array.from({ length: item.rating ?? 5 }).map(() => (
+									<span aria-hidden="true">★</span>
+								))}
+							</div>
+							{item.headline && <h3>{item.headline}</h3>}
+							<blockquote>“{item.quote}”</blockquote>
+							<figcaption>
+								<span>{attribution(item)}</span>
+							</figcaption>
+						</figure>
 					</div>
-					{item.headline && <h3>{item.headline}</h3>}
-					<blockquote>“{item.quote}”</blockquote>
-					<figcaption>
-						<span>{attribution(item)}</span>
-					</figcaption>
-				</figure>
-			))
-		}
+				))
+			}
+		</div>
 	</div>
 
 	{
 		total > 1 && (
-			<div class="review-carousel__nav">
+			<div class="review-carousel__controls">
 				<button type="button" class="review-carousel__button" data-review-prev>
 					<span class="sr-only">Previous review</span>
 					<svg viewBox="0 0 16 16" aria-hidden="true">
 						<path d="M10.2 2.4 4.6 8l5.6 5.6" fill="none" stroke="currentColor" stroke-width="1.6" />
 					</svg>
 				</button>
+				<div class="review-carousel__dots" data-review-dots></div>
 				<button type="button" class="review-carousel__button" data-review-next>
 					<span class="sr-only">Next review</span>
 					<svg viewBox="0 0 16 16" aria-hidden="true">
@@ -67,88 +71,79 @@ const slideLabel = (index: number) =>
 </div>
 
 <script>
-	let reviewController: AbortController | undefined;
+	import EmblaCarousel, { type EmblaCarouselType } from 'embla-carousel';
+
+	let teardown: (() => void) | undefined;
 
 	const initReviewCarousels = () => {
-		reviewController?.abort();
-		reviewController = new AbortController();
-		const { signal } = reviewController;
+		teardown?.();
+
+		const instances: EmblaCarouselType[] = [];
+		const abort = new AbortController();
+		const { signal } = abort;
 		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		document.querySelectorAll<HTMLElement>('[data-review-carousel]').forEach((root) => {
-			const scroller = root.querySelector<HTMLElement>('[data-review-scroller]');
+			const viewport = root.querySelector<HTMLElement>('[data-review-viewport]');
 			const prev = root.querySelector<HTMLButtonElement>('[data-review-prev]');
 			const next = root.querySelector<HTMLButtonElement>('[data-review-next]');
-			const cards = scroller ? [...scroller.querySelectorAll<HTMLElement>('.review-card')] : [];
+			const dotsRoot = root.querySelector<HTMLElement>('[data-review-dots]');
 
-			if (!scroller || cards.length < 2) return;
+			if (!viewport) return;
 
-			const gap = () => {
-				const parsed = Number.parseFloat(getComputedStyle(scroller).gap);
-				return Number.isFinite(parsed) ? parsed : 0;
+			const embla = EmblaCarousel(viewport, {
+				align: 'start',
+				containScroll: 'trimSnaps',
+				duration: reduceMotion ? 0 : 22,
+				slidesToScroll: 1,
+			});
+			instances.push(embla);
+
+			const syncButtons = () => {
+				prev?.toggleAttribute('disabled', !embla.canScrollPrev());
+				next?.toggleAttribute('disabled', !embla.canScrollNext());
 			};
 
-			const step = () => cards[0].getBoundingClientRect().width + gap();
+			const syncDots = () => {
+				if (!dotsRoot) return;
+				const snaps = embla.scrollSnapList();
+				const selected = embla.selectedScrollSnap();
 
-			const visibleCount = () => {
-				const cardWidth = cards[0].getBoundingClientRect().width;
-				if (cardWidth <= 0) return 1;
-				const g = gap();
-				return Math.max(1, Math.round((scroller.clientWidth + g) / (cardWidth + g)));
-			};
+				if (dotsRoot.childElementCount !== snaps.length) {
+					dotsRoot.replaceChildren(
+						...snaps.map((_, index) => {
+							const dot = document.createElement('button');
+							dot.type = 'button';
+							dot.className = 'review-carousel__dot';
+							dot.setAttribute('aria-label', `Go to review group ${index + 1}`);
+							dot.addEventListener('click', () => embla.scrollTo(index), { signal });
+							return dot;
+						}),
+					);
+				}
 
-			const lastIndex = () => Math.max(0, cards.length - visibleCount());
-
-			const currentIndex = () => {
-				const delta = step();
-				if (delta <= 0) return 0;
-				return Math.min(lastIndex(), Math.max(0, Math.round(scroller.scrollLeft / delta)));
-			};
-
-			const sync = () => {
-				const index = currentIndex();
-				prev?.toggleAttribute('disabled', index <= 0);
-				next?.toggleAttribute('disabled', index >= lastIndex());
-			};
-
-			const go = (direction: -1 | 1) => {
-				scroller.scrollBy({
-					left: direction * step(),
-					behavior: reduceMotion ? 'auto' : 'smooth',
+				[...dotsRoot.children].forEach((dot, index) => {
+					dot.setAttribute('aria-current', index === selected ? 'true' : 'false');
 				});
 			};
 
-			const equalise = () => {
-				scroller.style.removeProperty('--review-card-height');
-				const tallest = cards.reduce((max, card) => Math.max(max, card.offsetHeight), 0);
-				if (tallest) scroller.style.setProperty('--review-card-height', `${tallest}px`);
+			const sync = () => {
+				syncButtons();
+				syncDots();
 			};
 
-			equalise();
 			sync();
+			embla.on('select', sync);
+			embla.on('reInit', sync);
 
-			prev?.addEventListener('click', () => go(-1), { signal });
-			next?.addEventListener('click', () => go(1), { signal });
-			scroller.addEventListener('scroll', sync, { passive: true, signal });
-			scroller.addEventListener(
-				'keydown',
-				(event) => {
-					if (event.key === 'ArrowLeft') {
-						event.preventDefault();
-						go(-1);
-					}
-					if (event.key === 'ArrowRight') {
-						event.preventDefault();
-						go(1);
-					}
-				},
-				{ signal },
-			);
-			window.addEventListener('resize', () => {
-				equalise();
-				sync();
-			}, { signal });
+			prev?.addEventListener('click', () => embla.scrollPrev(), { signal });
+			next?.addEventListener('click', () => embla.scrollNext(), { signal });
 		});
+
+		teardown = () => {
+			abort.abort();
+			instances.forEach((embla) => embla.destroy());
+		};
 	};
 
 	document.addEventListener('astro:page-load', initReviewCarousels);

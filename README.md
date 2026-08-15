@@ -36,16 +36,19 @@ Required Cloudflare Pages env vars (for the contact form):
 - `RESEND_API_KEY`
 - `CONTACT_TO_EMAIL` (optional, defaults to `sales@energypoint.nz`)
 - `CONTACT_FROM_EMAIL` (optional; must be a verified Resend sender)
-- `R2_PUBLIC_BASE_URL` (optional public base URL for enquiry photos; email includes object keys if unset)
 
-Enquiry photos upload to the R2 bucket `energypoint-enquiry-photos` (binding `ENQUIRY_PHOTOS` in `wrangler.toml`). Create it once, then apply the 30-day deletion policy:
+Site images live in the public R2 bucket `energy-point` (binding `MEDIA`). Pages serve them at `/images/*`. Contact-form photos and documents live in the private bucket `energypoint-enquiry-photos` (binding `ENQUIRY_PHOTOS`) and expire after 30 days. Do not enable a public r2.dev URL or custom domain on the enquiry bucket. Leave `R2_PUBLIC_BASE_URL` unset.
+
+Create the buckets once, upload site images and apply the enquiry lifecycle:
 
 ```bash
+npx wrangler r2 bucket create energy-point --location oc --profile=florul
 npx wrangler r2 bucket create energypoint-enquiry-photos --profile=florul
+npm run r2:sync
 npm run r2:lifecycle
 ```
 
-The GitHub deploy workflow reapplies `r2-lifecycle.json` on each production deploy. The API token needs **Account → Workers R2 Storage → Edit** in addition to Pages Edit.
+The GitHub deploy workflow syncs `public/images` to `energy-point`, deploys Pages without bundling those files and reapplies `r2-lifecycle.json` on the enquiry bucket. The API token needs **Account → Workers R2 Storage → Edit** in addition to Pages Edit.
 
 Manual deploy:
 

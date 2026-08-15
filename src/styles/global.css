@@ -316,7 +316,7 @@ p {
 	padding: 0.9rem 1.35rem;
 	border: 1px solid transparent;
 	border-radius: var(--radius-button);
-	background: var(--moss);
+	background: var(--moss-deep);
 	color: var(--white);
 	font-size: 0.78rem;
 	font-weight: 700;
@@ -341,7 +341,7 @@ p {
 }
 
 .button:hover {
-	background: var(--moss-bright);
+	background: var(--forest-mid);
 	transform: translateY(-2px);
 }
 
@@ -361,8 +361,8 @@ p {
 }
 
 .button--ghost:hover {
-	border-color: var(--moss-bright);
-	background: var(--moss-bright);
+	border-color: var(--forest-mid);
+	background: var(--forest-mid);
 	color: var(--white);
 }
 
@@ -447,7 +447,7 @@ p {
 }
 
 .site-header--on-light .header-actions .button {
-	background: var(--moss);
+	background: var(--moss-deep);
 	color: var(--white);
 }
 
@@ -719,7 +719,7 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 }
 
 .mobile-menu .button--light {
-	background: var(--moss);
+	background: var(--moss-deep);
 	color: var(--white);
 }
 
@@ -1531,46 +1531,64 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 }
 
 .review-grid {
-	position: relative;
 	display: grid;
 	width: 100%;
 	min-width: 0;
-	padding-inline: 1.375rem;
+	gap: 1rem;
 }
 
-.review-carousel__scroller {
+.review-carousel {
+	overflow: hidden;
+}
+
+.review-carousel__container {
 	--review-gap: 1.25rem;
 	display: flex;
-	width: 100%;
+	touch-action: pan-y pinch-zoom;
+	margin-left: calc(var(--review-gap) * -1);
+}
+
+.review-carousel__slide {
+	flex: 0 0 50%;
 	min-width: 0;
-	gap: var(--review-gap);
-	overflow-x: auto;
-	overscroll-behavior-x: contain;
-	scroll-snap-type: x mandatory;
-	scrollbar-width: none;
-	touch-action: pan-x;
-	-webkit-overflow-scrolling: touch;
+	padding-left: var(--review-gap);
 }
 
-.review-carousel__scroller::-webkit-scrollbar {
-	display: none;
-}
-
-.review-carousel__nav {
-	position: absolute;
-	inset: 0;
-	z-index: 2;
+.review-carousel__controls {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding-inline: 0;
-	pointer-events: none;
+	gap: 0.75rem;
+}
+
+.review-carousel__dots {
+	display: flex;
+	flex: 1;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 0.45rem;
+}
+
+.review-carousel__dot {
+	width: 0.55rem;
+	height: 0.55rem;
+	padding: 0;
+	border: 0;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--ink) 18%, transparent);
+	cursor: pointer;
+}
+
+.review-carousel__dot[aria-current='true'] {
+	background: var(--moss);
 }
 
 .review-carousel__button {
 	display: inline-flex;
 	width: 2.75rem;
 	height: 2.75rem;
+	flex-shrink: 0;
 	align-items: center;
 	justify-content: center;
 	padding: 0;
@@ -1578,8 +1596,6 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	border-radius: var(--radius-button);
 	background: var(--paper);
 	color: var(--ink);
-	box-shadow: 0 0.4rem 1.1rem rgba(16, 19, 15, 0.12);
-	pointer-events: auto;
 	transition:
 		background 240ms ease,
 		border-color 240ms ease,
@@ -1592,8 +1608,8 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 }
 
 .review-carousel__button:hover:not(:disabled) {
-	border-color: var(--moss);
-	background: var(--moss);
+	border-color: var(--moss-deep);
+	background: var(--moss-deep);
 	color: var(--white);
 }
 
@@ -1604,10 +1620,7 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 
 .review-card {
 	display: flex;
-	flex: 0 0 calc((100% - var(--review-gap)) / 2);
-	width: calc((100% - var(--review-gap)) / 2);
-	min-width: 0;
-	height: var(--review-card-height, auto);
+	height: 100%;
 	margin: 0;
 	flex-direction: column;
 	gap: 1.1rem;
@@ -1615,8 +1628,6 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	border: 1px solid var(--line-light);
 	border-radius: var(--radius-md);
 	background: var(--paper);
-	scroll-snap-align: start;
-	scroll-snap-stop: always;
 }
 
 .review-card__stars {
@@ -2955,17 +2966,15 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 		gap: 2.5rem;
 	}
 
-	.review-grid {
-		padding-inline: 3rem;
+	.review-carousel__container {
+		--review-gap: 0.85rem;
 	}
 
-	.review-carousel__scroller {
-		--review-gap: 0px;
+	.review-carousel__slide {
+		flex-basis: 100%;
 	}
 
 	.review-card {
-		flex-basis: 100%;
-		width: 100%;
 		padding: 1.35rem 1.25rem;
 	}
 

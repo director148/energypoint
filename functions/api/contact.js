@@ -4,8 +4,8 @@
  *   RESEND_API_KEY       required
  *   CONTACT_TO_EMAIL     optional (default director@florul.co.uk while testing)
  *   CONTACT_FROM_EMAIL   optional (verified Resend sender)
- *   R2_PUBLIC_BASE_URL   optional public prefix for stored photos
- * R2 binding: ENQUIRY_PHOTOS
+ *   R2_PUBLIC_BASE_URL   leave unset: enquiry bucket is private
+ * R2 binding: ENQUIRY_PHOTOS (bucket energypoint-enquiry-photos)
  */
 
 import { validateContactFields } from '../_shared/contact-validation.js';
@@ -53,7 +53,8 @@ export async function onRequestPost(context) {
 
 	const apiKey = context.env.RESEND_API_KEY;
 	if (!apiKey) {
-		return new Response('Enquiry delivery is not configured yet.', { status: 503 });
+		console.error('RESEND_API_KEY is not set');
+		return new Response('Could not send enquiry. Please try again.', { status: 503 });
 	}
 
 	const to = context.env.CONTACT_TO_EMAIL || 'director@florul.co.uk';

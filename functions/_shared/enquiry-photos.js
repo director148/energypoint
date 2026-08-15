@@ -1,4 +1,4 @@
-/** Validate and store enquiry photos in R2.
+/** Validate and store enquiry files in the private R2 bucket.
  *  Bucket lifecycle (r2-lifecycle.json) deletes objects after 30 days.
  */
 

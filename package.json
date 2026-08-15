@@ -16,18 +16,21 @@
     "lighthouse": "node scripts/lighthouse-audit.mjs",
     "images:optimize": "node scripts/optimize-images.mjs",
     "astro": "astro",
-    "deploy": "npm run build && wrangler pages deploy dist --project-name=energypoint --branch=main --profile=florul",
+    "deploy": "npm run r2:sync && npm run build && rm -rf dist/images && wrangler pages deploy dist --project-name=energypoint --branch=main --profile=florul",
+    "r2:sync": "node scripts/sync-r2-images.mjs",
     "r2:lifecycle": "wrangler r2 bucket lifecycle set energypoint-enquiry-photos --file r2-lifecycle.json --force --profile=florul"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
-    "astro": "^7.2.1"
+    "astro": "^7.2.1",
+    "embla-carousel": "^8.6.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@playwright/test": "^1.62.1",
     "chrome-launcher": "^1.2.1",
     "lighthouse": "^13.4.1",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wrangler": "^4.123.0"
   }
 }

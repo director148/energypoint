@@ -4,7 +4,7 @@ import CTASection from '../components/CTASection.astro';
 import Hero from '../components/Hero.astro';
 import ProcessIndex from '../components/ProcessIndex.astro';
 import ReviewGrid from '../components/ReviewGrid.astro';
-import { audiences, featuredReviews } from '../data/site';
+import { audiences, reviews } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const serviceSchema = {
@@ -40,7 +40,7 @@ const serviceSchema = {
 					<h2>Clear advice, no pressure</h2>
 				</div>
 			</div>
-			<ReviewGrid items={featuredReviews.slice(0, 3)} />
+			<ReviewGrid items={reviews} />
 		</div>
 	</section>
 

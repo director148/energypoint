@@ -289,8 +289,6 @@ export const afterInstall = [
 	},
 ] as const;
 
-export const featuredReviews = [reviews[0], reviews[1], reviews[5]] as const;
-
 export const testimonials = {
 	residential: reviews
 		.filter((review) => review.name === 'Emma & Josh' || review.name === 'Tania R.')
