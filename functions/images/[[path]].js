@@ -1,8 +1,10 @@
 /** Serve site images from the energy-point R2 bucket. */
 
 export async function onRequestGet(context) {
-	const raw = String(context.params.path || '');
-	if (!raw || raw.includes('..')) {
+	/* A [[path]] catch-all gives an array of segments, so join rather than stringify. */
+	const parts = context.params.path;
+	const raw = Array.isArray(parts) ? parts.join('/') : String(parts || '');
+	if (!raw || raw.split('/').includes('..')) {
 		return new Response('Not found.', { status: 404 });
 	}
 
