@@ -19,9 +19,9 @@ export const navigation = [
 	{ label: 'Maintenance', href: '/maintenance/' },
 	{ label: 'How it works', href: '/how-it-works/' },
 	{ label: 'Finance', href: '/finance/' },
+	{ label: 'FAQs', href: '/frequently-asked-questions/' },
 	{ label: 'Meet the team', href: '/meet-the-team/' },
 	{ label: 'Reviews', href: '/reviews/' },
-	{ label: 'FAQs', href: '/frequently-asked-questions/' },
 ] as const;
 
 export const audiences = [
