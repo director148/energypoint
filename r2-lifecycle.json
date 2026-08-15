@@ -1,23 +1,29 @@
 {
-	"Rules": [
+	"rules": [
 		{
-			"ID": "expire-user-photos-30d",
-			"Status": "Enabled",
-			"Filter": {
-				"Prefix": ""
+			"id": "expire-user-photos-30d",
+			"enabled": true,
+			"conditions": {
+				"prefix": ""
 			},
-			"Expiration": {
-				"Days": 30
+			"deleteObjectsTransition": {
+				"condition": {
+					"maxAge": 2592000,
+					"type": "Age"
+				}
 			}
 		},
 		{
-			"ID": "abort-incomplete-user-photos",
-			"Status": "Enabled",
-			"Filter": {
-				"Prefix": ""
+			"id": "abort-incomplete-user-photos",
+			"enabled": true,
+			"conditions": {
+				"prefix": ""
 			},
-			"AbortIncompleteMultipartUpload": {
-				"DaysAfterInitiation": 1
+			"abortMultipartUploadsTransition": {
+				"condition": {
+					"maxAge": 86400,
+					"type": "Age"
+				}
 			}
 		}
 	]
