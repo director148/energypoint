@@ -1,3 +1,4 @@
+import { readFile } from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
 
 const routes = [
@@ -19,10 +20,15 @@ const routes = [
 	'/disclaimer/',
 ];
 
-test('about-us redirects to meet the team', async ({ page }) => {
-	await page.goto('/about-us/');
-	await expect(page).toHaveURL(/\/meet-the-team\/$/);
-	await expect(page.locator('main h1')).toBeVisible();
+/**
+ * Retired URLs redirect via public/_redirects, which Cloudflare Pages serves but
+ * `astro preview` ignores, so assert the rules rather than the response here.
+ */
+test('retired URLs redirect to meet the team', async () => {
+	const redirects = await readFile('public/_redirects', 'utf8');
+	for (const from of ['/about-us', '/about-us/', '/people', '/people/']) {
+		expect(redirects).toContain(`${from} /meet-the-team/ 301`);
+	}
 });
 
 for (const route of routes) {

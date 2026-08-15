@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Lighthouse audit: all pages × viewports with Slow 4G throttling.
+ * Lighthouse audit: all pages × viewports, throttled to match each form factor.
  * Lighthouse runs on Chromium only; pair with Playwright for Firefox/WebKit smoke.
  *
  * Requires a PRODUCTION preview (astro preview / wrangler pages dev), not `astro dev`.
@@ -16,7 +16,12 @@ const CHROME_PATH =
 	'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const OUT_DIR = path.resolve('lighthouse-results');
 
-/** Lighthouse Slow 4G (mobile default): applied to every viewport per request */
+/**
+ * Throttling has to match the form factor: Lighthouse scores desktop on a
+ * stricter curve than mobile, so feeding desktop a phone's network and a 4x CPU
+ * penalty reports a failing number for a site that is fine. Mobile keeps Slow 4G,
+ * desktop gets Lighthouse's own desktop preset.
+ */
 const SLOW_4G = {
 	rttMs: 150,
 	throughputKbps: 1.6 * 1024,
@@ -24,6 +29,16 @@ const SLOW_4G = {
 	downloadThroughputKbps: 1.6 * 1024,
 	uploadThroughputKbps: 750,
 	cpuSlowdownMultiplier: 4,
+};
+
+/** Lighthouse desktopDense4G preset */
+const DESKTOP = {
+	rttMs: 40,
+	throughputKbps: 10 * 1024,
+	requestLatencyMs: 0,
+	downloadThroughputKbps: 0,
+	uploadThroughputKbps: 0,
+	cpuSlowdownMultiplier: 1,
 };
 
 const PAGES = [
@@ -51,30 +66,40 @@ const DEVICES = [
 		id: 'phone-sm',
 		label: 'Phone S · 360×640',
 		formFactor: 'mobile',
+		throttling: SLOW_4G,
+		throttlingLabel: 'slow-4G',
 		screenEmulation: { mobile: true, width: 360, height: 640, deviceScaleFactor: 2, disabled: false },
 	},
 	{
 		id: 'phone',
 		label: 'Phone · 412×915',
 		formFactor: 'mobile',
+		throttling: SLOW_4G,
+		throttlingLabel: 'slow-4G',
 		screenEmulation: { mobile: true, width: 412, height: 915, deviceScaleFactor: 2.625, disabled: false },
 	},
 	{
 		id: 'tablet',
 		label: 'Tablet · 768×1024',
 		formFactor: 'mobile',
+		throttling: SLOW_4G,
+		throttlingLabel: 'slow-4G',
 		screenEmulation: { mobile: true, width: 768, height: 1024, deviceScaleFactor: 2, disabled: false },
 	},
 	{
 		id: 'laptop',
 		label: 'Laptop · 1366×768',
 		formFactor: 'desktop',
+		throttling: DESKTOP,
+		throttlingLabel: 'desktop',
 		screenEmulation: { mobile: false, width: 1366, height: 768, deviceScaleFactor: 1, disabled: false },
 	},
 	{
 		id: 'desktop',
 		label: 'Desktop · 1920×1080',
 		formFactor: 'desktop',
+		throttling: DESKTOP,
+		throttlingLabel: 'desktop',
 		screenEmulation: { mobile: false, width: 1920, height: 1080, deviceScaleFactor: 1, disabled: false },
 	},
 ];
@@ -162,7 +187,7 @@ async function main() {
 			for (const device of DEVICES) {
 				i += 1;
 				const url = BASE + page.path;
-				process.stderr.write(`[${i}/${total}] ${page.id} · ${device.id} · slow-4G … `);
+				process.stderr.write(`[${i}/${total}] ${page.id} · ${device.id} · ${device.throttlingLabel} … `);
 				try {
 					const options = {
 						logLevel: 'error',
@@ -172,7 +197,7 @@ async function main() {
 						formFactor: device.formFactor,
 						screenEmulation: device.screenEmulation,
 						throttlingMethod: 'simulate',
-						throttling: SLOW_4G,
+						throttling: device.throttling,
 						maxWaitForLoad: 60000,
 					};
 
@@ -187,7 +212,7 @@ async function main() {
 						deviceLabel: device.label,
 						formFactor: device.formFactor,
 						viewport: `${device.screenEmulation.width}x${device.screenEmulation.height}`,
-						throttling: 'slow-4G',
+						throttling: device.throttlingLabel,
 						scores: {
 							performance: score(lhr, 'performance'),
 							accessibility: score(lhr, 'accessibility'),
@@ -262,7 +287,7 @@ async function main() {
 		base: BASE,
 		generatedAt: new Date().toISOString(),
 		durationMs: Date.now() - started,
-		throttling: 'slow-4G',
+		throttling: 'slow-4G on mobile viewports, Lighthouse desktop preset on desktop',
 		note: 'Lighthouse is Chromium-only. Use Playwright for Firefox/WebKit smoke. thank-you/404 are noindex (SEO mins exclude them).',
 		pageCount: PAGES.length,
 		deviceCount: DEVICES.length,

@@ -1611,7 +1611,8 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 .review-card__stars {
 	display: flex;
 	gap: 0.2rem;
-	color: var(--sun);
+	/* The rating is only conveyed visually here, so it needs 3:1 against paper. */
+	color: var(--sun-deep);
 	font-size: 1rem;
 	letter-spacing: 0.08em;
 }
