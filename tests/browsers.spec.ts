@@ -9,13 +9,19 @@ const routes = [
 	'/residential/',
 	'/commercial/',
 	'/rural/',
+	'/how-it-works/',
 	'/finance/',
 	'/maintenance/',
 	'/about-us/',
+	'/meet-the-team/',
 	'/reviews/',
 	'/frequently-asked-questions/',
 	'/contact/',
 	'/thank-you/',
+	'/privacy/',
+	'/terms/',
+	'/cookies/',
+	'/disclaimer/',
 ];
 
 for (const route of routes) {

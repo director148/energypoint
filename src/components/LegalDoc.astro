@@ -1,0 +1,81 @@
+---
+import {
+	legalPages,
+	legalUpdated,
+	legalUpdatedIso,
+	type LegalDocument,
+} from '../data/legal';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+interface Props {
+	doc: LegalDocument;
+}
+
+const { doc } = Astro.props;
+const others = legalPages.filter((page) => page.href !== doc.href);
+
+const schema = {
+	'@context': 'https://schema.org',
+	'@type': 'WebPage',
+	name: doc.title,
+	description: doc.description,
+	dateModified: legalUpdatedIso,
+};
+---
+
+<BaseLayout title={doc.title} description={doc.description} schema={schema}>
+	<section class="section section--cream legal-page">
+		<article class="legal">
+			<header class="legal__header">
+				<span class="eyebrow">{doc.eyebrow}</span>
+				<h1>{doc.title}</h1>
+				<p class="lede muted">{doc.intro}</p>
+				<p class="legal__updated">Last updated {legalUpdated}</p>
+			</header>
+
+			<nav class="legal__toc" aria-label="On this page">
+				<p class="legal__toc-label">On this page</p>
+				<ol>
+					{
+						doc.sections.map((section) => (
+							<li>
+								<a href={`#${section.id}`}>{section.title}</a>
+							</li>
+						))
+					}
+				</ol>
+			</nav>
+
+			<div class="legal__body">
+				{
+					doc.sections.map((section) => (
+						<section id={section.id}>
+							<h2>{section.title}</h2>
+							{section.blocks.map((block) =>
+								block.type === 'ul' ? (
+									<ul>
+										{block.items.map((item) => (
+											<li set:html={item} />
+										))}
+									</ul>
+								) : (
+									<p set:html={block.html} />
+								),
+							)}
+						</section>
+					))
+				}
+			</div>
+
+			<nav class="legal__siblings" aria-label="Other legal pages">
+				{
+					others.map((page) => (
+						<a class="text-link" href={page.href}>
+							{page.label}
+						</a>
+					))
+				}
+			</nav>
+		</article>
+	</section>
+</BaseLayout>

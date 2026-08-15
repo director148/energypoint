@@ -5,13 +5,19 @@ const routes = [
 	'/residential/',
 	'/commercial/',
 	'/rural/',
+	'/how-it-works/',
 	'/finance/',
 	'/maintenance/',
 	'/about-us/',
+	'/meet-the-team/',
 	'/reviews/',
 	'/frequently-asked-questions/',
 	'/contact/',
 	'/thank-you/',
+	'/privacy/',
+	'/terms/',
+	'/cookies/',
+	'/disclaimer/',
 ];
 
 for (const route of routes) {
@@ -23,6 +29,13 @@ for (const route of routes) {
 		await expect(page.locator('main')).toHaveAttribute('id', 'main-content');
 	});
 }
+
+test('how it works page covers the grid connection', async ({ page }) => {
+	await page.goto('/how-it-works/');
+	await expect(page.getByRole('heading', { name: 'How it works', exact: true })).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'Grid connection' })).toBeVisible();
+	await expect(page.getByText('We handle everything')).toBeVisible();
+});
 
 test('mobile navigation exposes every primary journey', async ({ page, isMobile }) => {
 	test.skip(!isMobile, 'Mobile navigation test');
@@ -37,9 +50,20 @@ test('mobile navigation exposes every primary journey', async ({ page, isMobile 
 	await expect(page.getByRole('link', { name: 'Residential', exact: true })).toBeVisible();
 	await expect(page.getByRole('link', { name: 'Commercial', exact: true })).toBeVisible();
 	await expect(page.getByRole('link', { name: 'Rural', exact: true })).toBeVisible();
+	await expect(page.getByRole('link', { name: 'How it works', exact: true })).toBeVisible();
 
 	await page.keyboard.press('Escape');
 	await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('reviews page moves through a carousel', async ({ page }) => {
+	await page.goto('/reviews/');
+	const region = page.getByRole('region', { name: 'Customer reviews' });
+	await expect(region).toBeVisible();
+	await expect(region.getByRole('heading', { name: 'The whole process was so easy' })).toBeVisible();
+
+	await page.getByRole('button', { name: 'Next review' }).click();
+	await expect(region.getByRole('heading', { name: 'Local legends: highly recommend!' })).toBeInViewport();
 });
 
 test('FAQ search filters answers', async ({ page }) => {
@@ -55,6 +79,51 @@ test('FAQ search filters answers', async ({ page }) => {
 	await expect(page.locator('[data-faq-empty]')).toBeVisible();
 });
 
+test('FAQ audience filter shows matching questions', async ({ page }) => {
+	await page.goto('/frequently-asked-questions/');
+	const rural = page.getByRole('button', { name: 'Rural' });
+	const commercial = page.getByRole('button', { name: 'Commercial' });
+
+	await rural.click();
+	await expect(rural).toHaveAttribute('aria-pressed', 'true');
+	await expect(page).toHaveURL(/audience=rural/);
+	await expect(page.getByText('Is ground-mounted solar an option on a farm or lifestyle block?')).toBeVisible();
+	await expect(page.getByText('Can solar work on a commercial roof or multiple buildings?')).toBeHidden();
+
+	await commercial.click();
+	await expect(page.getByText('Can solar work on a commercial roof or multiple buildings?')).toBeVisible();
+	await expect(page.getByText('Is ground-mounted solar an option on a farm or lifestyle block?')).toBeHidden();
+});
+
+test('address lookup shows NZ suggestions when the Pages function is missing', async ({
+	page,
+}) => {
+	await page.route('https://photon.komoot.io/api/**', async (route) => {
+		await route.fulfill({
+			contentType: 'application/json',
+			body: JSON.stringify({
+				features: [
+					{
+						properties: {
+							countrycode: 'NZ',
+							housenumber: '12',
+							street: 'Victoria Street',
+							city: 'Hamilton',
+							state: 'Waikato',
+							postcode: '3204',
+							type: 'house',
+						},
+					},
+				],
+			}),
+		});
+	});
+
+	await page.goto('/contact/');
+	await page.locator('#address').fill('12 Victoria');
+	await expect(page.getByRole('option', { name: /12 Victoria Street/ })).toBeVisible();
+});
+
 test('contact form posts to the Cloudflare handler and validates required fields', async ({
 	page,
 }) => {
@@ -64,12 +133,39 @@ test('contact form posts to the Cloudflare handler and validates required fields
 	await expect(form).toHaveAttribute('action', '/api/contact');
 	await expect(form).toHaveAttribute('enctype', 'multipart/form-data');
 	await expect(page.locator('select[name="audience"]')).toHaveValue('Rural');
-	await expect(page.locator('input[name="photos"]')).toHaveAttribute('type', 'file');
+	await expect(page.locator('input[name="uploads"]')).toHaveAttribute('type', 'file');
+	await expect(page.locator('input[name="uploads"]')).toHaveAttribute('multiple', '');
+	await expect(page.locator('input[name="uploads"]')).not.toHaveAttribute('required');
+	await expect(page.locator('input[name="bill"]')).toHaveCount(0);
+	await expect(page.locator('input[name="usage"]')).toHaveCount(0);
+	await expect(page.locator('input[name="photos"]')).toHaveCount(0);
+	await expect(page.locator('ol.next-steps')).toContainText('Within one working day');
 
-	await page.getByRole('button', { name: 'Send my enquiry' }).click();
+	await page.getByRole('button', { name: 'Book a visit' }).click();
 	await expect(page).toHaveURL(/\/contact/);
 	const invalidFields = page.locator('form[name="energy-plan"] :invalid');
 	expect(await invalidFields.count()).toBeGreaterThan(0);
+});
+
+test('legal pages include a dated policy and on-page navigation', async ({ page }) => {
+	await page.goto('/privacy/');
+	await expect(page.locator('main h1')).toHaveText('Privacy policy');
+	await expect(page.getByText(/Last updated 15 August 2026/)).toBeVisible();
+	await expect(page.getByRole('navigation', { name: 'On this page' })).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'Your rights' })).toBeVisible();
+	await expect(page.locator('main')).toContainText('Privacy Act 2020');
+
+	await page.goto('/cookies/');
+	await expect(page.locator('main')).toContainText('We do not run Google Analytics');
+});
+
+test('footer exposes legal pages from the homepage', async ({ page }) => {
+	await page.goto('/');
+	const legal = page.getByRole('navigation', { name: 'Legal' });
+	await expect(legal.getByRole('link', { name: 'Privacy' })).toHaveAttribute('href', '/privacy/');
+	await expect(legal.getByRole('link', { name: 'Terms' })).toHaveAttribute('href', '/terms/');
+	await expect(legal.getByRole('link', { name: 'Cookies' })).toHaveAttribute('href', '/cookies/');
+	await expect(legal.getByRole('link', { name: 'Disclaimer' })).toHaveAttribute('href', '/disclaimer/');
 });
 
 test('all internal links on the homepage resolve', async ({ page, request }) => {

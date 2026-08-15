@@ -1,0 +1,53 @@
+---
+import CTASection from '../components/CTASection.astro';
+import Hero from '../components/Hero.astro';
+import ProcessTimeline from '../components/ProcessTimeline.astro';
+import { process, site } from '../data/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const howToSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'HowTo',
+	name: 'How Energy Point installs solar in the Waikato',
+	description:
+		'From the on-site visit to grid connection and ongoing support for Waikato homes, businesses and rural properties.',
+	provider: { '@type': 'LocalBusiness', name: site.name },
+	step: process.map((step, index) => ({
+		'@type': 'HowToStep',
+		position: index + 1,
+		name: step.title,
+		url: `${site.url}/how-it-works/#${step.id}`,
+		text: step.copy,
+	})),
+};
+---
+
+<BaseLayout
+	title="How it works"
+	description="From the free visit to grid connection and the app. Energy Point designs, installs and supports solar for Waikato homes, businesses and farms."
+	image="/images/consultation-home.jpg"
+	schema={howToSchema}
+>
+	<Hero
+		page
+		title="How it works"
+		intro="Visit. Design. Install.<br />Grid connection. Maintain."
+		image="/images/consultation-home.jpg"
+		alt="An Energy Point visit at a Waikato home"
+		cta="Book a free visit"
+		ctaHref="/contact/"
+		position="center 42%"
+	/>
+
+	<section class="section section--cream section--compact">
+		<div class="container">
+			<ProcessTimeline />
+		</div>
+	</section>
+
+	<CTASection
+		title="Book the visit that starts it"
+		copy="We come out, look at the property and the bill and leave you a plan. Grid connection included in how we work."
+		label="Book a free visit"
+	/>
+</BaseLayout>

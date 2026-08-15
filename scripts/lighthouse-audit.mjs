@@ -31,6 +31,7 @@ const PAGES = [
 	{ id: 'residential', path: '/residential/' },
 	{ id: 'commercial', path: '/commercial/' },
 	{ id: 'rural', path: '/rural/' },
+	{ id: 'how-it-works', path: '/how-it-works/' },
 	{ id: 'maintenance', path: '/maintenance/' },
 	{ id: 'finance', path: '/finance/' },
 	{ id: 'about-us', path: '/about-us/' },

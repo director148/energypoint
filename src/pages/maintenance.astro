@@ -1,39 +1,59 @@
 ---
 import BenefitsGrid from '../components/BenefitsGrid.astro';
 import CTASection from '../components/CTASection.astro';
-import FAQAccordion from '../components/FAQAccordion.astro';
 import Hero from '../components/Hero.astro';
-import { faqGroups } from '../data/faqs';
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-const careFaqs = faqGroups.find((group) => group.id === 'care')?.items ?? [];
 
 const carePaths = [
 	{
-		number: '01',
-		title: 'Repair',
-		copy: 'Investigate inverter faults, physical damage, alerts and unexplained drops in generation, then define the safest practical response.',
+		title: 'Fast, reliable repairs',
+		copy: 'Inverter, panel damage or a drop in generation. We find the cause and get the system back on track with little downtime.',
 		image: '/images/process-support.jpg',
 		alt: 'Energy Point specialist investigating a solar system issue',
 		position: 'center 48%',
 	},
 	{
-		number: '02',
-		title: 'Upgrade',
-		copy: 'Review batteries, monitoring, component replacement or expansion without losing sight of the existing system constraints.',
-		image: '/images/process-design.jpg',
-		alt: 'Planning a solar system upgrade around existing equipment',
-		position: 'center 42%',
+		title: 'Upgrade the system',
+		copy: 'Better components, more panels, batteries or monitoring. We design around what is already on the roof, then install it.',
+		image: '/images/social/fb-122159651738654298.jpg',
+		alt: 'Home battery storage installed beside a Waikato house',
+		position: 'center center',
 	},
 	{
-		number: '03',
-		title: 'Maintain',
-		copy: 'Use scheduled visual, electrical and performance checks to catch smaller issues before they become expensive interruptions.',
-		image: '/images/process-consultation.jpg',
-		alt: 'On-site solar maintenance and performance check',
-		position: 'center 35%',
+		title: 'Proactive maintenance',
+		copy: 'Regular inspections catch small issues before they become downtime. We look after systems we did not install too.',
+		image: '/images/maintenance-check.jpg',
+		alt: 'Energy Point technician on a ladder measuring a Waikato roof',
+		position: 'center 42%',
 	},
 ];
+
+const whyItMatters = [
+	{
+		title: 'Maximise energy output',
+		copy: 'Keep the panels performing at their best.',
+	},
+	{
+		title: 'Prevent costly repairs',
+		copy: 'Catch small issues before they become big ones.',
+	},
+	{
+		title: 'Protect the investment',
+		copy: 'A system that keeps earning for the long term.',
+	},
+	{
+		title: 'Stay warranty-ready',
+		copy: 'Keep product warranties in good standing.',
+	},
+	{
+		title: 'Prevent damage',
+		copy: 'Dirt, birds and weather wear. Spot it early.',
+	},
+	{
+		title: 'Peace of mind',
+		copy: 'A local team still looking after the system.',
+	},
+] as const;
 
 const maintenanceSchema = {
 	'@context': 'https://schema.org',
@@ -46,144 +66,62 @@ const maintenanceSchema = {
 
 <BaseLayout
 	title="Solar Maintenance Waikato"
-	description="Solar system checks, repair, performance investigation and upgrades across Waikato, including systems installed by other providers."
-	image="/images/process-support.jpg"
+	description="Solar checks, repair and upgrades across Waikato, including systems installed by other providers. Keep output up, catch faults early and stay warranty-ready."
+	image="/images/maintenance-hero.jpg"
 	schema={maintenanceSchema}
 >
 	<Hero
 		page
-		title="Keep good energy working."
-		intro="Protect system performance with monitoring, proactive checks, practical repairs and considered upgrades, whether we installed it or not."
-		image="/images/process-support.jpg"
+		title="Maintenance"
+		intro="We do not install and walk away.<br />Repair, upgrade or a check, even if someone else put it up."
+		image="/images/maintenance-hero.jpg"
 		alt="An Energy Point specialist supporting a solar energy system"
-		cta="Book a system check"
+		cta="Book a service"
 		ctaHref="/contact/?audience=Maintenance"
-		position="center 48%"
+		position="center bottom"
 	/>
 
-	<section class="section section--cream">
-		<div class="container intro-statement">
-			<div>
-				<span class="eyebrow">Long-term care</span>
+	<section class="section section--paper section--compact">
+		<div class="container">
+			<div class="section-heading section-heading--solo">
+				<div>
+					<h2>Look after what is already up</h2>
+					<p>
+						Solar is a long-term investment. We keep it clean, safe and earning: whether we
+						installed it or not.
+					</p>
+				</div>
 			</div>
-			<div class="intro-statement__body" data-reveal>
-				<p>
-					A solar system is low maintenance. That does not mean it should be ignored.
-				</p>
-				<p class="lede muted">
-					Monitoring can reveal a drop in performance, but it cannot tighten a connection,
-					remove a new shading issue or assess physical damage. Thoughtful care protects
-					output, safety and the useful life of your investment.
-				</p>
+			<div class="reason-grid">
+				{
+					whyItMatters.map((reason, index) => (
+						<article
+							class="reason-card"
+							data-reveal
+							style={`--reveal-delay: ${index * 40}ms`}
+						>
+							<span class="reason-card__number">{String(index + 1).padStart(2, '0')}</span>
+							<div>
+								<h3>{reason.title}</h3>
+								<p>{reason.copy}</p>
+							</div>
+						</article>
+					))
+				}
 			</div>
 		</div>
 	</section>
 
-	<section class="section section--paper">
+	<section class="section section--cream section--compact">
 		<div class="container">
-			<div class="section-heading">
-				<div>
-					<span class="eyebrow">Three ways we help</span>
-					<h2>Respond now. Improve next. Prevent later.</h2>
-				</div>
-				<p class="lede muted">
-					Start with the problem you can see, or the one you would rather catch early.
-				</p>
-			</div>
 			<BenefitsGrid items={carePaths} />
-		</div>
-	</section>
-
-	<section class="media-split">
-		<div class="media-split__media">
-			<img
-				src="/images/process-support-1600.webp"
-				alt="Solar monitoring and ongoing Energy Point support"
-				width="1400"
-				height="900"
-				loading="lazy"
-				decoding="async"
-			/>
-		</div>
-		<div class="media-split__content">
-			<span class="eyebrow">Performance, made visible</span>
-			<h2>Know when something changes.</h2>
-			<p class="lede">
-				Generation naturally moves with season and weather. Monitoring helps separate those
-				normal changes from alerts, outages or persistent underperformance worth investigating.
-			</p>
-			<ul class="feature-list">
-				<li>System status review</li>
-				<li>Inverter and monitoring alerts</li>
-				<li>Generation trend investigation</li>
-				<li>Practical next-step advice</li>
-			</ul>
-			<a class="button button--ghost" href="/contact/?audience=Maintenance">
-				Request support
-			</a>
-		</div>
-	</section>
-
-	<section class="section section--cream">
-		<div class="container">
-			<div class="section-heading">
-				<div>
-					<span class="eyebrow">Why it matters</span>
-					<h2>Small checks protect the bigger investment.</h2>
-				</div>
-				<p class="lede muted">
-					Maintenance is about sustained performance, safe operation and fewer surprises.
-				</p>
-			</div>
-			<div class="numbered-grid">
-				<article class="numbered-item">
-					<span class="numbered-item__number">01</span>
-					<div>
-						<h3>Protect output</h3>
-						<p>Identify performance changes caused by faults, dirt, shading or damage.</p>
-					</div>
-				</article>
-				<article class="numbered-item">
-					<span class="numbered-item__number">02</span>
-					<div>
-						<h3>Prevent escalation</h3>
-						<p>Catch smaller issues before they create extended downtime or larger repairs.</p>
-					</div>
-				</article>
-				<article class="numbered-item">
-					<span class="numbered-item__number">03</span>
-					<div>
-						<h3>Stay informed</h3>
-						<p>Understand what the system is doing and when a change needs attention.</p>
-					</div>
-				</article>
-				<article class="numbered-item">
-					<span class="numbered-item__number">04</span>
-					<div>
-						<h3>Plan upgrades well</h3>
-						<p>Make future additions with clear knowledge of the system already in place.</p>
-					</div>
-				</article>
-			</div>
-		</div>
-	</section>
-
-	<section class="section section--paper">
-		<div class="container faq-layout">
-			<div class="faq-intro">
-				<span class="eyebrow">Care questions</span>
-				<h2>Support that starts with a straight answer.</h2>
-				<a class="text-link" href="/frequently-asked-questions/">All FAQs</a>
-			</div>
-			<FAQAccordion items={careFaqs} />
 		</div>
 	</section>
 
 	<CTASection
 		audience="Maintenance"
-		title="Give your solar system the care it deserves."
-		copy="Tell us what you are seeing, when it changed and who installed the system. We will help define the right next step."
-		label="Request maintenance"
+		title="Keep the system in top shape"
+		copy="Book a maintenance check or talk to us about a regular service plan. Tell us what you are seeing, when it started and who installed it."
+		label="Book a service"
 	/>
 </BaseLayout>
-

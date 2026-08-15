@@ -1,25 +1,31 @@
 ---
+import { site } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
 	title="Enquiry Received"
-	description="Thank you for contacting Energy Point."
+	description="Thank you for contacting Energy Point. We will call within one working day."
 	noindex
 >
 	<section
-		class="section section--dark"
-		style="display: grid; min-height: 100svh; place-items: center; padding-top: 10rem; text-align: center;"
+		class="section section--cream"
+		style="display: grid; min-height: 100svh; place-items: center; padding-top: 10rem;"
 	>
 		<div class="narrow" data-reveal>
 			<span class="eyebrow">Enquiry received</span>
-			<h1 style="max-width: 11ch; margin-inline: auto;">Good energy starts with a conversation.</h1>
-			<p class="lede muted" style="margin-inline: auto; margin-bottom: 2rem;">
-				Thanks for giving us the context. The Energy Point team will review your enquiry and
-				get in touch with a practical next step.
+			<h1 style="max-width: 14ch;">We have it. Nick or the office will call.</h1>
+			<p class="lede muted" style="margin-bottom: 1.5rem;">
+				Expect a call within one working day, usually the same morning. Have a recent power
+				bill nearby if you can. You do not need it to start.
 			</p>
-			<a class="button button--light" href="/">Back to Energy Point</a>
+			<p class="muted" style="margin-bottom: 2rem;">
+				{site.hours}. If it is easier to talk now, call
+				<a class="text-link" href={site.phoneHref}>{site.phoneDisplay}</a>
+				or email
+				<a class="text-link" href={`mailto:${site.email}`}>{site.email}</a>.
+			</p>
+			<a class="button" href="/">Back to Energy Point</a>
 		</div>
 	</section>
 </BaseLayout>
-

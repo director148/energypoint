@@ -9,7 +9,7 @@
  */
 
 import { validateContactFields } from '../_shared/contact-validation.js';
-import { storeEnquiryPhotos } from '../_shared/enquiry-photos.js';
+import { storeEnquiryUploads } from '../_shared/enquiry-photos.js';
 
 export async function onRequestPost(context) {
 	const thankYou = new URL('/thank-you/', context.request.url).toString();
@@ -29,10 +29,14 @@ export async function onRequestPost(context) {
 	const { values, errors, ok } = validateContactFields({
 		audience: formData.get('audience'),
 		goal: formData.get('goal'),
+		preferredTime: formData.get('preferredTime'),
+		authority: formData.get('authority'),
+		monthlyBill: formData.get('monthlyBill'),
+		firstName: formData.get('firstName'),
+		lastName: formData.get('lastName'),
 		name: formData.get('name'),
 		phone: formData.get('phone'),
 		email: formData.get('email'),
-		location: formData.get('location'),
 		address: formData.get('address'),
 		message: formData.get('message'),
 		subject: formData.get('subject'),
@@ -53,28 +57,43 @@ export async function onRequestPost(context) {
 		context.env.CONTACT_FROM_EMAIL || 'Energy Point Website <onboarding@resend.dev>';
 	const subject = values.subject || 'New Energy Point consultation enquiry';
 
-	let photoLines = [];
+	const incoming = [
+		...formData.getAll('uploads'),
+		...formData.getAll('photos'),
+		formData.get('bill'),
+		formData.get('usage'),
+	].filter((file) => file instanceof File && file.size);
+
+	let uploadLines = [];
 	try {
-		const photos = await storeEnquiryPhotos(context.env, formData.getAll('photos'));
-		photoLines = photos.length
-			? ['', 'Photos:', ...photos.map((item) => `- ${item}`)]
-			: [];
+		const stored = await storeEnquiryUploads(context.env, incoming);
+		uploadLines = stored.length
+			? ['', 'Uploads:', ...stored.map((item) => `- ${item}`)]
+			: ['', 'Uploads: none stored.'];
 	} catch (error) {
-		console.error('R2 photo store error', error);
-		photoLines = ['', 'Photos: could not be stored.'];
+		console.error('R2 upload store error', error);
+		if (error instanceof Error && error.message === 'UPLOAD_TOO_LARGE') {
+			return new Response(
+				'A file was too large to store. Try a smaller photo, bill or usage file.',
+				{ status: 400 },
+			);
+		}
+		uploadLines = ['', 'Uploads: could not be stored.'];
 	}
 
 	const text = [
 		`Audience: ${values.audience}`,
 		`Goal: ${values.goal}`,
+		`Best time: ${values.preferredTime}`,
+		`Authority: ${values.authority}`,
+		values.monthlyBill ? `Typical monthly bill: $${values.monthlyBill}` : null,
 		`Name: ${values.name}`,
 		`Phone: ${values.phone}`,
 		`Email: ${values.email}`,
-		`Location: ${values.location}`,
-		values.address ? `Address: ${values.address}` : null,
+		`Address: ${values.address}`,
 		'',
-		values.message,
-		...photoLines,
+		values.message || '(No extra note.)',
+		...uploadLines,
 	]
 		.filter((line) => line !== null)
 		.join('\n');

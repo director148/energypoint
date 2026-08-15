@@ -1,0 +1,113 @@
+---
+import CTASection from '../components/CTASection.astro';
+import Hero from '../components/Hero.astro';
+import { people, site } from '../data/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const peopleSchema = people.slice(0, 2).map((person) => ({
+	'@context': 'https://schema.org',
+	'@type': 'Person',
+	name: person.name,
+	jobTitle: person.role,
+	worksFor: {
+		'@type': 'LocalBusiness',
+		name: site.name,
+		url: site.url,
+	},
+	address: {
+		'@type': 'PostalAddress',
+		addressRegion: 'Waikato',
+		addressCountry: 'NZ',
+	},
+}));
+---
+
+<BaseLayout
+	title="The People"
+	description="Meet the Waikato team behind Energy Point: named local owners, a Hamilton and Morrinsville base and the same people after install."
+	image="/images/team-photo.jpg"
+	schema={peopleSchema}
+>
+	<Hero
+		page
+		title="Meet the team"
+		intro="Your local Waikato crew.<br />Call them after switch-on."
+		image="/images/team-photo.jpg"
+		alt="The Energy Point team in the Waikato"
+		cta="Book a free visit"
+		ctaHref="/contact/"
+		position="32% 40%"
+		positionMobile="18% 38%"
+	/>
+
+	<section class="section section--cream">
+		<div class="container">
+			<div class="people-grid">
+				{
+					people.map((person, index) => (
+						<article
+							class="person-card"
+							data-reveal
+							style={`--reveal-delay: ${index * 80}ms`}
+						>
+							<div class="person-card__media">
+								{'image' in person && person.image ? (
+									<img
+										src={person.image.replace(/\.(png|jpe?g)$/i, '-960.webp')}
+										srcset={`${person.image.replace(/\.(png|jpe?g)$/i, '-640.webp')} 640w, ${person.image.replace(/\.(png|jpe?g)$/i, '-960.webp')} 960w`}
+										sizes="(max-width: 900px) 100vw, 33vw"
+										alt={person.alt}
+										width="960"
+										height="1200"
+										style={`--person-position: ${person.position};${'positionMobile' in person && person.positionMobile ? ` --person-position-mobile: ${person.positionMobile};` : ''}`}
+										loading={index === 0 ? 'eager' : 'lazy'}
+										decoding="async"
+									/>
+								) : (
+									<span class="person-card__initials" aria-hidden="true">
+										{person.name
+											.split(' ')
+											.map((part) => part[0])
+											.join('')}
+									</span>
+								)}
+							</div>
+							<div class="person-card__content">
+								<span class="eyebrow">{person.role}</span>
+								<h3>{person.name}</h3>
+								<p>{person.copy}</p>
+							</div>
+						</article>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="media-split">
+		<div class="media-split__media">
+			<img
+				src="/images/about-team-1600.webp"
+				alt="Energy Point ute on a Waikato driveway"
+				width="1480"
+				height="832"
+				loading="lazy"
+				decoding="async"
+			/>
+		</div>
+		<div class="media-split__content">
+			<span class="eyebrow">Waikato, our home ground</span>
+			<h2>We drive to you</h2>
+			<p class="lede">
+				Hamilton, Cambridge, Te Awamutu, Morrinsville, Raglan and the properties between
+				them. Close enough to understand the place. Serious enough to stay after switch-on.
+			</p>
+		</div>
+	</section>
+
+	<CTASection
+		title="Meet us on your property"
+		copy="A free visit. We look at the property and the bill and leave you with a plan. No pressure."
+		label="Book a free visit"
+	/>
+</BaseLayout>

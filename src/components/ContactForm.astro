@@ -18,11 +18,16 @@ const goals = [
 	'Maintenance or servicing',
 	'Not sure yet',
 ] as const;
+const preferredTimes = ['Morning', 'Afternoon', 'Either'] as const;
+const authorities = [
+	'I own the property',
+	'I act for the owner',
+	'This is a business',
+	'I am exploring',
+] as const;
 
 const isMaintenanceIntent = defaultAudience.toLowerCase() === 'maintenance';
 const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
-const addressFinderKey =
-	import.meta.env.PUBLIC_ADDRESSFINDER_KEY || 'ADDRESSFINDER_DEMO_KEY';
 ---
 
 <form
@@ -46,6 +51,100 @@ const addressFinderKey =
 	<p class="contact-form__error" data-form-error hidden></p>
 
 	<div class="field">
+		<label for="firstName">First name</label>
+		<input
+			id="firstName"
+			name="firstName"
+			type="text"
+			autocomplete="given-name"
+			required
+			minlength="2"
+			maxlength="20"
+			spellcheck="false"
+			autocapitalize="words"
+			pattern="\p{L}[\p{L}\-]{1,19}"
+			title="Use letters or hyphens only"
+			data-name-field
+		/>
+		<span class="field__error" data-error-for="firstName" hidden></span>
+	</div>
+
+	<div class="field">
+		<label for="lastName">Last name</label>
+		<input
+			id="lastName"
+			name="lastName"
+			type="text"
+			autocomplete="family-name"
+			required
+			minlength="2"
+			maxlength="20"
+			spellcheck="false"
+			autocapitalize="words"
+			pattern="\p{L}[\p{L}\-]{1,19}"
+			title="Use letters or hyphens only"
+			data-name-field
+		/>
+		<span class="field__error" data-error-for="lastName" hidden></span>
+	</div>
+
+	<div class="field">
+		<label for="phone">Phone</label>
+		<input
+			id="phone"
+			name="phone"
+			type="tel"
+			autocomplete="tel"
+			inputmode="tel"
+			required
+			maxlength="32"
+			data-phone-field
+		/>
+		<span class="field__error" data-error-for="phone" hidden></span>
+	</div>
+
+	<div class="field">
+		<label for="email">Email</label>
+		<input
+			id="email"
+			name="email"
+			type="email"
+			autocomplete="email"
+			required
+			maxlength="150"
+			inputmode="email"
+			data-email-field
+		/>
+		<span class="field__error" data-error-for="email" hidden></span>
+	</div>
+
+	<div class="field field--full">
+		<label for="address">Property address</label>
+		<div class="address-field">
+			<input
+				id="address"
+				name="address"
+				type="text"
+				autocomplete="street-address"
+				required
+				minlength="5"
+				maxlength="120"
+				role="combobox"
+				aria-autocomplete="list"
+				aria-controls="address-suggestions"
+				aria-expanded="false"
+				data-address-search
+			/>
+			<span class="address-loader" data-address-loader hidden></span>
+		</div>
+		<span class="sr-only" data-address-status aria-live="polite"></span>
+		<div class="address-suggest-shell" data-address-shell>
+			<ul id="address-suggestions" class="address-suggest" role="listbox"></ul>
+		</div>
+		<span class="field__error" data-error-for="address" hidden></span>
+	</div>
+
+	<div class="field">
 		<label for="audience">Property type</label>
 		<select id="audience" name="audience" required data-audience-select>
 			<option value="" selected={!propertyDefault}>Choose one</option>
@@ -61,7 +160,7 @@ const addressFinderKey =
 	</div>
 
 	<div class="field">
-		<label for="goal">Main goal</label>
+		<label for="goal">{isMaintenanceIntent ? 'What do you need?' : 'Main goal'}</label>
 		<select id="goal" name="goal" required data-goal-select>
 			<option value="" selected={!isMaintenanceIntent}>Choose one</option>
 			{
@@ -79,154 +178,182 @@ const addressFinderKey =
 	</div>
 
 	<div class="field">
-		<label for="name">Name</label>
-		<input
-			id="name"
-			name="name"
-			type="text"
-			autocomplete="name"
-			required
-			minlength="2"
-			maxlength="80"
-			data-capitalize-name
-		/>
-		<span class="field__error" data-error-for="name" hidden></span>
+		<label for="authority">Your role</label>
+		<select id="authority" name="authority" required>
+			<option value="">Choose one</option>
+			{authorities.map((option) => <option value={option}>{option}</option>)}
+		</select>
+		<span class="field__error" data-error-for="authority" hidden></span>
 	</div>
 
 	<div class="field">
-		<label for="phone">Phone</label>
-		<input
-			id="phone"
-			name="phone"
-			type="tel"
-			autocomplete="tel"
-			inputmode="tel"
-			required
-			maxlength="20"
-			placeholder="021 123 4567 or +64..."
-		/>
-		<span class="field__error" data-error-for="phone" hidden></span>
+		<div class="field-head">
+			<label for="uploads">Uploads (optional)</label>
+			<span class="field-info">
+				<button type="button" class="field-info__mark" aria-label="What to upload" aria-describedby="uploads-hint">
+					i
+				</button>
+				<span id="uploads-hint" class="field-info__tip" role="tooltip">
+					Latest electric bill, 12-month report or property photos. We can start without them.
+				</span>
+			</span>
+		</div>
+		<div class="file-field" data-file-field>
+			<label class="file-field__pick" for="uploads">
+				<input
+					id="uploads"
+					class="sr-only"
+					name="uploads"
+					type="file"
+					accept="image/jpeg,image/png,image/webp,application/pdf,.pdf,.csv,text/csv,.xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+					multiple
+					data-upload-input
+					aria-describedby="uploads-hint"
+				/>
+				<span data-file-pick>Upload files</span>
+			</label>
+			<span class="file-field__summary" data-file-summary hidden></span>
+			<button type="button" class="file-field__clear" data-file-clear hidden>Remove</button>
+		</div>
+		<span class="field__error" data-error-for="uploads" hidden></span>
 	</div>
 
 	<div class="field">
-		<label for="email">Email</label>
-		<input
-			id="email"
-			name="email"
-			type="email"
-			autocomplete="email"
-			required
-			maxlength="150"
-			inputmode="email"
-		/>
-		<span class="field__error" data-error-for="email" hidden></span>
+		<label for="monthlyBill">Monthly electric bill</label>
+		<div class="field__amount">
+			<span class="field__currency" aria-hidden="true">$</span>
+			<input
+				id="monthlyBill"
+				name="monthlyBill"
+				type="text"
+				maxlength="6"
+				inputmode="numeric"
+				autocomplete="off"
+				title="Numbers only"
+				data-bill-field
+			/>
+		</div>
+		<span class="field__error" data-error-for="monthlyBill" hidden></span>
 	</div>
 
 	<div class="field">
-		<label for="location">Town or postcode</label>
-		<input
-			id="location"
-			name="location"
-			type="text"
-			autocomplete="postal-code"
-			required
-			minlength="2"
-			maxlength="80"
-		/>
-		<span class="field__error" data-error-for="location" hidden></span>
+		<label for="preferredTime">Best time to call</label>
+		<select id="preferredTime" name="preferredTime" required>
+			<option value="">Choose one</option>
+			{preferredTimes.map((option) => <option value={option}>{option}</option>)}
+		</select>
+		<span class="field__error" data-error-for="preferredTime" hidden></span>
 	</div>
 
 	<div class="field field--full">
-		<label for="address">Property address <small>(optional)</small></label>
-		<input
-			id="address"
-			name="address"
-			type="text"
-			autocomplete="street-address"
-			maxlength="120"
-			placeholder="Start typing your address"
-			data-address-finder
-		/>
-		<span class="field__hint">Search and select a NZ address, or type it manually.</span>
-		<span class="field__error" data-error-for="address" hidden></span>
-	</div>
-
-	<div class="field field--full">
-		<label for="photos">Photos of the property <small>(optional)</small></label>
-		<input
-			id="photos"
-			name="photos"
-			type="file"
-			accept="image/jpeg,image/png,image/webp"
-			multiple
-			data-photo-input
-		/>
-		<span class="field__hint">Up to 6 photos. We compress them, convert to WebP, and delete them after 30 days.</span>
-		<ul class="photo-picker" data-photo-list hidden></ul>
-		<span class="field__error" data-error-for="photos" hidden></span>
-	</div>
-
-	<div class="field field--full">
-		<label for="message">Tell us about the property</label>
+		<label for="message">What should we know? (optional)</label>
 		<textarea
 			id="message"
 			name="message"
-			placeholder="What would a better energy setup help you achieve?"
-			required
-			minlength="10"
+			placeholder={
+				isMaintenanceIntent
+					? 'Inverter alerts, damaged panels, when generation dropped or how we get on site.'
+					: 'Roof type and shading, an existing system, a battery or EV on the way, switchboard notes or when you want us there.'
+			}
 			maxlength="1000"
 			rows="3"
 		></textarea>
-		<span class="field__hint"><span data-message-count>0</span> / 1000</span>
 		<span class="field__error" data-error-for="message" hidden></span>
 	</div>
 
 	<div class="contact-form__footer">
 		<p>
-			By sending this form, you agree that Energy Point may contact you about this
-			enquiry. We do not sell your details.
+			By sending this form, you agree that Energy Point may contact you about this enquiry. We do
+			not sell your details. Read the <a href="/privacy/">privacy policy</a>.
 		</p>
-		<button class="button" type="submit">Send my enquiry</button>
+		<button class="button" type="submit">Book a visit</button>
 	</div>
 </form>
 
-<script define:vars={{ addressFinderKey }}>
+<script>
+	import { photonSearchUrl, suggestionsFromPhoton } from '../lib/nz-address-search.js';
+
 	const LIMITS = {
-		name: 80,
-		phone: 20,
+		firstName: 20,
+		lastName: 20,
+		phone: 32,
 		email: 150,
-		location: 80,
 		address: 120,
 		message: 1000,
+		monthlyBill: 5,
 		photos: 6,
 		photoBytes: 12 * 1024 * 1024,
+		photoStoredBytes: 2 * 1024 * 1024,
 		photoEdge: 1600,
 		photoQuality: 0.8,
+		billBytes: 8 * 1024 * 1024,
+		usageBytes: 5 * 1024 * 1024,
 	};
 
 	const SAFE_TEXT = /^[\p{L}\p{N}\s.,'’/#&\-()+@:+]+$/u;
-	const NAME = /^[\p{L}][\p{L}\s'’-]{0,78}$/u;
-	const EMAIL = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-	const LOCATION = /^[\p{L}\p{N}\s.,'’\-]{2,80}$/u;
+	const NAME_PART = /^\p{L}[\p{L}\-]{0,19}$/u;
+	const EMAIL =
+		/^[a-z0-9](?:[a-z0-9._%+-]{0,62}[a-z0-9])?@[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$/;
 	const ADDRESS = /^[\p{L}\p{N}\s.,'’/#&\-]{5,120}$/u;
 
-	const cleanPhone = (value) => String(value || '').replace(/[\s().-]/g, '');
+	const sanitisePhone = (value) =>
+		String(value || '')
+			.replace(/[^\d+()-]/g, '')
+			.replace(/(?!^)\+/g, '')
+			.slice(0, 32);
+
+	const cleanPhone = (value) => {
+		let digits = sanitisePhone(value).replace(/[^\d+]/g, '');
+		if (digits.startsWith('0064')) digits = `+64${digits.slice(4)}`;
+		if (digits.startsWith('64') && digits.length >= 10) digits = `+${digits}`;
+		if (digits.startsWith('+64')) digits = `0${digits.slice(3)}`;
+		return digits.replace(/\D/g, '');
+	};
 
 	const isValidPhone = (value) => {
-		const cleaned = cleanPhone(value);
+		const raw = sanitisePhone(value).replace(/[^\d+]/g, '');
+		const digits = raw.replace(/\D/g, '');
+		if (digits.length > (raw.startsWith('00') ? 17 : 15)) return false;
+		if (/^\+[1-9]\d{7,14}$/.test(raw) || /^00[1-9]\d{7,14}$/.test(raw)) return true;
+
+		const local = cleanPhone(value);
 		return (
-			/^\+[1-9]\d{7,14}$/.test(cleaned) ||
-			/^0\d{7,10}$/.test(cleaned) ||
-			/^[1-9]\d{7,14}$/.test(cleaned)
+			/^02\d{7,9}$/.test(local) ||
+			/^0[34679]\d{7}$/.test(local) ||
+			/^0800\d{6,7}$/.test(local) ||
+			/^0508\d{6}$/.test(local)
 		);
 	};
 
-	const titleCaseName = (value) =>
+	const sanitiseEmail = (value) =>
 		String(value || '')
-			.trim()
-			.replace(/\s+/g, ' ')
-			.replace(/[^\p{L}\s'’-]/gu, '')
-			.replace(/(^|[\s'’-])(\p{L})/gu, (_, edge, letter) => edge + letter.toUpperCase());
+			.normalize('NFKC')
+			.replace(/\s+/g, '')
+			.replace(/[^A-Za-z0-9.@_%+-]/g, '')
+			.toLowerCase()
+			.slice(0, 150);
+
+	const isValidEmail = (value) => {
+		const email = sanitiseEmail(value);
+		if (!email || email.length > 150) return false;
+		if (email.includes('..')) return false;
+		if ((email.match(/@/g) || []).length !== 1) return false;
+		return EMAIL.test(email) && /\.[a-z]{2,}$/.test(email);
+	};
+
+	const titleCaseNameParts = (value) =>
+		String(value || '').replace(/\p{L}+/gu, (part) => part[0].toUpperCase() + part.slice(1).toLowerCase());
+
+	const sanitiseName = (value) => {
+		const cleaned = String(value || '')
+			.normalize('NFKC')
+			.replace(/[^\p{L}-]/gu, '')
+			.replace(/-{2,}/g, '-')
+			.replace(/^-+|-+$/g, '')
+			.slice(0, 20);
+
+		return cleaned ? titleCaseNameParts(cleaned) : '';
+	};
 
 	const blobToFile = (blob, name) => new File([blob], name, { type: blob.type, lastModified: Date.now() });
 
@@ -235,9 +362,8 @@ const addressFinderKey =
 			canvas.toBlob((blob) => resolve(blob), type, quality);
 		});
 
-	const compressImage = async (file) => {
-		const bitmap = await createImageBitmap(file);
-		const scale = Math.min(1, LIMITS.photoEdge / Math.max(bitmap.width, bitmap.height));
+	const encodePhoto = async (bitmap, edge, quality) => {
+		const scale = Math.min(1, edge / Math.max(bitmap.width, bitmap.height));
 		const width = Math.max(1, Math.round(bitmap.width * scale));
 		const height = Math.max(1, Math.round(bitmap.height * scale));
 		const canvas = document.createElement('canvas');
@@ -246,71 +372,149 @@ const addressFinderKey =
 		const ctx = canvas.getContext('2d');
 		if (!ctx) throw new Error('Could not prepare this photo.');
 		ctx.drawImage(bitmap, 0, 0, width, height);
-		bitmap.close();
 
-		const webp = await canvasToBlob(canvas, 'image/webp', LIMITS.photoQuality);
+		const webp = await canvasToBlob(canvas, 'image/webp', quality);
 		if (webp && webp.size > 0) return blobToFile(webp, 'photo.webp');
 
-		const jpeg = await canvasToBlob(canvas, 'image/jpeg', 0.82);
+		const jpeg = await canvasToBlob(canvas, 'image/jpeg', Math.min(0.82, quality + 0.02));
 		if (jpeg && jpeg.size > 0) return blobToFile(jpeg, 'photo.jpg');
 
 		throw new Error('Could not convert this photo.');
 	};
 
-	const validate = (form, photoCount = 0) => {
+	const compressImage = async (file) => {
+		const bitmap = await createImageBitmap(file);
+		try {
+			let edge = LIMITS.photoEdge;
+			let quality = LIMITS.photoQuality;
+
+			for (let attempt = 0; attempt < 8; attempt++) {
+				const encoded = await encodePhoto(bitmap, edge, quality);
+				if (encoded.size <= LIMITS.photoStoredBytes) return encoded;
+				if (quality > 0.5) quality = Math.round((quality - 0.1) * 10) / 10;
+				else {
+					edge = Math.max(640, Math.round(edge * 0.8));
+					quality = 0.72;
+				}
+			}
+
+			throw new Error('too-large');
+		} finally {
+			bitmap.close();
+		}
+	};
+
+	const isCsvFile = (file) => {
+		const name = String(file?.name || '').toLowerCase();
+		const type = String(file?.type || '').toLowerCase();
+		return name.endsWith('.csv') || type === 'text/csv' || type === 'text/plain';
+	};
+
+	const isSpreadsheetFile = (file) => {
+		const name = String(file?.name || '').toLowerCase();
+		const type = String(file?.type || '').toLowerCase();
+		return (
+			name.endsWith('.xlsx') ||
+			name.endsWith('.xls') ||
+			type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+			type === 'application/vnd.ms-excel'
+		);
+	};
+
+	const isUsageFile = (file) => isCsvFile(file) || isSpreadsheetFile(file);
+
+	const isPdfFile = (file) => {
+		const name = String(file?.name || '').toLowerCase();
+		const type = String(file?.type || '').toLowerCase();
+		return type === 'application/pdf' || name.endsWith('.pdf');
+	};
+
+	const isBillFile = (file) => isPdfFile(file);
+
+	const classifyUploads = (billFile, usageFile, photos) => ({
+		bill: billFile,
+		usage: usageFile,
+		photos,
+	});
+
+	const validate = (form, extras = {}) => {
+		const photoCount = extras.photoCount || 0;
+		const bill = extras.bill;
+		const usage = extras.usage;
 		const data = new FormData(form);
 		const errors = {};
+		const monthlyBill = String(data.get('monthlyBill') || '').replace(/\D/g, '').slice(0, LIMITS.monthlyBill);
 		const values = {
 			audience: String(data.get('audience') || '').trim(),
 			goal: String(data.get('goal') || '').trim(),
-			name: titleCaseName(data.get('name')),
-			phone: String(data.get('phone') || '').trim(),
-			email: String(data.get('email') || '').trim().toLowerCase(),
-			location: String(data.get('location') || '').trim().replace(/\s+/g, ' '),
+			preferredTime: String(data.get('preferredTime') || '').trim(),
+			authority: String(data.get('authority') || '').trim(),
+			monthlyBill,
+			firstName: sanitiseName(data.get('firstName')),
+			lastName: sanitiseName(data.get('lastName')),
+			phone: sanitisePhone(data.get('phone')),
+			email: sanitiseEmail(data.get('email')),
 			address: String(data.get('address') || '').trim().replace(/\s+/g, ' '),
 			message: String(data.get('message') || '').trim().replace(/\s+/g, ' '),
 		};
 
 		if (!values.audience) errors.audience = 'Choose a property type.';
 		if (!values.goal) errors.goal = 'Choose a main goal.';
+		if (!values.preferredTime) errors.preferredTime = 'Choose a time that suits.';
+		if (!values.authority) errors.authority = 'Tell us your role.';
+		if (values.monthlyBill && Number(values.monthlyBill) > 10 ** LIMITS.monthlyBill - 1) {
+			errors.monthlyBill = 'Enter a typical monthly amount or leave this blank.';
+		}
 
-		if (!values.name || values.name.length < 2) errors.name = 'Enter your name.';
-		else if (values.name.length > LIMITS.name) errors.name = `Name must be ${LIMITS.name} characters or fewer.`;
-		else if (!NAME.test(values.name)) errors.name = 'Use letters, spaces, hyphens or apostrophes only.';
+		if (!values.firstName || values.firstName.length < 2) errors.firstName = 'Enter your first name.';
+		else if (values.firstName.length > LIMITS.firstName) {
+			errors.firstName = `First name must be ${LIMITS.firstName} characters or fewer.`;
+		} else if (!NAME_PART.test(values.firstName)) {
+			errors.firstName = 'Use letters only.';
+		}
+
+		if (!values.lastName || values.lastName.length < 2) errors.lastName = 'Enter your last name.';
+		else if (values.lastName.length > LIMITS.lastName) {
+			errors.lastName = `Last name must be ${LIMITS.lastName} characters or fewer.`;
+		} else if (!NAME_PART.test(values.lastName)) {
+			errors.lastName = 'Use letters only.';
+		}
 
 		if (!values.phone) errors.phone = 'Enter a phone number.';
 		else if (values.phone.length > LIMITS.phone) errors.phone = `Phone must be ${LIMITS.phone} characters or fewer.`;
 		else if (!isValidPhone(values.phone)) {
-			errors.phone = 'Use a NZ number (e.g. 021 123 4567) or international format (+64...).';
+			errors.phone = 'Enter a local or international number, such as 021 123 4567 or +61 412 345 678.';
 		}
 
 		if (!values.email) errors.email = 'Enter an email address.';
 		else if (values.email.length > LIMITS.email) errors.email = `Email must be ${LIMITS.email} characters or fewer.`;
-		else if (!EMAIL.test(values.email)) errors.email = 'Enter a valid email address.';
+		else if (!isValidEmail(values.email)) errors.email = 'Enter a valid email address.';
 
-		if (!values.location) errors.location = 'Enter a town or postcode.';
-		else if (!LOCATION.test(values.location)) {
-			errors.location = 'Use letters, numbers, spaces or hyphens only.';
+		if (!values.address) errors.address = 'Enter the property address.';
+		else if (values.address.length > LIMITS.address) {
+			errors.address = `Address must be ${LIMITS.address} characters or fewer.`;
+		} else if (!ADDRESS.test(values.address)) {
+			errors.address = 'Use a normal street address without special symbols.';
 		}
 
-		if (values.address) {
-			if (values.address.length > LIMITS.address) {
-				errors.address = `Address must be ${LIMITS.address} characters or fewer.`;
-			} else if (!ADDRESS.test(values.address)) {
-				errors.address = 'Use a normal street address without special symbols.';
+		if (values.message) {
+			if (values.message.length < 10) {
+				errors.message = 'Tell us a little more (at least 10 characters) or leave this blank.';
+			} else if (values.message.length > LIMITS.message) {
+				errors.message = `Message must be ${LIMITS.message} characters or fewer.`;
+			} else if (!SAFE_TEXT.test(values.message)) {
+				errors.message = 'Remove unusual symbols from your message.';
 			}
 		}
 
-		if (!values.message || values.message.length < 10) {
-			errors.message = 'Tell us a little more (at least 10 characters).';
-		} else if (values.message.length > LIMITS.message) {
-			errors.message = `Message must be ${LIMITS.message} characters or fewer.`;
-		} else if (!SAFE_TEXT.test(values.message)) {
-			errors.message = 'Remove unusual symbols from your message.';
-		}
-
-		if (photoCount > LIMITS.photos) {
-			errors.photos = `Add ${LIMITS.photos} photos or fewer.`;
+		if (bill && !isBillFile(bill)) errors.uploads = 'Use a PDF for the bill.';
+		else if (bill && bill.size > LIMITS.billBytes) errors.uploads = 'The bill must be under 8MB.';
+		else if (usage && !isUsageFile(usage)) errors.uploads = 'Use a CSV or Excel file from your retailer.';
+		else if (usage && usage.size > LIMITS.usageBytes) errors.uploads = 'The usage file must be under 5MB.';
+		else if (photoCount > LIMITS.photos) {
+			errors.uploads = `Add ${LIMITS.photos} photos or fewer.`;
+		} else if ((extras.photos || []).some((photo) => photo.size > LIMITS.photoStoredBytes)) {
+			errors.uploads = 'A photo is still over 2MB after compressing. Try another image.';
 		}
 
 		return { values, errors, ok: Object.keys(errors).length === 0 };
@@ -349,168 +553,442 @@ const addressFinderKey =
 		}
 	};
 
-	const applyAudienceFromQuery = () => {
+	const applyAudienceFromQuery = (form) => {
 		const params = new URLSearchParams(window.location.search);
 		const audience = params.get('audience');
-		const audienceSelect = document.querySelector('[data-audience-select]');
-		const goalSelect = document.querySelector('[data-goal-select]');
 		if (!audience) return;
 
-		if (audience.toLowerCase() === 'maintenance') {
-			if (goalSelect) {
-				const option = Array.from(goalSelect.options).find(
-					(item) => item.value.toLowerCase() === 'maintenance or servicing',
-				);
-				if (option) goalSelect.value = option.value;
-			}
-			return;
-		}
-
-		if (audienceSelect) {
-			const option = Array.from(audienceSelect.options).find(
-				(item) => item.value.toLowerCase() === audience.toLowerCase(),
+		const setSelect = (name, value) => {
+			const field = form.elements.namedItem(name);
+			if (!(field instanceof HTMLSelectElement)) return;
+			const match = Array.from(field.options).find(
+				(item) => item.value.toLowerCase() === value.toLowerCase(),
 			);
-			if (option) audienceSelect.value = option.value;
+			if (match) field.value = match.value;
+		};
+
+		if (audience.toLowerCase() === 'maintenance') {
+			setSelect('goal', 'Maintenance or servicing');
+			return;
 		}
+
+		setSelect('audience', audience);
 	};
 
-	const initAddressFinder = (input) => {
-		if (!input || !window.AddressFinder) return;
+	const fetchAddressSuggestions = async (value, signal) => {
+		try {
+			const response = await fetch(`/api/address-search?q=${encodeURIComponent(value)}`, {
+				signal,
+			});
+			if (response.ok) {
+				const data = await response.json();
+				if (Array.isArray(data.suggestions)) return data.suggestions;
+			}
+		} catch (error) {
+			if (error?.name === 'AbortError') throw error;
+		}
 
-		const widget = new window.AddressFinder.Widget(input, addressFinderKey, 'NZ', {
-			manual_style: false,
-			max_results: 8,
+		const response = await fetch(photonSearchUrl(value), { signal });
+		if (!response.ok) return [];
+		return suggestionsFromPhoton(await response.json());
+	};
+
+	const initAddressSearch = (input) => {
+		if (!(input instanceof HTMLInputElement)) return;
+
+		const list = document.getElementById('address-suggestions');
+		const shell = document.querySelector('[data-address-shell]');
+		const loader = document.querySelector('[data-address-loader]');
+		const status = document.querySelector('[data-address-status]');
+		if (!(list instanceof HTMLElement) || !(shell instanceof HTMLElement)) return;
+
+		const setLoading = (on) => {
+			input.setAttribute('aria-busy', on ? 'true' : 'false');
+			if (loader instanceof HTMLElement) loader.hidden = !on;
+			if (status) status.textContent = on ? 'Searching addresses' : '';
+		};
+
+		const cache = new Map();
+		let controller = null;
+		let timer = 0;
+		let closeTimer = 0;
+		let active = -1;
+		let suggestions = [];
+
+		const isOpen = () => shell.classList.contains('is-open');
+
+		const close = () => {
+			shell.classList.remove('is-open');
+			input.setAttribute('aria-expanded', 'false');
+			input.removeAttribute('aria-activedescendant');
+			active = -1;
+			suggestions = [];
+			window.clearTimeout(closeTimer);
+			closeTimer = window.setTimeout(() => {
+				if (!isOpen()) list.replaceChildren();
+			}, 240);
+		};
+
+		const choose = (value) => {
+			input.value = value.slice(0, 120);
+			setLoading(false);
+			close();
+		};
+
+		const render = (items) => {
+			suggestions = items;
+			active = items.length ? 0 : -1;
+			window.clearTimeout(closeTimer);
+			list.replaceChildren();
+
+			if (!items.length) {
+				close();
+				return;
+			}
+
+			items.forEach((label, index) => {
+				const option = document.createElement('li');
+				option.id = `address-option-${index}`;
+				option.role = 'option';
+				option.textContent = label;
+				if (index === active) option.setAttribute('aria-selected', 'true');
+				option.addEventListener('mousedown', (event) => {
+					event.preventDefault();
+					choose(label);
+				});
+				list.append(option);
+			});
+
+			input.setAttribute('aria-expanded', 'true');
+			input.setAttribute('aria-activedescendant', 'address-option-0');
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					shell.classList.add('is-open');
+				});
+			});
+		};
+
+		const highlight = (index) => {
+			active = index;
+			Array.from(list.children).forEach((option, optionIndex) => {
+				option.setAttribute('aria-selected', optionIndex === index ? 'true' : 'false');
+			});
+			if (index >= 0) input.setAttribute('aria-activedescendant', `address-option-${index}`);
+		};
+
+		const search = async (value) => {
+			if (cache.has(value)) {
+				setLoading(false);
+				render(cache.get(value));
+				return;
+			}
+
+			controller?.abort();
+			controller = new AbortController();
+			const current = controller;
+			setLoading(true);
+
+			try {
+				const items = await fetchAddressSuggestions(value, current.signal);
+				cache.set(value, items);
+				if (input.value.trim().replace(/\s+/g, ' ') === value) render(items);
+			} catch (error) {
+				if (error?.name !== 'AbortError') close();
+			} finally {
+				if (controller === current) setLoading(false);
+			}
+		};
+
+		input.addEventListener('input', () => {
+			const value = input.value.trim().replace(/\s+/g, ' ');
+			window.clearTimeout(timer);
+			if (value.length < 3) {
+				setLoading(false);
+				close();
+				return;
+			}
+			if (cache.has(value)) {
+				setLoading(false);
+				render(cache.get(value));
+				return;
+			}
+			setLoading(true);
+			close();
+			timer = window.setTimeout(() => search(value), 280);
 		});
 
-		widget.on('address:select', (fullAddress, metaData) => {
-			input.value = metaData.full_address || fullAddress || '';
-			const location = document.getElementById('location');
-			if (location instanceof HTMLInputElement) {
-				const town = metaData.city || metaData.suburb || metaData.town || '';
-				const postcode = metaData.postcode || '';
-				location.value = [town, postcode].filter(Boolean).join(' ').trim() || location.value;
+		input.addEventListener('keydown', (event) => {
+			if (!isOpen() || !suggestions.length) return;
+
+			if (event.key === 'ArrowDown') {
+				event.preventDefault();
+				highlight((active + 1) % suggestions.length);
+			} else if (event.key === 'ArrowUp') {
+				event.preventDefault();
+				highlight((active - 1 + suggestions.length) % suggestions.length);
+			} else if (event.key === 'Enter' && active >= 0) {
+				event.preventDefault();
+				choose(suggestions[active]);
+			} else if (event.key === 'Escape') {
+				close();
 			}
 		});
-	};
 
-	const loadAddressFinder = (input) => {
-		if (!input) return;
-		if (window.AddressFinder) {
-			initAddressFinder(input);
-			return;
-		}
-
-		const existing = document.querySelector('script[data-addressfinder]');
-		if (existing) {
-			existing.addEventListener('load', () => initAddressFinder(input), { once: true });
-			return;
-		}
-
-		const script = document.createElement('script');
-		script.src = 'https://api.addressfinder.io/assets/v3/widget.js';
-		script.async = true;
-		script.dataset.addressfinder = 'true';
-		script.onload = () => initAddressFinder(input);
-		document.body.appendChild(script);
+		input.addEventListener('blur', () => {
+			window.setTimeout(close, 120);
+		});
 	};
 
 	document.addEventListener('astro:page-load', () => {
 		const form = document.querySelector('[data-contact-form]');
 		if (!(form instanceof HTMLFormElement)) return;
 
-		applyAudienceFromQuery();
-		loadAddressFinder(form.querySelector('[data-address-finder]'));
+		applyAudienceFromQuery(form);
+		initAddressSearch(form.querySelector('[data-address-search]'));
 
-		const nameInput = form.querySelector('[data-capitalize-name]');
-		nameInput?.addEventListener('blur', () => {
-			if (nameInput instanceof HTMLInputElement) {
-				nameInput.value = titleCaseName(nameInput.value);
-			}
+		form.querySelectorAll('[data-name-field]').forEach((input) => {
+			if (!(input instanceof HTMLInputElement)) return;
+
+			const applyNameFormat = () => {
+				const cursor = input.selectionStart;
+				const next = titleCaseNameParts(input.value.replace(/[^\p{L}-]/gu, ''));
+				if (next === input.value) return;
+				input.value = next;
+				if (typeof cursor === 'number') {
+					input.setSelectionRange(Math.min(cursor, next.length), Math.min(cursor, next.length));
+				}
+			};
+
+			input.addEventListener('beforeinput', (event) => {
+				if (event.inputType === 'insertText' && typeof event.data === 'string' && /[^\p{L}-]/u.test(event.data)) {
+					event.preventDefault();
+				}
+			});
+
+			input.addEventListener('input', applyNameFormat);
+			input.addEventListener('change', applyNameFormat);
+			input.addEventListener('blur', () => {
+				input.value = sanitiseName(input.value);
+			});
 		});
 
-		const message = form.querySelector('#message');
-		const counter = form.querySelector('[data-message-count]');
-		const updateCount = () => {
-			if (message instanceof HTMLTextAreaElement && counter) {
-				counter.textContent = String(message.value.length);
-			}
-		};
-		message?.addEventListener('input', updateCount);
-		updateCount();
+		const phoneInput = form.querySelector('[data-phone-field]');
+		if (phoneInput instanceof HTMLInputElement) {
+			phoneInput.addEventListener('input', () => {
+				const cursor = phoneInput.selectionStart;
+				let next = phoneInput.value.replace(/[^\d+()-]/g, '').replace(/(?!^)\+/g, '');
+				const maxDigits = next.trim().startsWith('00') ? 17 : 15;
+				if ((next.replace(/\D/g, '') || '').length > maxDigits) {
+					let kept = 0;
+					next = next.replace(/\d/g, (digit) => {
+						kept += 1;
+						return kept > maxDigits ? '' : digit;
+					});
+				}
+				if (next !== phoneInput.value) {
+					phoneInput.value = next;
+					if (typeof cursor === 'number') {
+						phoneInput.setSelectionRange(Math.min(cursor, next.length), Math.min(cursor, next.length));
+					}
+				}
+			});
 
-		const photoInput = form.querySelector('[data-photo-input]');
-		const photoList = form.querySelector('[data-photo-list]');
+			phoneInput.addEventListener('blur', () => {
+				phoneInput.value = sanitisePhone(phoneInput.value);
+				if (phoneInput.value && !isValidPhone(phoneInput.value)) {
+					showErrors(form, { phone: 'Enter a local or international number, such as 021 123 4567 or +61 412 345 678.' });
+					return;
+				}
+				if (phoneInput.value) showErrors(form, {});
+			});
+		}
+
+		const billInput = form.querySelector('[data-bill-field]');
+		if (billInput instanceof HTMLInputElement) {
+			const digitsOnly = (value) => value.replace(/\D/g, '').slice(0, LIMITS.monthlyBill);
+			const formatBill = (digits) => (digits ? Number(digits).toLocaleString('en-NZ') : '');
+			const cursorAfterDigits = (formatted, digitCount) => {
+				if (digitCount <= 0) return 0;
+				let seen = 0;
+				for (let i = 0; i < formatted.length; i++) {
+					if (/\d/.test(formatted[i])) {
+						seen += 1;
+						if (seen === digitCount) return i + 1;
+					}
+				}
+				return formatted.length;
+			};
+
+			billInput.addEventListener('keydown', (event) => {
+				if (event.ctrlKey || event.metaKey || event.altKey) return;
+				if (event.key.length !== 1) return;
+				if (!/\d/.test(event.key)) event.preventDefault();
+			});
+
+			billInput.addEventListener('beforeinput', (event) => {
+				if (event.inputType === 'insertFromPaste' || event.inputType === 'insertFromDrop') return;
+				if (event.data && /\D/.test(event.data)) event.preventDefault();
+			});
+
+			billInput.addEventListener('input', () => {
+				const cursor = billInput.selectionStart;
+				const digitsBefore = billInput.value.slice(0, cursor ?? 0).replace(/\D/g, '').length;
+				const next = formatBill(digitsOnly(billInput.value));
+				billInput.value = next;
+				if (typeof cursor === 'number') {
+					const pos = cursorAfterDigits(next, digitsBefore);
+					billInput.setSelectionRange(pos, pos);
+				}
+			});
+		}
+
+		const emailInput = form.querySelector('[data-email-field]');
+		if (emailInput instanceof HTMLInputElement) {
+			emailInput.addEventListener('keydown', (event) => {
+				if (event.key === ' ' || event.code === 'Space') event.preventDefault();
+			});
+
+			emailInput.addEventListener('input', () => {
+				const cursor = emailInput.selectionStart;
+				const next = emailInput.value.replace(/\s+/g, '').replace(/[^A-Za-z0-9.@_%+-]/g, '');
+				if (next !== emailInput.value) {
+					emailInput.value = next;
+					if (typeof cursor === 'number') {
+						emailInput.setSelectionRange(Math.min(cursor, next.length), Math.min(cursor, next.length));
+					}
+				}
+			});
+
+			emailInput.addEventListener('blur', () => {
+				emailInput.value = sanitiseEmail(emailInput.value);
+				if (emailInput.value && !isValidEmail(emailInput.value)) {
+					showErrors(form, { email: 'Enter a valid email address.' });
+					return;
+				}
+				if (emailInput.value) showErrors(form, {});
+			});
+		}
+
+		const uploadInput = form.querySelector('[data-upload-input]');
+		const fileField = form.querySelector('[data-file-field]');
+		const filePick = form.querySelector('[data-file-pick]');
+		const fileSummary = form.querySelector('[data-file-summary]');
+		const fileClear = form.querySelector('[data-file-clear]');
+		let billFile = null;
+		let usageFile = null;
 		const photos = [];
 
-		const renderPhotos = () => {
-			if (!(photoList instanceof HTMLElement)) return;
-			photoList.hidden = photos.length === 0;
-			photoList.replaceChildren();
+		const renderFiles = () => {
+			const total = (billFile ? 1 : 0) + (usageFile ? 1 : 0) + photos.length;
+			const imagesOnly = !billFile && !usageFile && photos.length > 0;
 
-			photos.forEach((file, index) => {
-				const item = document.createElement('li');
-				const img = document.createElement('img');
-				img.src = URL.createObjectURL(file);
-				img.alt = `Prepared photo ${index + 1}`;
-				img.onload = () => URL.revokeObjectURL(img.src);
+			if (filePick) filePick.textContent = total === 0 ? 'Upload files' : 'Add more';
+			fileField?.classList.toggle('file-field--has-files', total > 0);
 
-				const remove = document.createElement('button');
-				remove.type = 'button';
-				remove.textContent = 'Remove';
-				remove.addEventListener('click', () => {
-					photos.splice(index, 1);
-					renderPhotos();
-				});
+			if (fileSummary instanceof HTMLElement) {
+				if (total === 0) {
+					fileSummary.textContent = '';
+					fileSummary.hidden = true;
+				} else {
+					fileSummary.hidden = false;
+					fileSummary.textContent = imagesOnly
+						? `${photos.length} image${photos.length === 1 ? '' : 's'}`
+						: `${total} file${total === 1 ? '' : 's'}`;
+				}
+			}
 
-				item.append(img, remove);
-				photoList.append(item);
-			});
+			if (fileClear instanceof HTMLButtonElement) fileClear.hidden = total === 0;
 		};
 
-		photoInput?.addEventListener('change', async () => {
-			if (!(photoInput instanceof HTMLInputElement) || !photoInput.files) return;
+		fileClear?.addEventListener('click', () => {
+			billFile = null;
+			usageFile = null;
+			photos.length = 0;
+			if (uploadInput instanceof HTMLInputElement) uploadInput.value = '';
+			renderFiles();
+		});
 
-			const incoming = Array.from(photoInput.files);
-			photoInput.value = '';
+		uploadInput?.addEventListener('change', async () => {
+			if (!(uploadInput instanceof HTMLInputElement) || !uploadInput.files) return;
+
+			const incoming = Array.from(uploadInput.files);
+			uploadInput.value = '';
 
 			for (const file of incoming) {
-				if (photos.length >= LIMITS.photos) {
-					showErrors(form, { photos: `Add ${LIMITS.photos} photos or fewer.` });
-					break;
-				}
-				if (!file.type.startsWith('image/')) {
-					showErrors(form, { photos: 'Use JPEG, PNG or WebP photos.' });
-					continue;
-				}
-				if (file.size > LIMITS.photoBytes) {
-					showErrors(form, { photos: 'Each original photo must be under 12MB.' });
+				if (isUsageFile(file)) {
+					if (file.size > LIMITS.usageBytes) {
+						showErrors(form, { uploads: 'The usage file must be under 5MB.' });
+						continue;
+					}
+					usageFile = file;
+					showErrors(form, {});
+					renderFiles();
 					continue;
 				}
 
-				try {
-					photos.push(await compressImage(file));
+				if (isPdfFile(file)) {
+					if (file.size > LIMITS.billBytes) {
+						showErrors(form, { uploads: 'The bill must be under 8MB.' });
+						continue;
+					}
+					billFile = file;
 					showErrors(form, {});
-					renderPhotos();
-				} catch {
-					showErrors(form, { photos: 'Could not prepare that photo. Try another image.' });
+					renderFiles();
+					continue;
 				}
+
+				if (file.type.startsWith('image/')) {
+					if (photos.length >= LIMITS.photos) {
+						showErrors(form, { uploads: `Add ${LIMITS.photos} photos or fewer.` });
+						continue;
+					}
+					if (file.size > LIMITS.photoBytes) {
+						showErrors(form, { uploads: 'Each original photo must be under 12MB.' });
+						continue;
+					}
+
+					try {
+						photos.push(await compressImage(file));
+						showErrors(form, {});
+						renderFiles();
+					} catch (error) {
+						showErrors(form, {
+							uploads:
+								error instanceof Error && error.message === 'too-large'
+									? 'That photo is still over 2MB after compressing. Try another image.'
+									: 'Could not prepare that image. Try another file.',
+						});
+					}
+					continue;
+				}
+
+				showErrors(form, {
+					uploads: 'Use a PDF for the bill, a CSV or Excel file for usage or JPEG, PNG or WebP photos.',
+				});
 			}
 		});
 
 		form.addEventListener('submit', async (event) => {
 			event.preventDefault();
 
-			const nameField = form.querySelector('#name');
-			if (nameField instanceof HTMLInputElement) {
-				nameField.value = titleCaseName(nameField.value);
+			form.querySelectorAll('[data-name-field]').forEach((input) => {
+				if (input instanceof HTMLInputElement) input.value = sanitiseName(input.value);
+			});
+			if (phoneInput instanceof HTMLInputElement) {
+				phoneInput.value = sanitisePhone(phoneInput.value);
 			}
 
-			const emailField = form.querySelector('#email');
-			if (emailField instanceof HTMLInputElement) {
-				emailField.value = emailField.value.trim().toLowerCase();
+			if (emailInput instanceof HTMLInputElement) {
+				emailInput.value = sanitiseEmail(emailInput.value);
 			}
 
-			const { values, errors, ok } = validate(form, photos.length);
+			const classified = classifyUploads(billFile, usageFile, photos);
+			const { values, errors, ok } = validate(form, {
+				photoCount: classified.photos.length,
+				photos: classified.photos,
+				bill: classified.bill,
+				usage: classified.usage,
+			});
 			showErrors(form, errors);
 
 			if (!ok) {
@@ -528,14 +1006,25 @@ const addressFinderKey =
 			if (submit instanceof HTMLButtonElement) {
 				submit.disabled = true;
 				submit.textContent = 'Sending...';
+				submit.dataset.label = 'Book a visit';
 			}
 
 			const payload = new FormData(form);
+			payload.delete('uploads');
 			payload.delete('photos');
-			photos.forEach((file, index) => {
+			payload.delete('bill');
+			payload.delete('usage');
+			classified.photos.forEach((file, index) => {
 				const ext = file.type === 'image/webp' ? 'webp' : 'jpg';
 				payload.append('photos', file, `photo-${index + 1}.${ext}`);
 			});
+			if (classified.bill) {
+				const billName = classified.bill.type === 'application/pdf' ? 'bill.pdf' : 'bill.webp';
+				payload.append('bill', classified.bill, classified.bill.name || billName);
+			}
+			if (classified.usage) {
+				payload.append('usage', classified.usage, classified.usage.name || 'usage.csv');
+			}
 
 			try {
 				const response = await fetch(form.action, { method: 'POST', body: payload });
@@ -548,18 +1037,18 @@ const addressFinderKey =
 					return;
 				}
 				const message = (await response.text()) || 'Could not send enquiry. Please try again.';
-				showErrors(form, { photos: message });
+				showErrors(form, { uploads: message });
 				const formError = form.querySelector('[data-form-error]');
 				if (formError) {
 					formError.textContent = message;
 					formError.hidden = false;
 				}
 			} catch {
-				showErrors(form, { photos: 'Could not send enquiry. Check your connection and try again.' });
+				showErrors(form, { uploads: 'Could not send enquiry. Check your connection and try again.' });
 			} finally {
 				if (submit instanceof HTMLButtonElement) {
 					submit.disabled = false;
-					submit.textContent = 'Send my enquiry';
+					submit.textContent = submit.dataset.label || 'Book a visit';
 				}
 			}
 		});

@@ -1,5 +1,22 @@
 ---
-import { process } from '../data/site';
+import { process as defaultProcess } from '../data/site';
+
+interface Step {
+	id: string;
+	number: string;
+	title: string;
+	timing?: string;
+	copy: string;
+	points?: readonly string[];
+	image: string;
+	alt: string;
+}
+
+interface Props {
+	steps?: readonly Step[];
+}
+
+const { steps = defaultProcess } = Astro.props;
 
 const optimized = (image: string) => {
 	const base = image
@@ -7,38 +24,49 @@ const optimized = (image: string) => {
 		.replace(/\.(png|jpe?g|webp)$/i, '')
 		.replace(/-(?:640|960|1200|1600)$/i, '');
 	return {
-		src: `/images/${base}-640.webp`,
-		srcset: `/images/${base}-640.webp 640w, /images/${base}-960.webp 960w`,
+		src: `/images/${base}-960.webp`,
+		srcset: `/images/${base}-640.webp 640w, /images/${base}-960.webp 960w, /images/${base}-1200.webp 1200w`,
 	};
 };
 ---
 
-<div class="process-list">
+<div class="process-journey">
 	{
-		process.map((step, index) => {
+		steps.map((step, index) => {
 			const media = optimized(step.image);
 			return (
-			<article
-				class="process-item"
-				data-reveal
-				style={`--reveal-delay: ${index * 70}ms`}
-			>
-				<span class="process-item__number">{step.number}</span>
-				<h3>{step.title}</h3>
-				<p>{step.copy}</p>
-				<img
-					src={media.src}
-					srcset={media.srcset}
-					sizes="(max-width: 900px) 100vw, 28rem"
-					alt={step.alt}
-					width="560"
-					height="350"
-					loading="lazy"
-					decoding="async"
-				/>
-			</article>
+				<article
+					class="process-journey__step"
+					id={step.id}
+					data-reveal
+					style={`--reveal-delay: ${index * 40}ms`}
+				>
+					<div class="process-journey__media">
+						<img
+							src={media.src}
+							srcset={media.srcset}
+							sizes="(max-width: 48rem) 100vw, 46vw"
+							alt={step.alt}
+							width="1200"
+							height="900"
+							loading={index === 0 ? 'eager' : 'lazy'}
+							decoding="async"
+						/>
+					</div>
+					<div class="process-journey__copy">
+						<h2>{step.title}</h2>
+						{step.timing && <p class="process-journey__timing">{step.timing}</p>}
+						<p>{step.copy}</p>
+						{step.points && step.points.length > 0 && (
+							<ul>
+								{step.points.map((point) => (
+									<li>{point}</li>
+								))}
+							</ul>
+						)}
+					</div>
+				</article>
 			);
 		})
 	}
 </div>
-

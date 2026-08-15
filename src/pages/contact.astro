@@ -1,85 +1,101 @@
 ---
 import ContactForm from '../components/ContactForm.astro';
 import Icon from '../components/Icon.astro';
-import { site } from '../data/site';
+import { people, reviews, site } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const audienceParam = Astro.url.searchParams.get('audience') || '';
+
+const nick = people[0];
+const trustReviews = [reviews[0], reviews[5]];
 
 const nextSteps = [
 	{
-		number: '01',
-		title: 'We listen',
-		copy: 'We review what you send.',
+		title: 'We call you',
+		copy: 'Within one working day.',
 		icon: 'support',
 	},
 	{
-		number: '02',
-		title: 'We clarify',
-		copy: 'We ask only for useful details.',
-		icon: 'monitor',
+		title: 'Site visit',
+		copy: 'We walk the property with you. No pitch on the doorstep.',
+		icon: 'home',
 	},
 	{
-		number: '03',
-		title: 'Next step',
-		copy: 'Site visit, review or advice.',
-		icon: 'arrow',
+		title: 'Options to take home',
+		copy: 'A plan you can sit with. No pressure to sign that day.',
+		icon: 'monitor',
 	},
 ] as const;
 ---
 
 <BaseLayout
-	title="Start Your Energy Plan"
-	description="Talk with Energy Point about residential, commercial, rural or maintenance needs across Waikato. Start with a no-pressure project conversation."
-	image="/images/process-consultation.jpg"
+	title="Book a visit"
+	description="Book a Waikato property visit with Energy Point. Nick walks the place with you and you leave with clear options. No pressure to sign."
+	image="/images/contact-hero-1200.webp"
 >
-	<section class="hero hero--contact" style="--hero-position: 70% 42%;">
-		<div class="hero__media">
-			<img
-				src="/images/process-consultation-1200.webp"
-				srcset="/images/process-consultation-640.webp 640w, /images/process-consultation-960.webp 960w, /images/process-consultation-1200.webp 1200w, /images/process-consultation-1600.webp 1600w"
-				sizes="100vw"
-				alt="An Energy Point specialist meeting a Waikato homeowner on site"
-				width="1920"
-				height="1080"
-				fetchpriority="high"
-				decoding="async"
-			/>
-		</div>
-		<div class="hero__content">
+	<section id="enquiry" class="section section--cream section--compact contact-section">
+		<div class="container">
+			<div class="contact-heading">
+				<h1>Book a visit</h1>
+			</div>
+			<ol class="next-steps">
+				{
+					nextSteps.map((step) => (
+						<li class="next-steps__item">
+							<span class="next-steps__icon" aria-hidden="true">
+								<Icon name={step.icon} size={22} />
+							</span>
+							<div>
+								<h3>{step.title}</h3>
+								<p>{step.copy}</p>
+							</div>
+						</li>
+					))
+				}
+			</ol>
 			<div class="contact-stage">
-				<div class="contact-stage__intro">
-					<div>
-						<h1>Tell us about your property.</h1>
-						<p class="lede muted">
-							What you use, what you want to change, and what a better setup should achieve.
-							We will come back with a practical next step.
-						</p>
-					</div>
-					<div class="contact-details">
-						<a class="button button--light" href={site.phoneHref}>{site.phoneDisplay}</a>
-						<a class="button button--ghost" href={`mailto:${site.email}`}>{site.email}</a>
-						<span class="muted">{site.hours}</span>
-						<span class="muted">{site.region}</span>
-					</div>
-				</div>
 				<div class="contact-stage__form">
-					<ol class="next-steps">
+					<ContactForm defaultAudience={audienceParam} />
+				</div>
+				<aside class="contact-rail" aria-label="Why book with Energy Point">
+					{
+						nick.image && (
+							<div class="contact-rail__person">
+								<img
+									src={nick.image.replace(/\.(png|jpe?g)$/i, '-960.webp')}
+									srcset={`${nick.image.replace(/\.(png|jpe?g)$/i, '-640.webp')} 640w, ${nick.image.replace(/\.(png|jpe?g)$/i, '-960.webp')} 960w`}
+									sizes="(max-width: 64rem) 100vw, 22rem"
+									alt={nick.alt}
+									width="960"
+									height="640"
+								/>
+								<div>
+									<span class="eyebrow">{nick.role}</span>
+									<h2>{nick.name}</h2>
+									<p>{nick.copy}</p>
+								</div>
+							</div>
+						)
+					}
+					<ul class="contact-rail__quotes">
 						{
-							nextSteps.map((step) => (
-								<li class="next-steps__item">
-									<span class="next-steps__icon" aria-hidden="true">
-										<Icon name={step.icon} size={22} />
-									</span>
-									<span class="next-steps__number">{step.number}</span>
-									<div>
-										<h3>{step.title}</h3>
-										<p>{step.copy}</p>
-									</div>
+							trustReviews.map((review) => (
+								<li>
+									<blockquote>{review.headline ?? review.quote}</blockquote>
+									<p>
+										{review.name}
+										{review.location ? ` · ${review.location}` : ''}
+									</p>
 								</li>
 							))
 						}
-					</ol>
-					<ContactForm />
-				</div>
+					</ul>
+					<p class="contact-rail__phone">
+						Rather talk now?
+						<a href={site.phoneHref}>{site.phoneDisplay}</a>
+						<span>{site.hours}</span>
+					</p>
+				</aside>
 			</div>
 		</div>
 	</section>

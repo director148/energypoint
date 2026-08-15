@@ -7,8 +7,8 @@ const optimized = (image: string) => {
 		.replace(/\.(png|jpe?g|webp)$/i, '')
 		.replace(/-(?:640|960|1200|1600)$/i, '');
 	return {
-		src: `/images/${base}-960.webp`,
-		srcset: `/images/${base}-640.webp 640w, /images/${base}-960.webp 960w`,
+		src: `/images/${base}-1200.webp`,
+		srcset: `/images/${base}-640.webp 640w, /images/${base}-960.webp 960w, /images/${base}-1200.webp 1200w, /images/${base}-1600.webp 1600w`,
 	};
 };
 ---
@@ -24,6 +24,9 @@ const optimized = (image: string) => {
 				data-reveal
 				style={`--reveal-delay: ${index * 90}ms`}
 			>
+				<div class="audience-card__content">
+					<h3>{audience.title}</h3>
+				</div>
 				<div class="audience-card__media">
 					<img
 						src={media.src}
@@ -35,11 +38,6 @@ const optimized = (image: string) => {
 						loading="lazy"
 						decoding="async"
 					/>
-				</div>
-				<div class="audience-card__content">
-					<span class="eyebrow">{audience.eyebrow}</span>
-					<h3>{audience.title}</h3>
-					<span class="text-link">Explore</span>
 				</div>
 			</a>
 			);

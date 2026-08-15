@@ -1,13 +1,10 @@
 ---
 import AudienceCards from '../components/AudienceCards.astro';
-import BenefitsGrid from '../components/BenefitsGrid.astro';
 import CTASection from '../components/CTASection.astro';
-import FAQAccordion from '../components/FAQAccordion.astro';
 import Hero from '../components/Hero.astro';
-import ProcessTimeline from '../components/ProcessTimeline.astro';
+import ProcessIndex from '../components/ProcessIndex.astro';
 import ReviewGrid from '../components/ReviewGrid.astro';
-import { featuredFaqs } from '../data/faqs';
-import { featuredReviews, homeBenefits } from '../data/site';
+import { audiences, featuredReviews } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const serviceSchema = {
@@ -22,163 +19,56 @@ const serviceSchema = {
 
 <BaseLayout
 	title="Energy Point"
-	description="Smart solar and personalised energy plans for Waikato homes, businesses and rural properties. Designed, installed and supported by a local team."
+	description="Solar for Waikato homes, businesses and rural properties. Designed, installed and supported by a local team. No pressure."
 	schema={serviceSchema}
 >
 	<Hero
-		title="Energy, designed around you."
-		intro="We understand how you use power, then design a future-ready system that makes it work harder for your home, business or land."
+		title="Solar for<br />the Waikato"
+		intro="We come out and leave you a plan.<br />Locally owned. People first."
 		image="/images/home-hero.jpg"
 		alt="An Energy Point solar installation on a Waikato home"
 		position="center 48%"
+		cta="Book a free visit"
+		chips={audiences.map((audience) => ({ label: audience.title, href: audience.href }))}
 	/>
 
-	<section class="section section--cream">
-		<div class="container intro-statement">
-			<div>
-				<span class="eyebrow">Our point of view</span>
-			</div>
-			<div class="intro-statement__body" data-reveal>
-				<p>
-					The future of energy is not bought off a shelf. It is designed around the way
-					you live, work and grow.
-				</p>
-				<a class="text-link" href="/about-us/">Why Energy Point</a>
-			</div>
-		</div>
-	</section>
-
-	<section class="section section--paper">
+	<section class="section section--cream section--compact">
 		<div class="container">
 			<div class="section-heading section-heading--solo">
 				<div>
-					<span class="eyebrow">Built for the Waikato</span>
-					<h2>Home, business or land.</h2>
+					<span class="eyebrow">Designed around you</span>
+					<h2>Clear advice, no pressure</h2>
+				</div>
+			</div>
+			<ReviewGrid items={featuredReviews.slice(0, 3)} />
+		</div>
+	</section>
+
+	<section class="section section--paper section--compact">
+		<div class="container">
+			<div class="section-heading section-heading--oneline">
+				<div>
+					<span class="eyebrow">Where we work</span>
+					<h2>Homes, businesses or land</h2>
 				</div>
 			</div>
 			<AudienceCards />
 		</div>
 	</section>
 
-	<section class="section section--dark">
+	<section class="section section--cream section--compact">
 		<div class="container">
-			<div class="section-heading">
+			<div class="section-heading section-heading--solo">
 				<div>
-					<span class="eyebrow">The Energy Point method</span>
-					<h2>One team, from first question to long-term care.</h2>
+					<span class="eyebrow">How it works</span>
+					<h2>Five steps</h2>
+					<p>
+						Visit, design, install, grid connection, support.
+						<a class="text-link" href="/how-it-works/">See the full process</a>
+					</p>
 				</div>
-				<p class="lede muted">
-					Clear advice, disciplined design, professional installation and support that
-					does not disappear after switch-on.
-				</p>
 			</div>
-			<ProcessTimeline />
-		</div>
-	</section>
-
-	<section class="section section--cream">
-		<div class="container">
-			<div class="section-heading">
-				<div>
-					<span class="eyebrow">A smarter energy position</span>
-					<h2>Control more of what happens behind your meter.</h2>
-				</div>
-				<p class="lede muted">
-					A well-designed system gives you more than generation. It gives you visibility,
-					options and a practical path into what comes next.
-				</p>
-			</div>
-			<BenefitsGrid items={homeBenefits} />
-		</div>
-	</section>
-
-	<section class="media-split">
-		<div class="media-split__media">
-			<img
-				src="/images/home-detail-1600.webp"
-				alt="Energy Point solar technology installed for a local property"
-				width="1920"
-				height="1080"
-				loading="lazy"
-				decoding="async"
-			/>
-		</div>
-		<div class="media-split__content">
-			<span class="eyebrow">More than panels</span>
-			<h2>Built for the whole energy picture.</h2>
-			<p class="lede">
-				The best system is the one that fits today without boxing you out of tomorrow.
-				That means thinking about changing demand, storage, transport and the technology
-				already on its way.
-			</p>
-			<ul class="feature-list">
-				<li>Solar generation</li>
-				<li>Battery readiness</li>
-				<li>EV charging</li>
-				<li>Monitoring and optimisation</li>
-			</ul>
-			<a class="button button--ghost" href="/residential/">Explore home energy</a>
-		</div>
-	</section>
-
-	<section class="media-split media-split--reverse">
-		<div class="media-split__media">
-			<img
-				src="/images/finance-hero-1600.webp"
-				alt="A considered path to financing a solar energy system"
-				width="1920"
-				height="1280"
-				loading="lazy"
-				decoding="async"
-			/>
-		</div>
-		<div class="media-split__content">
-			<span class="eyebrow">Finance without the fog</span>
-			<h2>Good energy should make financial sense.</h2>
-			<p class="lede">
-				Several New Zealand banks offer green lending for eligible customers. We help you
-				understand the technical investment; your lender confirms the finance that is
-				right for you.
-			</p>
-			<ul class="feature-list">
-				<li>Current lender options</li>
-				<li>Clear eligibility caveats</li>
-				<li>No imaginary government rebates</li>
-			</ul>
-			<a class="button" href="/finance/">See current finance pathways</a>
-		</div>
-	</section>
-
-	<section class="section section--forest">
-		<div class="container">
-			<div class="section-heading">
-				<div>
-					<span class="eyebrow">Customer reviews</span>
-					<h2>What customers say after the install.</h2>
-				</div>
-				<p class="lede muted">
-					What Waikato homeowners say after working with Energy Point, from first chat
-					to switch-on.
-				</p>
-			</div>
-			<ReviewGrid items={featuredReviews} />
-			<p style="margin-top: 2rem;">
-				<a class="text-link" href="/reviews/">Read every review</a>
-			</p>
-		</div>
-	</section>
-
-	<section class="section section--paper">
-		<div class="container faq-layout">
-			<div class="faq-intro">
-				<span class="eyebrow">Straight answers</span>
-				<h2>Solar, without the sales fog.</h2>
-				<p class="muted">
-					Start with the questions most Waikato property owners ask us.
-				</p>
-				<a class="text-link" href="/frequently-asked-questions/">View all questions</a>
-			</div>
-			<FAQAccordion items={featuredFaqs} />
+			<ProcessIndex />
 		</div>
 	</section>
 

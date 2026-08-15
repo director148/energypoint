@@ -1,0 +1,22 @@
+---
+import { process as defaultProcess } from '../data/site';
+
+interface Props {
+	href?: string;
+}
+
+const { href = '/how-it-works/' } = Astro.props;
+---
+
+<ol class="process-index">
+	{
+		defaultProcess.map((step) => (
+			<li>
+				<a href={`${href}#${step.id}`}>
+					<span>{step.number}</span>
+					<strong>{step.title}</strong>
+				</a>
+			</li>
+		))
+	}
+</ol>

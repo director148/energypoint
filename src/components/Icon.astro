@@ -20,7 +20,7 @@ interface Props {
 }
 
 const { name, size = 24 } = Astro.props;
-const isFilled = name === 'facebook';
+const isFilled = name === 'facebook' || name === 'instagram';
 ---
 
 <svg
@@ -121,11 +121,10 @@ const isFilled = name === 'facebook';
 	}
 	{
 		name === 'instagram' && (
-			<>
-				<rect x="2" y="2" width="20" height="20" rx="5" />
-				<path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-				<path d="M17.5 6.5h.01" />
-			</>
+			<path
+				fill-rule="evenodd"
+				d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm8.5 1.7h-8.5A4.05 4.05 0 0 0 3.7 7.75v8.5A4.05 4.05 0 0 0 7.75 20.3h8.5a4.05 4.05 0 0 0 4.05-4.05v-8.5A4.05 4.05 0 0 0 16.25 3.7ZM12 7.1A4.9 4.9 0 1 1 7.1 12 4.9 4.9 0 0 1 12 7.1Zm0 1.7A3.2 3.2 0 1 0 15.2 12 3.2 3.2 0 0 0 12 8.8Zm5.05-3.15a1.15 1.15 0 1 1-1.15 1.15 1.15 1.15 0 0 1 1.15-1.15Z"
+			/>
 		)
 	}
 </svg>

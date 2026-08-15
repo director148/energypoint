@@ -10,6 +10,8 @@ production launch, the site owner should confirm the following migrated business
 - The exact product and workmanship warranties offered with every current system package.
 - The official Instagram profile URL.
 - Whether Energy Point is currently a member of any industry association that should be shown.
+- Names, roles and photography on the People page (Nick Davies, Sam Andersen, crew photos). Confirm wording and that job photos may sit next to named bios.
+- Replace the commercial hero if a tighter or higher-resolution business install becomes available. The current crop is the after frame from the before/after collage.
 
 ## Time-sensitive information
 
@@ -19,6 +21,17 @@ production launch, the site owner should confirm the following migrated business
   Election proposals must not be presented as available government support.
 - Any future savings claim must be supported by a clearly defined usage profile, tariff, export
   rate, system design and modelling method.
+
+## Legal pages
+
+- Confirm the registered legal name, NZBN and postal address if those should appear on
+  the privacy policy. The pages currently use the trading name Energy Point and the
+  public phone and email only.
+- Have a lawyer review privacy, terms, cookies and disclaimer before launch if formal
+  sign-off is required. The copy matches how this site actually works (contact form,
+  Resend, Cloudflare photo storage, OpenStreetMap address search, no analytics cookies).
+- If analytics or advertising cookies are added later, update the cookie policy and
+  privacy policy before those tools go live.
 
 ## Form launch checklist
 

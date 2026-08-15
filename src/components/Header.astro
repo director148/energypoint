@@ -4,9 +4,10 @@ import { navigation, site } from '../data/site';
 const pathname = Astro.url.pathname;
 const isActive = (href: string) =>
 	href === '/' ? pathname === '/' : pathname.startsWith(href);
+const onLight = pathname.startsWith('/contact') || pathname.startsWith('/thank-you');
 ---
 
-<header class="site-header" data-site-header>
+<header class:list={['site-header', onLight && 'site-header--on-light']} data-site-header>
 	<div class="site-header__bar">
 		<a class="brand" href="/" aria-label="Energy Point home">
 			<img
@@ -30,8 +31,8 @@ const isActive = (href: string) =>
 		</nav>
 
 		<div class="header-actions">
+			<a class="button button--light" href="/contact/">Book a visit</a>
 			<a class="header-phone" href={site.phoneHref}>{site.phoneDisplay}</a>
-			<a class="button button--light" href="/contact/">Contact</a>
 			<button
 				class="menu-toggle"
 				type="button"
@@ -48,29 +49,20 @@ const isActive = (href: string) =>
 
 <div class="mobile-menu" id="mobile-menu" data-mobile-menu data-open="false">
 	<nav aria-label="Mobile navigation">
-		<a href="/residential/" aria-current={isActive('/residential/') ? 'page' : undefined}>
-			Residential
-		</a>
-		<a href="/commercial/" aria-current={isActive('/commercial/') ? 'page' : undefined}>
-			Commercial
-		</a>
-		<a href="/rural/" aria-current={isActive('/rural/') ? 'page' : undefined}>Rural</a>
-		<a href="/finance/" aria-current={isActive('/finance/') ? 'page' : undefined}>Finance</a>
-		<a href="/maintenance/" aria-current={isActive('/maintenance/') ? 'page' : undefined}>
-			Maintenance
-		</a>
-		<a href="/about-us/" aria-current={isActive('/about-us/') ? 'page' : undefined}>About us</a>
-		<a href="/reviews/" aria-current={isActive('/reviews/') ? 'page' : undefined}>Reviews</a>
-		<a href="/frequently-asked-questions/" aria-current={isActive('/frequently-asked-questions/') ? 'page' : undefined}>
-			FAQs
-		</a>
+		{
+			navigation.map((item) => (
+				<a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+					{item.label}
+				</a>
+			))
+		}
 	</nav>
 	<div class="mobile-menu__meta">
 		<a class="button button--light mobile-menu__action" href={site.phoneHref}>
 			{site.phoneDisplay}
 		</a>
 		<a class="button button--light mobile-menu__action" href="/contact/">
-			Contact
+			Book a visit
 		</a>
 	</div>
 </div>
@@ -86,6 +78,7 @@ const isActive = (href: string) =>
 		const header = document.querySelector('[data-site-header]');
 		const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
 		const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+		let lastY = window.scrollY;
 
 		const closeMenu = () => {
 			if (!toggle || !menu) return;
@@ -108,6 +101,7 @@ const isActive = (href: string) =>
 				);
 				if (menu) menu.dataset.open = String(willOpen);
 				document.body.classList.toggle('nav-open', willOpen);
+				if (willOpen) header?.classList.remove('is-hidden');
 			},
 			{ signal },
 		);
@@ -126,10 +120,29 @@ const isActive = (href: string) =>
 
 		window.addEventListener(
 			'scroll',
-			() => header?.classList.toggle('is-scrolled', window.scrollY > 40),
+			() => {
+				if (!(header instanceof HTMLElement)) return;
+
+				const y = Math.max(0, window.scrollY);
+				header.classList.toggle('is-scrolled', y > 40);
+
+				const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+				if (reduceMotion || document.body.classList.contains('nav-open') || y < 72) {
+					header.classList.remove('is-hidden');
+					lastY = y;
+					return;
+				}
+
+				const delta = y - lastY;
+				if (Math.abs(delta) < 6) return;
+
+				header.classList.toggle('is-hidden', delta > 0);
+				lastY = y;
+			},
 			{ passive: true, signal },
 		);
 		header?.classList.toggle('is-scrolled', window.scrollY > 40);
+		header?.classList.remove('is-hidden');
 	};
 
 	document.addEventListener('astro:page-load', initHeader);

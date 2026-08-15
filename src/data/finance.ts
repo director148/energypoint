@@ -1,8 +1,9 @@
-export const financeReviewed = '12 August 2026';
+export const financeReviewed = '15 August 2026';
 
 export const financeOptions = [
 	{
 		provider: 'Westpac',
+		logo: '/images/banks/westpac.png',
 		product: 'Greater Choices home loan',
 		rate: '0% p.a.',
 		limit: 'Up to $50,000',
@@ -12,6 +13,7 @@ export const financeOptions = [
 	},
 	{
 		provider: 'ANZ',
+		logo: '/images/banks/anz.png',
 		product: 'Good Energy home loan top-up',
 		rate: '1% p.a.',
 		limit: 'Up to $80,000',
@@ -22,6 +24,7 @@ export const financeOptions = [
 	},
 	{
 		provider: 'ASB',
+		logo: '/images/banks/asb.png',
 		product: 'Better Homes top-up',
 		rate: '1% p.a.',
 		limit: 'Up to $80,000',
@@ -31,15 +34,17 @@ export const financeOptions = [
 	},
 	{
 		provider: 'BNZ',
-		product: 'Green Home Loan top-up',
+		logo: '/images/banks/bnz.png',
+		product: 'Better Future home loan top-up',
 		rate: '1% p.a.',
 		limit: 'Up to $80,000',
 		term: 'Fixed for three years',
 		note: 'Eligibility and lending criteria apply; confirm current rates and eligible products with BNZ.',
-		source: 'https://www.bnz.co.nz/personal-banking/home-loans/green-home-loan-top-up',
+		source: 'https://www.bnz.co.nz/personal-banking/home-loans/manage-your-loan/top-ups/better-future-home-loan-top-ups',
 	},
 	{
 		provider: 'Kiwibank',
+		logo: '/images/banks/kiwibank.png',
 		product: 'Sustainable Energy Loan',
 		rate: 'Standard lending rate',
 		limit: 'Based on lending approval',
@@ -52,16 +57,28 @@ export const financeOptions = [
 
 export const financeBenefits = [
 	{
-		title: 'Preserve cash',
-		copy: 'Spread the upfront investment while your system starts generating.',
+		title: 'Keep the cash',
+		copy: 'Spread the cost instead of paying the system in one hit.',
 	},
 	{
-		title: 'Match the plan',
-		copy: 'Compare repayments with a conservative model of your energy use.',
+		title: 'Start generating',
+		copy: 'The system can earn while you repay the lending.',
 	},
 	{
-		title: 'Build for later',
-		copy: 'Consider batteries, EV charging and future demand in the first design.',
+		title: 'Use the mortgage',
+		copy: 'Eligible home-loan customers can top up with the bank they already have.',
+	},
+	{
+		title: 'Compare the numbers',
+		copy: 'Set repayments against a conservative model of how you use power.',
+	},
+	{
+		title: 'Leave room to grow',
+		copy: 'Design for a battery, EV charging or more panels later.',
+	},
+	{
+		title: 'We prepare the plan',
+		copy: 'You take a clear proposal to the lender. We stay on the specs if they ask.',
 	},
 ] as const;
 

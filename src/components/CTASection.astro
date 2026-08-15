@@ -7,9 +7,9 @@ interface Props {
 }
 
 const {
-	title = 'Let’s design energy around you.',
-	copy = 'Start with a clear conversation about your property, your energy use and what you want to achieve.',
-	label = 'Start your energy plan',
+	title = 'Book a free visit',
+	copy = 'We come out, look at your property, energy bills and leave you with a plan. No pressure. Locally owned. People first.',
+	label = 'Book a free visit',
 	audience,
 } = Astro.props;
 
@@ -22,6 +22,6 @@ const href = audience ? `/contact/?audience=${encodeURIComponent(audience)}` : '
 			<h2>{title}</h2>
 			<p>{copy}</p>
 		</div>
-		<a class="button button--light" href={href}>{label}</a>
+		<a class="button" href={href}>{label}</a>
 	</div>
 </section>

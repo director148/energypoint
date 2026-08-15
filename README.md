@@ -36,7 +36,6 @@ Required Cloudflare Pages env vars (for the contact form):
 - `RESEND_API_KEY`
 - `CONTACT_TO_EMAIL` (optional, defaults to `sales@energypoint.nz`)
 - `CONTACT_FROM_EMAIL` (optional; must be a verified Resend sender)
-- `PUBLIC_ADDRESSFINDER_KEY` (optional NZ AddressFinder licence key; demo key used if unset)
 - `R2_PUBLIC_BASE_URL` (optional public base URL for enquiry photos; email includes object keys if unset)
 
 Enquiry photos upload to the R2 bucket `energypoint-enquiry-photos` (binding `ENQUIRY_PHOTOS` in `wrangler.toml`). Create it once, then apply the 30-day deletion policy:

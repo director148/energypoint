@@ -32,36 +32,31 @@ const reviewSchema = {
 
 <BaseLayout
 	title="Customer Reviews"
-	description="What Waikato homeowners say about Energy Point: clear advice, no pressure, and support that lasts."
-	image="/images/residential-hero.jpg"
+	description="What Waikato homeowners say about Energy Point: clear advice, no pressure and support that lasts."
+	image="/images/reviews-hero.jpg"
 	schema={reviewSchema}
 >
 	<Hero
 		page
-		title="Clear advice. No pressure."
-		intro="From the first conversation to switch-on and aftercare, this is what customers say about working with Energy Point."
-		image="/images/residential-hero.jpg"
-		alt="A Waikato home with an Energy Point solar installation"
-		cta="Start your energy plan"
+		title="Reviews"
+		intro="From first chat to aftercare.<br />This is what customers say."
+		image="/images/reviews-hero.jpg"
+		alt="Nick Davies talking with a Waikato homeowner during a visit"
+		cta="Book a free visit"
 		ctaHref="/contact/"
-		position="center 48%"
+		position="center 42%"
+		positionMobile="center 38%"
 	/>
 
-	<section class="section section--forest">
+	<section class="section section--cream section--compact">
 		<div class="container">
-			<div class="section-heading">
-				<div>
-					<span class="eyebrow">From the Waikato</span>
-					<h2>Five stars, in their own words.</h2>
-				</div>
-			</div>
 			<ReviewGrid items={reviews} />
 		</div>
 	</section>
 
 	<CTASection
-		title="See if solar fits your property."
-		copy="Start with a no-pressure conversation about how you use energy, and what you want the system to do."
-		label="Talk to Energy Point"
+		title="See if solar fits your property"
+		copy="Start with a no-pressure conversation about how you use energy and what you want the system to do."
+		label="Book a free visit"
 	/>
 </BaseLayout>
