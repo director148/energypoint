@@ -8,6 +8,7 @@ export const legalPages = [
 	{ label: 'Terms', href: '/terms/' },
 	{ label: 'Cookies', href: '/cookies/' },
 	{ label: 'Disclaimer', href: '/disclaimer/' },
+	{ label: 'Accessibility', href: '/accessibility/' },
 ] as const;
 
 export type LegalBlock =
@@ -548,4 +549,170 @@ export const disclaimer: LegalDocument = {
 	],
 };
 
-export const legalDocuments = [privacy, terms, cookies, disclaimer] as const;
+export const accessibility: LegalDocument = {
+	href: '/accessibility/',
+	title: 'Accessibility statement',
+	eyebrow: 'Legal',
+	description:
+		'How Energy Point works to keep this website usable for people in New Zealand, including under the Human Rights Act 1993.',
+	intro:
+		'This website should work for people in the Waikato, whatever device, browser or assistive technology they use. If something gets in the way, tell us and we will fix it or find another way.',
+	sections: [
+		{
+			id: 'commitment',
+			title: 'Our commitment',
+			blocks: [
+				{
+					type: 'p',
+					html: 'Energy Point is a locally owned solar and energy business in the Waikato, New Zealand. We want anyone considering solar, a battery or maintenance to be able to read these pages, send an enquiry and call us.',
+				},
+				{
+					type: 'p',
+					html: 'Under the Human Rights Act 1993 it is unlawful to discriminate on the ground of disability when providing goods and services. New Zealand has also ratified the United Nations Convention on the Rights of Persons with Disabilities. This statement explains how we approach that on the website.',
+				},
+			],
+		},
+		{
+			id: 'standards',
+			title: 'Standards we aim for',
+			blocks: [
+				{
+					type: 'p',
+					html: 'We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at Level AA. That is the current W3C recommendation and a practical bar for a public New Zealand website.',
+				},
+				{
+					type: 'p',
+					html: 'Public service websites in New Zealand follow the <a href="https://www.digital.govt.nz/standards-and-guidance/nz-government-web-standards/web-accessibility-standard-1-2" target="_blank" rel="noreferrer">NZ Government Web Accessibility Standard 1.2</a>, which requires WCAG 2.2 Level AA. We are a private business, not a government agency. We still use that standard as a reference.',
+				},
+				{
+					type: 'p',
+					html: 'We have not commissioned a full independent audit. This page describes what we have built in and how to contact us if something fails. We do not claim formal conformance.',
+				},
+			],
+		},
+		{
+			id: 'what-we-have-built-in',
+			title: 'What we have built in',
+			blocks: [
+				{
+					type: 'p',
+					html: 'Pages are written in English for New Zealand readers and marked as New Zealand English. Layouts use headings, landmarks and labels so a screen reader can find the main content, navigation and footer.',
+				},
+				{
+					type: 'ul',
+					items: [
+						'A skip link to jump to the main content',
+						'Keyboard access through menus, forms, FAQs and the reviews carousel, with a visible focus ring',
+						'Alternative text on content photographs',
+						'Form fields with labels, a clear required mark and error messages you can read next to the field',
+						'Support for reduced motion, including FAQ accordions and scroll-triggered animation',
+						'Escape closes the mobile menu',
+					],
+				},
+			],
+		},
+		{
+			id: 'using-the-site',
+			title: 'Using the site',
+			blocks: [
+				{
+					type: 'p',
+					html: 'You can:',
+				},
+				{
+					type: 'ul',
+					items: [
+						'Move through links and controls with the Tab key, then Enter or Space to activate them',
+						'Zoom the page in the browser. Layouts are built to reflow on phones and larger text',
+						'Use a screen reader. Landmarks and headings are there to skip around a page',
+						'Ask your operating system or browser to reduce motion. We honour that setting',
+					],
+				},
+				{
+					type: 'p',
+					html: `If the contact form is hard to use, ${contactHtml} We can take the same details over the phone or by email.`,
+				},
+			],
+		},
+		{
+			id: 'known-limits',
+			title: 'Known limits',
+			blocks: [
+				{
+					type: 'p',
+					html: 'Some parts of the site are harder to make fully accessible:',
+				},
+				{
+					type: 'ul',
+					items: [
+						'Address suggestions on the contact form come from OpenStreetMap. If those suggestions are awkward, type the address yourself',
+						'Links to banks, Facebook and Instagram open third-party sites. Their accessibility is outside our control',
+						'A few cropped or decorative images may have short alternative text. Tell us if a photo needs a better description',
+					],
+				},
+			],
+		},
+		{
+			id: 'another-way',
+			title: 'Get information another way',
+			blocks: [
+				{
+					type: 'p',
+					html: 'We can talk through a property, a quote or a maintenance job by phone, email or a visit. We do not require you to use the website to deal with us.',
+				},
+				{
+					type: 'p',
+					html: `Energy Point. ${contactHtml}`,
+				},
+			],
+		},
+		{
+			id: 'feedback',
+			title: 'Tell us if something is hard to use',
+			blocks: [
+				{
+					type: 'p',
+					html: `If a page, form or control is difficult, ${contactHtml}`,
+				},
+				{
+					type: 'p',
+					html: 'It helps if you can include:',
+				},
+				{
+					type: 'ul',
+					items: [
+						'The page address',
+						'What you were trying to do',
+						'The browser, device or assistive technology you were using, if you know it',
+					],
+				},
+				{
+					type: 'p',
+					html: 'We will reply during business hours and either fix the issue or offer another way to get the information.',
+				},
+			],
+		},
+		{
+			id: 'if-you-are-not-satisfied',
+			title: 'If you are not satisfied',
+			blocks: [
+				{
+					type: 'p',
+					html: 'Please contact us first so we can put it right. If you believe you have been discriminated against because of a disability, you can contact <a href="https://tikatangata.org.nz" target="_blank" rel="noreferrer">Te Kāhui Tika Tangata Human Rights Commission</a>.',
+				},
+			],
+		},
+		{
+			id: 'changes',
+			title: 'Changes',
+			blocks: [
+				{
+					type: 'p',
+					html: 'We may update this statement when the site or the law changes. The date at the top of the page is the current version.',
+				},
+			],
+		},
+	],
+};
+
+export const legalDocuments = [privacy, terms, cookies, disclaimer, accessibility] as const;

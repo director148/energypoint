@@ -986,13 +986,14 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 
 .people-grid {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(4, 1fr);
+	align-items: start;
 	gap: clamp(1rem, 2vw, 1.5rem);
 }
 
 .person-card {
 	display: grid;
-	grid-template-rows: auto 1fr;
+	grid-template-rows: auto auto;
 	color: inherit;
 }
 
@@ -1004,9 +1005,15 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	background: var(--forest);
 }
 
-.person-card__media img {
+.person-card__media img,
+.person-card__initials {
+	position: absolute;
+	inset: 0;
 	width: 100%;
 	height: 100%;
+}
+
+.person-card__media img {
 	object-fit: cover;
 	object-position: var(--person-position, center);
 	transition: transform 900ms var(--ease);
@@ -1015,7 +1022,6 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 .person-card__initials {
 	display: grid;
 	place-items: center;
-	height: 100%;
 	color: var(--cream);
 	font-family: var(--font-display);
 	font-size: clamp(3.5rem, 6vw, 5rem);
@@ -1028,18 +1034,79 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 
 .person-card__content {
 	display: grid;
+	align-content: start;
 	gap: 0.4rem;
 	padding: 1.15rem 0.15rem 0;
 }
 
+.person-card__content .eyebrow {
+	margin-bottom: 0;
+}
+
 .person-card__content h2 {
 	margin: 0;
-	font-size: clamp(1.65rem, 2.4vw, 2.2rem);
+	font-size: clamp(1.45rem, 2vw, 1.85rem);
 }
 
 .person-card__content p {
-	margin: 0.35rem 0 0;
+	margin: 0;
 	color: var(--text-muted);
+}
+
+.membership {
+	display: grid;
+	grid-template-columns: minmax(18rem, 0.78fr) minmax(0, 1.22fr);
+	align-items: stretch;
+}
+
+.membership__brand {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 1.5rem;
+	padding: clamp(2.5rem, 6vw, 5.5rem);
+	background: var(--forest);
+	color: var(--cream);
+}
+
+.membership__brand img {
+	width: min(100%, 17.5rem);
+	height: auto;
+}
+
+.membership__brand p {
+	max-width: 24rem;
+	margin: 0;
+	color: rgba(243, 240, 231, 0.88);
+	font-size: 1.05rem;
+	line-height: 1.55;
+}
+
+.membership__brand .text-link {
+	width: fit-content;
+	color: var(--cream);
+}
+
+.membership__content {
+	padding: clamp(2.5rem, 6vw, 5.5rem);
+	background: var(--paper);
+}
+
+.membership__content h2 {
+	margin: 0 0 0.85rem;
+	font-size: clamp(2rem, 4.2vw, 3.35rem);
+}
+
+.membership__content .lede {
+	margin-bottom: 0.5rem;
+}
+
+.membership__content .reason-grid {
+	margin-top: 0.5rem;
+}
+
+.membership__content > .text-link {
+	margin-top: 1.75rem;
 }
 
 .process-index {
@@ -2406,7 +2473,38 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	display: grid;
 	grid-template-columns: 1.2fr repeat(4, minmax(0, 0.5fr));
 	gap: 3rem 1.4rem;
-	padding-bottom: 4rem;
+	padding-bottom: 3rem;
+}
+
+.site-footer__logos {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 1.25rem 2.25rem;
+	padding: 1.5rem 0 1.75rem;
+	border-top: 1px solid var(--line-dark);
+}
+
+.site-footer__logos a {
+	display: block;
+	opacity: 0.82;
+	transition: opacity 220ms ease;
+}
+
+.site-footer__logos a:hover,
+.site-footer__logos a:focus-visible {
+	opacity: 1;
+}
+
+.site-footer__logos img {
+	display: block;
+	height: 3.5rem;
+	width: auto;
+}
+
+.site-footer__logos img.is-compact {
+	height: 2rem;
 }
 
 .site-footer__brand img {
@@ -2732,6 +2830,18 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	border-top: 1px solid var(--line-light);
 }
 
+.legal__siblings .text-link {
+	gap: 0;
+}
+
+.legal__siblings .text-link:hover {
+	gap: 0;
+}
+
+.legal__siblings .text-link::after {
+	content: none;
+}
+
 /* Progressive reveal */
 [data-reveal] {
 	opacity: 0;
@@ -2803,6 +2913,10 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 
 	.people-grid {
 		grid-template-columns: 1fr 1fr;
+	}
+
+	.membership {
+		grid-template-columns: 1fr;
 	}
 
 	.process-index {
@@ -2997,6 +3111,11 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	}
 
 	.media-split__content {
+		padding: 3.5rem 1.25rem;
+	}
+
+	.membership__brand,
+	.membership__content {
 		padding: 3.5rem 1.25rem;
 	}
 

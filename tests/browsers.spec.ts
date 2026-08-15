@@ -13,6 +13,7 @@ const routes = [
 	'/finance/',
 	'/maintenance/',
 	'/meet-the-team/',
+	'/seanz/',
 	'/reviews/',
 	'/frequently-asked-questions/',
 	'/contact/',
@@ -21,6 +22,7 @@ const routes = [
 	'/terms/',
 	'/cookies/',
 	'/disclaimer/',
+	'/accessibility/',
 ];
 
 for (const route of routes) {

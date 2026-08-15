@@ -1,7 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import { legalPages } from '../data/legal';
-import { site } from '../data/site';
+import { footerLogos, site } from '../data/site';
 
 const year = new Date().getFullYear();
 ---
@@ -75,6 +75,27 @@ const year = new Date().getFullYear();
 				</nav>
 			</div>
 		</div>
+
+		<nav class="site-footer__logos" aria-label="Partners">
+			{
+				footerLogos.map((logo) => (
+					<a
+						href={logo.href}
+						target={logo.external ? '_blank' : undefined}
+						rel={logo.external ? 'noreferrer' : undefined}
+					>
+						<img
+							class:list={[logo.compact && 'is-compact']}
+							src={logo.src}
+							alt={logo.alt}
+							width={logo.width}
+							height={logo.height}
+							loading="lazy"
+						/>
+					</a>
+				))
+			}
+		</nav>
 
 		<div class="site-footer__bottom">
 			<span>© {year} Energy Point. All rights reserved.</span>

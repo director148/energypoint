@@ -40,7 +40,12 @@ const organisationSchema = {
 		'@type': 'AdministrativeArea',
 		name: 'Waikato, New Zealand',
 	},
-	sameAs: [site.facebook, site.instagram],
+	sameAs: [site.facebook, site.instagram, site.seanz],
+	memberOf: {
+		'@type': 'Organization',
+		name: 'Sustainable Energy Association of New Zealand',
+		url: 'https://www.seanz.org.nz/',
+	},
 };
 
 const schemas = schema

@@ -18,6 +18,10 @@ const SKIP = new Set([
 	'energy-point-logo-white.webp',
 	'energy-point-logo-white-240.webp',
 	'energy-point-logo.png',
+	'seanz-logo-white.png',
+	'seanz-logo-white.webp',
+	'sigenergy-logo-white.png',
+	'sigenergy-logo-white.webp',
 ]);
 
 function baseName(file) {

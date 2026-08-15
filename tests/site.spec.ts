@@ -10,6 +10,7 @@ const routes = [
 	'/finance/',
 	'/maintenance/',
 	'/meet-the-team/',
+	'/seanz/',
 	'/reviews/',
 	'/frequently-asked-questions/',
 	'/contact/',
@@ -18,14 +19,16 @@ const routes = [
 	'/terms/',
 	'/cookies/',
 	'/disclaimer/',
+	'/accessibility/',
 ];
 
 /**
- * Retired URLs redirect via public/_redirects, which Cloudflare Pages serves but
+ * Retired URLs redirect via _redirects, which Cloudflare Pages serves but
  * `astro preview` ignores, so assert the rules rather than the response here.
+ * Read the built copy so a rule that never reaches dist/ still fails.
  */
 test('retired URLs redirect to meet the team', async () => {
-	const redirects = await readFile('public/_redirects', 'utf8');
+	const redirects = await readFile('dist/_redirects', 'utf8');
 	for (const from of ['/about-us', '/about-us/', '/people', '/people/']) {
 		expect(redirects).toContain(`${from} /meet-the-team/ 301`);
 	}
@@ -66,6 +69,26 @@ test('mobile navigation exposes every primary journey', async ({ page, isMobile 
 
 	await page.keyboard.press('Escape');
 	await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('meet the team names the owners, lead installer and inspector', async ({ page }) => {
+	await page.goto('/meet-the-team/');
+	await expect(page.getByRole('heading', { name: 'Nick Davies' })).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'Sam Andersen' })).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'Sheamus Bronson' })).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'Alan Gellert' })).toBeVisible();
+});
+
+test('SEANZ page covers member benefits and the public listing', async ({ page }) => {
+	await page.goto('/seanz/');
+	await expect(page.getByRole('heading', { name: 'SEANZ', exact: true })).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'Why a SEANZ installer' })).toBeVisible();
+	await expect(page.getByRole('img', { name: 'SEANZ, Sustainable Energy Association of New Zealand' })).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'The bank pathway' })).toBeVisible();
+	await expect(page.getByRole('link', { name: 'View our SEANZ listing' })).toHaveAttribute(
+		'href',
+		'https://www.seanz.org.nz/50438',
+	);
 });
 
 test('reviews page moves through a carousel', async ({ page }) => {
@@ -231,6 +254,11 @@ test('legal pages include a dated policy and on-page navigation', async ({ page 
 
 	await page.goto('/cookies/');
 	await expect(page.locator('main')).toContainText('We do not run Google Analytics');
+
+	await page.goto('/accessibility/');
+	await expect(page.locator('main h1')).toHaveText('Accessibility statement');
+	await expect(page.locator('main')).toContainText('Human Rights Act 1993');
+	await expect(page.locator('main')).toContainText('WCAG');
 });
 
 test('footer exposes legal pages from the homepage', async ({ page }) => {
@@ -240,6 +268,15 @@ test('footer exposes legal pages from the homepage', async ({ page }) => {
 	await expect(legal.getByRole('link', { name: 'Terms' })).toHaveAttribute('href', '/terms/');
 	await expect(legal.getByRole('link', { name: 'Cookies' })).toHaveAttribute('href', '/cookies/');
 	await expect(legal.getByRole('link', { name: 'Disclaimer' })).toHaveAttribute('href', '/disclaimer/');
+	await expect(legal.getByRole('link', { name: 'Accessibility' })).toHaveAttribute('href', '/accessibility/');
+	await expect(page.getByRole('navigation', { name: 'Partners' }).getByRole('link', { name: 'SEANZ member' })).toHaveAttribute(
+		'href',
+		'/seanz/',
+	);
+	await expect(page.getByRole('navigation', { name: 'Partners' }).getByRole('link', { name: 'Sigenergy' })).toHaveAttribute(
+		'href',
+		'https://www.sigenergy.com/au/',
+	);
 });
 
 test('all internal links on the homepage resolve', async ({ page, request }) => {

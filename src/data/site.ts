@@ -8,6 +8,8 @@ export const site = {
 	hours: '9am - 5pm, Monday - Friday',
 	facebook: 'https://www.facebook.com/EnergyPointNZ',
 	instagram: 'https://www.instagram.com/energypointnz/',
+	seanz: 'https://www.seanz.org.nz/50438',
+	seanzLogo: '/images/seanz-logo-white.webp',
 	description:
 		'Solar, battery and energy plans for Waikato homes, businesses and rural properties. Locally owned. People first.',
 } as const;
@@ -225,8 +227,8 @@ export const reviews: readonly Review[] = [
 export const people = [
 	{
 		name: 'Nick Davies',
-		role: 'Co-owner',
-		copy: 'He visits the property, explains the options in plain English and stays in the job until handover.',
+		role: 'Sales',
+		copy: 'Co-owner. He visits the property, explains the options in plain English and stays in the job until handover.',
 		image: '/images/process-consultation.jpg',
 		alt: 'Energy Point meeting a Waikato homeowner on site',
 		position: 'center 28%',
@@ -234,16 +236,58 @@ export const people = [
 	},
 	{
 		name: 'Sam Andersen',
-		role: 'Co-owner',
-		copy: 'Operations, compliance and getting the work done. Waikato based, so the plan does not disappear into a national call centre.',
+		role: 'Operations',
+		copy: 'Co-owner. Compliance and getting the work done. Waikato based, so the plan does not disappear into a national call centre.',
 	},
 	{
-		name: 'The crew',
-		role: 'Install and aftercare',
-		copy: 'Certified people on the roof, then the same local team for monitoring, maintenance and the next upgrade.',
-		image: '/images/team-photo.jpg',
-		alt: 'The Energy Point crew together in the Waikato',
-		position: 'center 78%',
+		name: 'Alan Gellert',
+		role: 'Electrical inspector',
+		copy: 'Co-owner. He inspects our solar and battery jobs and signs the work off so it meets the rules, not just our own checklist. EWRB I 254535.',
+	},
+	{
+		name: 'Sheamus Bronson',
+		role: 'Lead installer',
+		copy: 'He runs the install on the roof. The crew works to his standard, then he walks you through the system before they leave.',
+	},
+] as const;
+
+export const seanzBenefits = [
+	{
+		title: 'Vetted, then listed',
+		copy: 'SEANZ does not sell a sticker. Membership is applied for and accepted. Our listing is public, so you can check who we are before we visit.',
+	},
+	{
+		title: 'A code they have to keep',
+		copy: 'Members follow a code of conduct: honest advertising, installs that meet the law and products that meet the standards.',
+	},
+	{
+		title: 'The bank pathway',
+		copy: 'Major banks use SEANZ membership as a quality check for green home-loan top-ups. A non-member can take those rates off the table.',
+	},
+	{
+		title: 'A named inspector',
+		copy: 'Alan Gellert is listed as our electrical inspector, EWRB I 254535. Sign-off sits with a person you can look up.',
+	},
+] as const;
+
+export const footerLogos = [
+	{
+		href: '/seanz/',
+		src: site.seanzLogo,
+		alt: 'SEANZ member',
+		width: 481,
+		height: 162,
+		external: false,
+		compact: false,
+	},
+	{
+		href: 'https://www.sigenergy.com/au/',
+		src: '/images/sigenergy-logo-white.webp',
+		alt: 'Sigenergy',
+		width: 800,
+		height: 166,
+		external: true,
+		compact: true,
 	},
 ] as const;
 

@@ -50,6 +50,7 @@ const PAGES = [
 	{ id: 'maintenance', path: '/maintenance/' },
 	{ id: 'finance', path: '/finance/' },
 	{ id: 'meet-the-team', path: '/meet-the-team/' },
+	{ id: 'seanz', path: '/seanz/' },
 	{ id: 'reviews', path: '/reviews/' },
 	{ id: 'faqs', path: '/frequently-asked-questions/' },
 	{ id: 'contact', path: '/contact/' },
@@ -57,6 +58,7 @@ const PAGES = [
 	{ id: 'terms', path: '/terms/' },
 	{ id: 'cookies', path: '/cookies/' },
 	{ id: 'disclaimer', path: '/disclaimer/' },
+	{ id: 'accessibility', path: '/accessibility/' },
 	{ id: 'thank-you', path: '/thank-you/', noindex: true },
 	{ id: '404', path: '/404.html', noindex: true },
 ];

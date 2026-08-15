@@ -4,7 +4,7 @@ import Hero from '../components/Hero.astro';
 import { people, site } from '../data/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const peopleSchema = people.slice(0, 2).map((person) => ({
+const peopleSchema = people.map((person) => ({
 	'@context': 'https://schema.org',
 	'@type': 'Person',
 	name: person.name,
@@ -24,7 +24,7 @@ const peopleSchema = people.slice(0, 2).map((person) => ({
 
 <BaseLayout
 	title="Meet the team"
-	description="Meet the Waikato team behind Energy Point: named local owners, a Hamilton and Morrinsville base and the same people after install."
+	description="Meet the Waikato team behind Energy Point: co-owners Nick, Sam and Alan, with lead installer Sheamus Bronson."
 	schema={peopleSchema}
 >
 	<Hero
@@ -54,7 +54,7 @@ const peopleSchema = people.slice(0, 2).map((person) => ({
 									<img
 										src={person.image.replace(/\.(png|jpe?g)$/i, '-960.webp')}
 										srcset={`${person.image.replace(/\.(png|jpe?g)$/i, '-640.webp')} 640w, ${person.image.replace(/\.(png|jpe?g)$/i, '-960.webp')} 960w`}
-										sizes="(max-width: 900px) 100vw, 33vw"
+										sizes="(max-width: 48rem) 100vw, (max-width: 70rem) 50vw, 25vw"
 										alt={person.alt}
 										width="960"
 										height="1200"
