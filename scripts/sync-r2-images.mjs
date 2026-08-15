@@ -49,9 +49,6 @@ function put(file) {
 		'public, max-age=31536000',
 		'--remote',
 	];
-	if (process.env.CLOUDFLARE_ACCOUNT_ID) {
-		args.push('--account-id', process.env.CLOUDFLARE_ACCOUNT_ID);
-	}
 	if (!process.env.CLOUDFLARE_API_TOKEN) {
 		args.push('--profile=florul');
 	}
