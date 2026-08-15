@@ -219,7 +219,7 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 	</div>
 
 	<div class="field">
-		<label for="monthlyBill">Monthly electric bill</label>
+		<label for="monthlyBill">Electric bill</label>
 		<div class="field__amount">
 			<span class="field__currency" aria-hidden="true">$</span>
 			<input
@@ -231,7 +231,9 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 				autocomplete="off"
 				title="Numbers only"
 				data-bill-field
+				aria-describedby="monthlyBill-period"
 			/>
+			<span class="field__period" id="monthlyBill-period">/ month</span>
 		</div>
 		<span class="field__error" data-error-for="monthlyBill" hidden></span>
 	</div>

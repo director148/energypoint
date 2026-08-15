@@ -2136,7 +2136,15 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	color: var(--ink);
 }
 
+.field__period {
+	flex: none;
+	color: color-mix(in srgb, var(--ink) 55%, transparent);
+	white-space: nowrap;
+}
+
 .field__amount input {
+	min-width: 0;
+	flex: 1;
 	padding-inline: 0;
 	background: transparent;
 }
