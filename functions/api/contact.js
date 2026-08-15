@@ -15,6 +15,15 @@ import {
 } from '../_shared/enquiry-emails.js';
 import { storeEnquiryUploads } from '../_shared/enquiry-photos.js';
 
+function isLocalRequest(request) {
+	try {
+		const host = new URL(request.url).hostname;
+		return host === 'localhost' || host === '127.0.0.1' || host === '::1';
+	} catch {
+		return false;
+	}
+}
+
 export async function onRequestPost(context) {
 	const thankYou = new URL('/thank-you/', context.request.url).toString();
 
@@ -53,6 +62,9 @@ export async function onRequestPost(context) {
 
 	const apiKey = context.env.RESEND_API_KEY;
 	if (!apiKey) {
+		if (isLocalRequest(context.request)) {
+			return Response.redirect(thankYou, 303);
+		}
 		console.error('RESEND_API_KEY is not set');
 		return new Response('Could not send enquiry. Please try again.', { status: 503 });
 	}

@@ -85,6 +85,10 @@ export function isValidEmail(value) {
 	return EMAIL.test(email) && /\.[a-z]{2,}$/.test(email);
 }
 
+export function capitaliseFirstLetter(value) {
+	return String(value || '').replace(/^(\s*)(\p{L})/u, (_, space, letter) => space + letter.toUpperCase());
+}
+
 export function validateContactFields(raw) {
 	const errors = {};
 	const values = {
@@ -97,7 +101,7 @@ export function validateContactFields(raw) {
 		phone: sanitisePhone(raw.phone),
 		email: sanitiseEmail(raw.email),
 		address: String(raw.address || '').trim().replace(/\s+/g, ' '),
-		message: String(raw.message || '').trim().replace(/\s+/g, ' '),
+		message: capitaliseFirstLetter(String(raw.message || '').trim().replace(/\s+/g, ' ')),
 		subject: String(raw.subject || '').trim(),
 		preferredTime: String(raw.preferredTime || '').trim(),
 		authority: String(raw.authority || '').trim(),

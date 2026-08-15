@@ -12,7 +12,7 @@ Cloudflare Pages (`solar.florul.com`).
 Use `npm run check` for Astro/TypeScript diagnostics, `npm run build` for the production build,
 and `npm test` for Playwright route and interaction smoke tests.
 
-To exercise the contact API locally: `npm run preview:cf` (Wrangler Pages + Functions).
+To send real enquiry emails locally, add `RESEND_API_KEY` to `.dev.vars` and run `npm run preview:cf`. Without that key, `astro dev` still accepts a valid form and opens the thank-you page.
 
 ## Content
 

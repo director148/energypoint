@@ -1103,7 +1103,11 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 			}
 
 			try {
-				const response = await fetch(form.action, { method: 'POST', body: payload });
+				const response = await fetch(form.action, { method: 'POST', body: payload, redirect: 'follow' });
+				if (/\/thank-you\/?(\?|#|$)/.test(response.url)) {
+					window.location.assign(response.url);
+					return;
+				}
 				if (response.redirected && /thank-you/.test(response.url)) {
 					window.location.assign(response.url);
 					return;
