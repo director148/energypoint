@@ -2651,11 +2651,11 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
-	gap: 0.15rem 0;
+	gap: 0.35rem 0;
 }
 
 .footer-legal a {
-	padding-inline: 0.7rem;
+	padding-inline: 0.95rem;
 }
 
 .footer-legal a + a {
@@ -3240,6 +3240,17 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	.site-footer__bottom {
 		flex-direction: column;
 		align-items: center;
+	}
+
+	.footer-legal {
+		gap: 0.5rem 0;
+	}
+
+	.footer-legal a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 3rem;
+		padding-inline: 1rem;
 	}
 
 	.site-footer__logos {
