@@ -5,6 +5,13 @@ export const site = {
 	companyNumber: '9297401',
 	nzbn: '9429052495519',
 	registeredOffice: '71 Anderson Street, Morrinsville 3300, New Zealand',
+	address: {
+		street: '71 Anderson Street',
+		locality: 'Morrinsville',
+		postalCode: '3300',
+		region: 'Waikato',
+		country: 'NZ',
+	},
 	url: 'https://solar.florul.com',
 	phoneDisplay: '0800 102 211',
 	phoneHref: 'tel:+64800102211',
@@ -18,6 +25,8 @@ export const site = {
 	ewrbRegister:
 		'https://kete.mbie.govt.nz/EW/EWPRSearch/practitioner/?id=228928f3-b042-df11-917a-005056ae567f',
 	ewrbLogo: '/images/ewrb-logo.webp',
+	sigenergy: 'https://www.sigenergy.com/au/',
+	sigenergyLogo: '/images/sigenergy-logo-white.webp',
 	description:
 		'Solar, battery and energy plans for Waikato homes, businesses and rural properties. Locally owned. People first.',
 } as const;
@@ -259,34 +268,14 @@ export const people = [
 	},
 ] as const;
 
-export const seanzBenefits = [
-	{
-		title: 'Vetted, then listed',
-		copy: 'SEANZ does not sell a sticker. Membership is applied for and accepted. Our listing is public, so you can check who we are before we visit.',
-	},
-	{
-		title: 'A code they have to keep',
-		copy: 'Members follow a code of conduct: honest advertising, installs that meet the law and products that meet the standards.',
-	},
-	{
-		title: 'The bank pathway',
-		copy: 'Major banks use SEANZ membership as a quality check for green home-loan top-ups. A non-member can take those rates off the table.',
-	},
-	{
-		title: 'A named inspector',
-		copy: 'Alan Gellert is listed as our electrical inspector, EWRB I 254535. Sign-off sits with a person you can look up.',
-	},
-] as const;
-
 export const footerLogos = [
 	{
-		href: '/seanz/',
+		href: site.seanz,
 		src: site.seanzLogo,
 		alt: 'SEANZ member',
 		width: 481,
 		height: 162,
-		external: false,
-		compact: false,
+		external: true,
 	},
 	{
 		href: site.ewrbRegister,
@@ -295,16 +284,14 @@ export const footerLogos = [
 		width: 660,
 		height: 192,
 		external: true,
-		compact: true,
 	},
 	{
-		href: 'https://www.sigenergy.com/au/',
-		src: '/images/sigenergy-logo-white.webp',
+		href: site.sigenergy,
+		src: site.sigenergyLogo,
 		alt: 'Sigenergy',
 		width: 800,
 		height: 166,
 		external: true,
-		compact: true,
 	},
 ] as const;
 

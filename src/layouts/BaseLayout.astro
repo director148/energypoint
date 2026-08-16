@@ -2,6 +2,7 @@
 import { ClientRouter, fade } from 'astro:transitions';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import { areas } from '../data/areas';
 import { site } from '../data/site';
 import '../styles/global.css';
 
@@ -36,10 +37,30 @@ const organisationSchema = {
 	email: site.email,
 	telephone: site.phoneDisplay,
 	description: site.description,
-	areaServed: {
-		'@type': 'AdministrativeArea',
-		name: 'Waikato, New Zealand',
+	address: {
+		'@type': 'PostalAddress',
+		streetAddress: site.address.street,
+		addressLocality: site.address.locality,
+		postalCode: site.address.postalCode,
+		addressRegion: site.address.region,
+		addressCountry: site.address.country,
 	},
+	openingHoursSpecification: {
+		'@type': 'OpeningHoursSpecification',
+		dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+		opens: '09:00',
+		closes: '17:00',
+	},
+	areaServed: [
+		{
+			'@type': 'AdministrativeArea',
+			name: 'Waikato, New Zealand',
+		},
+		...areas.map((area) => ({
+			'@type': 'City',
+			name: area.searchName,
+		})),
+	],
 	sameAs: [site.facebook, site.instagram, site.seanz],
 	memberOf: {
 		'@type': 'Organization',

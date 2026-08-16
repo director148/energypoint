@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
+import { areas } from '../src/data/areas';
 
 const routes = [
 	'/',
@@ -10,7 +11,7 @@ const routes = [
 	'/finance/',
 	'/maintenance/',
 	'/meet-the-team/',
-	'/seanz/',
+	'/areas-we-cover/',
 	'/reviews/',
 	'/frequently-asked-questions/',
 	'/contact/',
@@ -31,6 +32,9 @@ test('retired URLs redirect to meet the team', async () => {
 	const redirects = await readFile('dist/_redirects', 'utf8');
 	for (const from of ['/about-us', '/about-us/', '/people', '/people/']) {
 		expect(redirects).toContain(`${from} /meet-the-team/ 301`);
+	}
+	for (const from of ['/seanz', '/seanz/', '/ewrb', '/ewrb/', '/sigenergy', '/sigenergy/']) {
+		expect(redirects).toContain(`${from} / 301`);
 	}
 });
 
@@ -79,16 +83,30 @@ test('meet the team names the owners, lead installer and inspector', async ({ pa
 	await expect(page.getByRole('heading', { name: 'Alan Gellert' })).toBeVisible();
 });
 
-test('SEANZ page covers member benefits and the public listing', async ({ page }) => {
-	await page.goto('/seanz/');
-	await expect(page.getByRole('heading', { name: 'SEANZ', exact: true })).toBeVisible();
-	await expect(page.getByRole('heading', { name: 'Why a SEANZ installer' })).toBeVisible();
-	await expect(page.getByRole('img', { name: 'SEANZ, Sustainable Energy Association of New Zealand' })).toBeVisible();
-	await expect(page.getByRole('heading', { name: 'The bank pathway' })).toBeVisible();
-	await expect(page.getByRole('link', { name: 'View our SEANZ listing' })).toHaveAttribute(
-		'href',
-		'https://www.seanz.org.nz/50438',
-	);
+test('areas we cover lists Waikato towns and a local solar company', async ({ page }) => {
+	await page.goto('/areas-we-cover/');
+	await expect(page.getByRole('heading', { name: 'Areas we cover', exact: true })).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'A local solar company' })).toBeVisible();
+	await expect(page.locator('a.area-card[href="/areas-we-cover/hamilton/"]')).toBeVisible();
+	await expect(page.locator('a.area-card[href="/areas-we-cover/morrinsville/"]')).toBeVisible();
+	await expect(page.getByText('Gordonton')).toBeVisible();
+});
+
+test('Hamilton area page names the town as a solar installer', async ({ page }) => {
+	await page.goto('/areas-we-cover/hamilton/');
+	await expect(page.getByRole('heading', { name: 'Hamilton', exact: true })).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'Why we work in Hamilton' })).toBeVisible();
+	await expect(page.getByText(/solar installer for Hamilton/i)).toBeVisible();
+	await expect(page).toHaveTitle(/Solar installers in Hamilton/);
+});
+
+test('every town area page renders its name', async ({ page }) => {
+	for (const area of areas) {
+		const response = await page.goto(`/areas-we-cover/${area.slug}/`);
+		expect(response?.ok(), area.slug).toBeTruthy();
+		await expect(page.getByRole('heading', { level: 1, name: area.name, exact: true })).toBeVisible();
+		await expect(page).toHaveTitle(new RegExp(`Solar installers in ${area.searchName}`));
+	}
 });
 
 test('reviews page moves through a carousel', async ({ page }) => {
@@ -280,9 +298,12 @@ test('footer exposes legal pages from the homepage', async ({ page }) => {
 	await expect(legal.getByRole('link', { name: 'Cookies' })).toHaveAttribute('href', '/cookies/');
 	await expect(legal.getByRole('link', { name: 'Disclaimer' })).toHaveAttribute('href', '/disclaimer/');
 	await expect(legal.getByRole('link', { name: 'Accessibility' })).toHaveAttribute('href', '/accessibility/');
+	await expect(
+		page.getByRole('navigation', { name: 'Footer company pages' }).getByRole('link', { name: 'Areas we cover' }),
+	).toHaveAttribute('href', '/areas-we-cover/');
 	await expect(page.getByRole('navigation', { name: 'Partners' }).getByRole('link', { name: 'SEANZ member' })).toHaveAttribute(
 		'href',
-		'/seanz/',
+		'https://www.seanz.org.nz/50438',
 	);
 	await expect(page.getByRole('navigation', { name: 'Partners' }).getByRole('link', { name: 'Sigenergy' })).toHaveAttribute(
 		'href',

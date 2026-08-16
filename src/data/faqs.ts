@@ -140,12 +140,56 @@ export const faqGroups: FaqGroup[] = [
 						'Yes. Sheds and ground arrays still generate in diffuse light, with lower output than a clear day. Annual modelling includes Waikato weather and the seasons that drive farm load.',
 				},
 			}),
+			faq({
+				all: {
+					question: 'Where do you install solar?',
+					answer:
+						'Energy Point is a Waikato solar company based in Morrinsville. We install for homes, businesses and farms in Hamilton, Cambridge, Te Awamutu, Morrinsville, Raglan, Matamata, Huntly, Te Aroha, Ngāruawāhia, Tamahere, Te Kauwhata, Putaruru and the properties between. See the areas we cover page or ask if you are just outside that.',
+				},
+				residential: {
+					question: 'Do you install home solar in my town?',
+					answer:
+						'If you are in the Waikato, most likely yes. Energy Point is a Morrinsville solar company covering Hamilton, Cambridge, Te Awamutu, Raglan, Matamata, Huntly, Te Aroha, Ngāruawāhia, Tamahere and the towns and blocks between. The areas we cover page lists them. Ask if you are on the edge.',
+				},
+				commercial: {
+					question: 'Do you install commercial solar in my town?',
+					answer:
+						'Yes across the Waikato. We design for Hamilton and Cambridge businesses as well as town and rural sites in Te Awamutu, Morrinsville, Matamata, Huntly and further south or north if the load makes sense. See areas we cover or send the site address.',
+				},
+				rural: {
+					question: 'Do you install farm solar in my area?',
+					answer:
+						'Yes. Farms and lifestyle blocks around Morrinsville, Te Awamutu, Matamata, Te Aroha, Tamahere, Putaruru and the rest of the Waikato are a core part of the work. Ground arrays and shed roofs are on the table. See areas we cover or ask.',
+				},
+			}),
 		],
 	},
 	{
 		id: 'installation',
 		label: 'Design & installation',
 		items: [
+			faq({
+				all: {
+					question: 'Is the electrical work licensed?',
+					answer:
+						'Yes. Solar and battery installs are prescribed electrical work. Licensed people do the wiring. Alan Gellert inspects our jobs and is listed as EWRB I 254535 on the public register.',
+				},
+				residential: {
+					question: 'Is the electrical work on my house licensed?',
+					answer:
+						'Yes. A home solar or battery job is prescribed electrical work. Licensed people do the wiring. Alan Gellert inspects our jobs and is listed as EWRB I 254535, so you can look him up before we visit.',
+				},
+				commercial: {
+					question: 'Is the electrical work on a business site licensed?',
+					answer:
+						'Yes. Commercial solar and battery work is prescribed electrical work. Licensed people do the wiring. Alan Gellert inspects our jobs and is listed as EWRB I 254535 on the public register.',
+				},
+				rural: {
+					question: 'Is the electrical work on a farm licensed?',
+					answer:
+						'Yes. Farm solar and battery work is prescribed electrical work. Licensed people do the wiring. Alan Gellert inspects our jobs and is listed as EWRB I 254535 on the public register.',
+				},
+			}),
 			faq({
 				all: {
 					question: 'How long does installation take?',
@@ -298,6 +342,28 @@ export const faqGroups: FaqGroup[] = [
 					question: 'Can the farm add a battery or more panels later?',
 					answer:
 						'Often, yes. We discuss pumps, seasonal peaks and storage at design so inverter capacity, switchboard work and array space can take a later upgrade.',
+				},
+			}),
+			faq({
+				all: {
+					question: 'What inverter do you install?',
+					answer:
+						'We typically install Sigenergy. The stack combines the inverter, battery and energy management so the system can time when you use, store and export power. See the Sigenergy page for how the AI, peak and off-peak timing and two-way EV charging work.',
+				},
+				residential: {
+					question: 'What inverter do you put on a house?',
+					answer:
+						'We typically install Sigenergy. One stack for the inverter, battery and the brain that times charge and export. See the Sigenergy page for AI timing, peak and off-peak use and two-way EV charging.',
+				},
+				commercial: {
+					question: 'What inverter do you put on a business site?',
+					answer:
+						'We typically install Sigenergy. The stack can scale, time charge and export against the site tariff and take an EV DC charger later. See the Sigenergy page for how the hardware works.',
+				},
+				rural: {
+					question: 'What inverter do you put on a farm?',
+					answer:
+						'We typically install Sigenergy. The stack can time charge and export around seasonal loads and grow when you add batteries or an EV charger. See the Sigenergy page for how the hardware works.',
 				},
 			}),
 		],

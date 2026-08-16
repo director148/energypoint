@@ -1,0 +1,152 @@
+---
+import CTASection from '../../components/CTASection.astro';
+import Hero from '../../components/Hero.astro';
+import ReviewGrid from '../../components/ReviewGrid.astro';
+import {
+	areas,
+	audienceHrefs,
+	audienceLabels,
+	type Area,
+} from '../../data/areas';
+import { reviews, site } from '../../data/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+	return areas.map((area) => ({
+		params: { slug: area.slug },
+		props: { area },
+	}));
+}
+
+interface Props {
+	area: Area;
+}
+
+const { area } = Astro.props;
+const localReviews = reviews.filter((review) => review.location === area.searchName);
+const areaUrl = `${site.url}/areas-we-cover/${area.slug}/`;
+
+const townSchema = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'Service',
+		name: `Solar installation in ${area.searchName}`,
+		serviceType: ['Solar installation', 'Solar installer', 'Solar company'],
+		areaServed: {
+			'@type': 'City',
+			name: area.searchName,
+			containedInPlace: {
+				'@type': 'AdministrativeArea',
+				name: 'Waikato, New Zealand',
+			},
+		},
+		provider: {
+			'@type': 'LocalBusiness',
+			name: site.name,
+			url: site.url,
+			telephone: site.phoneDisplay,
+			address: {
+				'@type': 'PostalAddress',
+				streetAddress: site.address.street,
+				addressLocality: site.address.locality,
+				postalCode: site.address.postalCode,
+				addressRegion: site.address.region,
+				addressCountry: site.address.country,
+			},
+		},
+		url: areaUrl,
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: [
+			{ '@type': 'ListItem', position: 1, name: 'Home', item: `${site.url}/` },
+			{
+				'@type': 'ListItem',
+				position: 2,
+				name: 'Areas we cover',
+				item: `${site.url}/areas-we-cover/`,
+			},
+			{ '@type': 'ListItem', position: 3, name: area.name, item: areaUrl },
+		],
+	},
+];
+---
+
+<BaseLayout
+	title={`Solar installers in ${area.searchName}`}
+	description={area.lede.replace(/<br\s*\/?>/g, ' ')}
+	schema={townSchema}
+>
+	<Hero
+		page
+		title={area.name}
+		intro={area.intro}
+		image={area.image}
+		alt={area.alt}
+		cta="Book a free visit"
+		ctaHref="/contact/"
+		position={area.position}
+	/>
+
+	<section class="section section--paper section--compact">
+		<div class="container">
+			<div class="section-heading section-heading--solo">
+				<div>
+					<span class="eyebrow">Solar company</span>
+					<h2>Why we work in {area.name}</h2>
+					<p>{area.lede}</p>
+				</div>
+			</div>
+			<div class="reason-grid">
+				{
+					area.points.map((point, index) => (
+						<article
+							class="reason-card"
+							data-reveal
+							style={`--reveal-delay: ${index * 40}ms`}
+						>
+							<span class="reason-card__number">{String(index + 1).padStart(2, '0')}</span>
+							<div>
+								<h3>{point.title}</h3>
+								<p>{point.copy}</p>
+							</div>
+						</article>
+					))
+				}
+			</div>
+			<nav class="area-audiences" aria-label={`Solar options in ${area.name}`}>
+				{
+					area.audiences.map((audience) => (
+						<a class="text-link" href={audienceHrefs[audience]}>
+							{audienceLabels[audience]}
+						</a>
+					))
+				}
+				<a class="text-link" href="/areas-we-cover/">All areas</a>
+			</nav>
+		</div>
+	</section>
+
+	{
+		localReviews.length > 0 && (
+			<section class="section section--cream section--compact">
+				<div class="container">
+					<div class="section-heading section-heading--solo">
+						<div>
+							<span class="eyebrow">From {area.name}</span>
+							<h2>What customers say</h2>
+						</div>
+					</div>
+					<ReviewGrid items={localReviews} />
+				</div>
+			</section>
+		)
+	}
+
+	<CTASection
+		title={`Book a free visit in ${area.name}`}
+		copy="We come out, look at the property and the bill and leave you a plan. No pressure to sign on the day."
+		label="Book a free visit"
+	/>
+</BaseLayout>

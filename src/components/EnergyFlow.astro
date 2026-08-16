@@ -6,6 +6,7 @@ interface Step {
 
 interface Props {
 	steps?: readonly Step[];
+	inset?: boolean;
 }
 
 const defaultSteps = [
@@ -31,10 +32,10 @@ const defaultSteps = [
 	},
 ];
 
-const { steps = defaultSteps } = Astro.props;
+const { steps = defaultSteps, inset = false } = Astro.props;
 ---
 
-<div class="energy-flow" aria-label="How a solar energy system works">
+<div class:list={['energy-flow', inset && 'energy-flow--inset']} aria-label="How a solar energy system works">
 	{
 		steps.map((step, index) => (
 			<div

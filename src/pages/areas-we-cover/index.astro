@@ -1,0 +1,153 @@
+---
+import CTASection from '../../components/CTASection.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import Hero from '../../components/Hero.astro';
+import ProcessIndex from '../../components/ProcessIndex.astro';
+import { areaFaqs, areas, nearbyPlaces } from '../../data/areas';
+import { site } from '../../data/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const areaList = `${areas.map((area) => area.searchName).join(', ')} and the properties between`;
+
+const areaSchema = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'CollectionPage',
+		name: 'Solar installers in the Waikato',
+		description: `Energy Point is a Waikato solar company based in Morrinsville. Solar installers for ${areaList}.`,
+		url: `${site.url}/areas-we-cover/`,
+		isPartOf: { '@type': 'WebSite', name: site.name, url: site.url },
+		mainEntity: {
+			'@type': 'ItemList',
+			itemListElement: areas.map((area, index) => ({
+				'@type': 'ListItem',
+				position: index + 1,
+				name: `Solar installers in ${area.searchName}`,
+				url: `${site.url}/areas-we-cover/${area.slug}/`,
+			})),
+		},
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: areaFaqs.map((item) => ({
+			'@type': 'Question',
+			name: item.question,
+			acceptedAnswer: { '@type': 'Answer', text: item.answer },
+		})),
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: [
+			{ '@type': 'ListItem', position: 1, name: 'Home', item: `${site.url}/` },
+			{
+				'@type': 'ListItem',
+				position: 2,
+				name: 'Areas we cover',
+				item: `${site.url}/areas-we-cover/`,
+			},
+		],
+	},
+];
+---
+
+<BaseLayout
+	title="Solar installers in the Waikato"
+	description={`Energy Point is a Morrinsville solar company installing across the Waikato: ${areaList}. Free visit. Local crew.`}
+	schema={areaSchema}
+>
+	<Hero
+		page
+		title="Areas we cover"
+		intro="Waikato solar installers.<br />Based in Morrinsville."
+		image="/images/rural-hero.png"
+		alt="Solar across Waikato land, towns and rural properties"
+		cta="Book a free visit"
+		ctaHref="/contact/"
+		position="center 48%"
+	/>
+
+	<section class="section section--paper section--compact">
+		<div class="container">
+			<div class="section-heading section-heading--solo">
+				<div>
+					<span class="eyebrow">The Waikato</span>
+					<h2>A local solar company</h2>
+					<p>
+						Energy Point designs, installs and looks after solar for homes, businesses and
+						farms across the Waikato. We drive to you. The office is in Morrinsville.
+					</p>
+				</div>
+			</div>
+			<div class="area-grid">
+				{
+					areas.map((area, index) => (
+						<a
+							class="area-card"
+							href={`/areas-we-cover/${area.slug}/`}
+							data-reveal
+							style={`--reveal-delay: ${index * 30}ms`}
+						>
+							<h3>{area.name}</h3>
+							<p>{area.summary}</p>
+						</a>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="section section--cream section--compact">
+		<div class="container">
+			<div class="section-heading section-heading--solo">
+				<div>
+					<span class="eyebrow">And nearby</span>
+					<h2>The properties between</h2>
+					<p>
+						Lifestyle blocks, dairies and smaller towns sit between the places above. If
+						you are on this list or just off it, ask. We will say if the drive makes sense.
+					</p>
+				</div>
+			</div>
+			<ul class="area-nearby">
+				{
+					nearbyPlaces.map((place) => (
+						<li>{place}</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+
+	<section class="section section--paper section--compact">
+		<div class="container">
+			<div class="section-heading section-heading--solo">
+				<div>
+					<span class="eyebrow">How it works</span>
+					<h2>The same five steps</h2>
+					<p>Visit, design, install, grid connection, support. Town or farm.</p>
+				</div>
+			</div>
+			<ProcessIndex />
+		</div>
+	</section>
+
+	<section class="section section--cream section--compact">
+		<div class="narrow">
+			<div class="section-heading section-heading--solo">
+				<div>
+					<span class="eyebrow">Before you book</span>
+					<h2>Straight answers</h2>
+				</div>
+			</div>
+			<FAQAccordion items={[...areaFaqs]} />
+		</div>
+	</section>
+
+	<CTASection
+		title="Book a visit on your property"
+		copy="Tell us the town or the road. We come out, look at the place and the bill and leave you a plan. No pressure."
+		label="Book a free visit"
+	/>
+</BaseLayout>

@@ -59,6 +59,7 @@ const year = new Date().getFullYear();
 			<div class="footer-column">
 				<h2>Company</h2>
 				<nav aria-label="Footer company pages">
+					<a href="/areas-we-cover/">Areas we cover</a>
 					<a href="/meet-the-team/">Meet the team</a>
 					<a href="/reviews/">Reviews</a>
 					<a href="/contact/">Contact</a>
@@ -85,7 +86,6 @@ const year = new Date().getFullYear();
 						rel={logo.external ? 'noreferrer' : undefined}
 					>
 						<img
-							class:list={[logo.compact && 'is-compact']}
 							src={logo.src}
 							alt={logo.alt}
 							width={logo.width}
