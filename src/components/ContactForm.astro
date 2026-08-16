@@ -120,6 +120,9 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 
 	<div class="field field--full">
 		<label for="address">Property address</label>
+		<span class="field__hint" id="address-hint">
+			Start typing to search, or just type the address yourself if it is not listed.
+		</span>
 		<div class="address-field">
 			<input
 				id="address"
@@ -132,6 +135,7 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 				role="combobox"
 				aria-autocomplete="list"
 				aria-controls="address-suggestions"
+				aria-describedby="address-hint"
 				aria-expanded="false"
 				data-address-search
 			/>
@@ -694,7 +698,8 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 
 		const render = (items) => {
 			suggestions = items;
-			active = items.length ? 0 : -1;
+			// Nothing is preselected: Enter keeps what was typed until the user arrows onto a suggestion.
+			active = -1;
 			window.clearTimeout(closeTimer);
 			list.replaceChildren();
 
@@ -717,7 +722,7 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 			});
 
 			input.setAttribute('aria-expanded', 'true');
-			input.setAttribute('aria-activedescendant', 'address-option-0');
+			input.removeAttribute('aria-activedescendant');
 			requestAnimationFrame(() => {
 				requestAnimationFrame(() => {
 					shell.classList.add('is-open');
@@ -782,7 +787,7 @@ const propertyDefault = isMaintenanceIntent ? '' : defaultAudience;
 				highlight((active + 1) % suggestions.length);
 			} else if (event.key === 'ArrowUp') {
 				event.preventDefault();
-				highlight((active - 1 + suggestions.length) % suggestions.length);
+				highlight(active <= 0 ? suggestions.length - 1 : active - 1);
 			} else if (event.key === 'Enter' && active >= 0) {
 				event.preventDefault();
 				choose(suggestions[active]);
