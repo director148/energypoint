@@ -270,28 +270,22 @@ export const people = [
 
 export const footerLogos = [
 	{
-		href: site.seanz,
 		src: site.seanzLogo,
 		alt: 'SEANZ member',
 		width: 481,
 		height: 162,
-		external: true,
 	},
 	{
-		href: site.ewrbRegister,
 		src: site.ewrbLogo,
 		alt: 'Electrical Workers Registration Board',
 		width: 660,
 		height: 192,
-		external: true,
 	},
 	{
-		href: site.sigenergy,
 		src: site.sigenergyLogo,
 		alt: 'Sigenergy',
 		width: 800,
 		height: 166,
-		external: true,
 	},
 ] as const;
 

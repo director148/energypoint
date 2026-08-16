@@ -2563,22 +2563,12 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	border-top: 1px solid var(--line-dark);
 }
 
-.site-footer__logos a {
-	display: block;
-	opacity: 0.82;
-	transition: opacity 220ms ease;
-}
-
-.site-footer__logos a:hover,
-.site-footer__logos a:focus-visible {
-	opacity: 1;
-}
-
 .site-footer__logos img {
 	display: block;
-	height: 2.75rem;
+	height: 2.2rem;
 	width: auto;
 	object-fit: contain;
+	opacity: 0.82;
 }
 
 .site-footer__brand img {
@@ -3261,7 +3251,7 @@ body.nav-open .site-header--on-light.is-scrolled .menu-toggle {
 	}
 
 	.site-footer__logos img {
-		height: 2rem;
+		height: 1.6rem;
 		width: auto;
 		max-width: 100%;
 		object-fit: contain;

@@ -301,20 +301,11 @@ test('footer exposes legal pages from the homepage', async ({ page }) => {
 	await expect(
 		page.getByRole('navigation', { name: 'Footer company pages' }).getByRole('link', { name: 'Areas we cover' }),
 	).toHaveAttribute('href', '/areas-we-cover/');
-	await expect(page.getByRole('navigation', { name: 'Partners' }).getByRole('link', { name: 'SEANZ member' })).toHaveAttribute(
-		'href',
-		'https://www.seanz.org.nz/50438',
-	);
-	await expect(page.getByRole('navigation', { name: 'Partners' }).getByRole('link', { name: 'Sigenergy' })).toHaveAttribute(
-		'href',
-		'https://www.sigenergy.com/au/',
-	);
-	await expect(
-		page.getByRole('navigation', { name: 'Partners' }).getByRole('link', { name: 'Electrical Workers Registration Board' }),
-	).toHaveAttribute(
-		'href',
-		'https://kete.mbie.govt.nz/EW/EWPRSearch/practitioner/?id=228928f3-b042-df11-917a-005056ae567f',
-	);
+	const partners = page.locator('.site-footer__logos');
+	await expect(partners.getByRole('img', { name: 'SEANZ member' })).toBeVisible();
+	await expect(partners.getByRole('img', { name: 'Sigenergy' })).toBeVisible();
+	await expect(partners.getByRole('img', { name: 'Electrical Workers Registration Board' })).toBeVisible();
+	await expect(partners.getByRole('link')).toHaveCount(0);
 });
 
 test('all internal links on the homepage resolve', async ({ page, request }) => {

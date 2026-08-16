@@ -77,25 +77,19 @@ const year = new Date().getFullYear();
 			</div>
 		</div>
 
-		<nav class="site-footer__logos" aria-label="Partners">
+		<div class="site-footer__logos">
 			{
 				footerLogos.map((logo) => (
-					<a
-						href={logo.href}
-						target={logo.external ? '_blank' : undefined}
-						rel={logo.external ? 'noreferrer' : undefined}
-					>
-						<img
-							src={logo.src}
-							alt={logo.alt}
-							width={logo.width}
-							height={logo.height}
-							loading="lazy"
-						/>
-					</a>
+					<img
+						src={logo.src}
+						alt={logo.alt}
+						width={logo.width}
+						height={logo.height}
+						loading="lazy"
+					/>
 				))
 			}
-		</nav>
+		</div>
 
 		<div class="site-footer__bottom">
 			<span>© {year} Energy Point. All rights reserved.</span>
